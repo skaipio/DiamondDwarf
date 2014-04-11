@@ -3,6 +3,7 @@ package org.diamonddwarf
 import org.diamonddwarf.stage._
 import com.badlogic.gdx.InputProcessor
 import scala.collection.mutable.MutableList
+import org.diamonddwarf.stage.Coordinate
 
 class Controller(val game : DiamondDwarf) extends InputProcessor {
   override def keyTyped(character: Char): Boolean = {
@@ -11,6 +12,7 @@ class Controller(val game : DiamondDwarf) extends InputProcessor {
       case 'd' => game.movePlayer(Coordinate.Right)
       case 'w' => game.movePlayer(Coordinate.Up)
       case 's' => game.movePlayer(Coordinate.Down)
+      case 'e' => game.playerEnterArea
       case ' ' => game.playerDig
       case _ =>
     }

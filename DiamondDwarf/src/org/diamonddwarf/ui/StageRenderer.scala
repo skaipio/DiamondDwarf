@@ -12,40 +12,55 @@ class StageRenderer(game: DiamondDwarf) {
   private var batch = new SpriteBatch
   private var font = new BitmapFont
   
-  font.setColor(Color.BLACK)
+  private var mapXOffset = 20
+  private var mapYOffset = 50
   
-  def render {
-    shapeR.begin(ShapeRenderer.ShapeType.Filled)   
-    this.renderTiles  
+  private var inventoryXOffset = 250
+  private var inventoryYOffset = 220
+  
+  font.setColor(Color.BLACK)
+
+  def render() {
+    shapeR.begin(ShapeRenderer.ShapeType.Filled)
+    
     shapeR.end()
     batch.begin()
+    this.renderTiles
     this.renderPlayerInventory
     batch.end()
   }
-  
+
   def dispose = batch.dispose(); shapeR.dispose()
-  
+
   private def renderTiles {
-    for(y <- 0 until game.activeStage.height; x <- 0 until game.activeStage.width){
-      if (game.activeStage.isPlayerAt(x, y)){
-        shapeR.setColor(Color.RED)
-      }else if (game.activeStage.tileAt(x, y).isDug){
-        shapeR.setColor(Color.ORANGE)
-      }else if (!game.activeStage.tileAt(x, y).passable){
-        shapeR.setColor(Color.GRAY)
-      }else{
-        shapeR.setColor(Color.BLACK)
+    //    for(y <- 0 until game.activeMap.height; x <- 0 until game.activeMap.width){
+    //      if (game.activeMap.isPlayerAt(x, y)){
+    //        shapeR.setColor(Color.RED)
+    //      }else if (game.activeMap.getTileAt(x, y).isDug){
+    //        shapeR.setColor(Color.ORANGE)
+    //      }else if (!game.activeMap.getTileAt(x, y).passable){
+    //        shapeR.setColor(Color.GRAY)
+    //      }else{
+    //        shapeR.setColor(Color.BLACK)
+    //      }
+    //      shapeR.rect(x*20, y*20, 20, 20)
+    //    }   
+    for (y <- 0 until game.activeMap.height; x <- 0 until game.activeMap.width) {
+      if (game.activeMap.isPlayerAt(x, y)) {
+        font.draw(batch, "@", x*20+mapXOffset, y*20+mapYOffset)
+      } else{
+        font.draw(batch, game.activeMap.getTileAt(x, y).toString, x*20+mapXOffset, y*20+mapYOffset)
       }
-      shapeR.rect(x*20, y*20, 20, 20)
-    }   
+    }
+
   }
-  
-  private def renderPlayerInventory{
+
+  private def renderPlayerInventory {
     var i = 1
-    font.draw(batch, game.player.name + "'s inventory", 250, 200)
-    for((gem, count) <- game.player.inventory){
-      font.draw(batch, gem + ": " + count, 250, 200-i*20)
-      i+=1
-    }   
+    font.draw(batch, game.player.name + "'s inventory", inventoryXOffset, inventoryYOffset)
+    for ((gem, count) <- game.player.inventory) {
+      font.draw(batch, gem + ": " + count, inventoryXOffset, inventoryYOffset - i * 20)
+      i += 1
+    }
   }
 }

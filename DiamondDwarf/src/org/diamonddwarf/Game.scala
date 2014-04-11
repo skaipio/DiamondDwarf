@@ -25,7 +25,7 @@ class Game extends ApplicationListener {
   private var sprite: Sprite = null
 
   private var game = new DiamondDwarf(new Player("Hessu"))
-  game.activeStage = new Stage(10, 12, 10, Map(Gem.bestGem -> 3, Gem.okayGem -> 5))
+  game.startStage(Stage.stage1)
   val controller = new Controller(game)
 
   @Override

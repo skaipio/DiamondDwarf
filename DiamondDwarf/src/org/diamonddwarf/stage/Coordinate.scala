@@ -1,9 +1,10 @@
-package org.diamonddwarf
+package org.diamonddwarf.stage
 
-protected class Coordinate(val x: Int, val y: Int) {
+class Coordinate(val x: Int, val y: Int) {
 
 	def +(a: Coordinate) = new Coordinate(this.x + a.x, this.y + a.y) 
 
+	override def toString = "(" + x + "," + y + ")"
 } 
   
 object Coordinate {
