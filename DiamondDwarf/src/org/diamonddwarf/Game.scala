@@ -16,10 +16,6 @@ import org.diamonddwarf.ui.StageRenderer
 import org.diamonddwarf.ui.InventoryRenderer
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.Input.Keys
-class Game extends ApplicationListener {
-
-import org.diamonddwarf.ui.InventoryRenderer
-import org.diamonddwarf.ui.InventoryRenderer
 
 class Game extends ApplicationListener {
   private var batch : SpriteBatch = null
