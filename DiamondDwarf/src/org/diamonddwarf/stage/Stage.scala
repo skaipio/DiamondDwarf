@@ -5,6 +5,7 @@ import scala.collection.mutable.Set
 import scala.collection.mutable.IndexedSeq
 import scala.collection.Iterable
 import scala.util.Random
+import org.diamonddwarf.items.Gem
 
 object Stage {
 
@@ -32,9 +33,7 @@ class Stage(width: Int, height: Int, stones: Int, gemList: Map[Gem, Int]) extend
       val (x, y) = coordinatePairs.head
       this.setTileAt(x, y, Tile.newTileWithStone)
       coordinatePairs = coordinatePairs.tail
-    }
-    
-    this.setTileAt(exitToHomeBase, Tile.newEntryToBase)    
+    }  
   }
   
   this.setBaseAround(new Coordinate(4,4))

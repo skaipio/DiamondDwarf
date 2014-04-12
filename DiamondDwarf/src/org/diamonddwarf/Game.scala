@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.GL20
 import org.diamonddwarf.stage.Stage
-import org.diamonddwarf.stage.Gem
+import org.diamonddwarf.items.Gem
 import org.diamonddwarf.stage.Player
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.Color

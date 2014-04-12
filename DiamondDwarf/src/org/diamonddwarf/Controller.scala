@@ -12,7 +12,6 @@ class Controller(val game : DiamondDwarf) extends InputProcessor {
       case 'd' => game.movePlayer(Coordinate.Right)
       case 'w' => game.movePlayer(Coordinate.Up)
       case 's' => game.movePlayer(Coordinate.Down)
-      case 'e' => game.playerEnterArea
       case ' ' => game.playerDig
       case _ =>
     }

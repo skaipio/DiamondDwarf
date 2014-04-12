@@ -28,3 +28,6 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
+
+#AndroidProguard
+proguard_cache/
