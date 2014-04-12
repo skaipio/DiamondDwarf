@@ -12,9 +12,8 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter
 import scala.util.Random
 import com.badlogic.gdx.graphics.OrthographicCamera
 
-class StageRenderer(game: DiamondDwarf, spriteMap: Map[GameObject, Array[Texture]]) {
+class StageRenderer(game: DiamondDwarf, private val batch : SpriteBatch, spriteMap: Map[GameObject, Array[Texture]]) {
   private var camera: OrthographicCamera = null
-  private val batch = new SpriteBatch
   private val font = new BitmapFont
 
   private val mapXOffset = 20
@@ -49,12 +48,10 @@ class StageRenderer(game: DiamondDwarf, spriteMap: Map[GameObject, Array[Texture
     //    batch.setProjectionMatrix(camera.combined);
     batch.begin()
     this.renderTiles
-    this.renderPlayerInventory
     batch.end()
   }
 
   def dispose = {
-    batch.dispose()
     playerTexture.dispose()
   }
 
@@ -98,23 +95,8 @@ class StageRenderer(game: DiamondDwarf, spriteMap: Map[GameObject, Array[Texture
         return null
     }
   }
-
-  private def renderPlayerInventory {
-    var i = 1
-    var additionalXOffset = 0
-    var additionalYOffset = -20
-    font.draw(batch, game.player.name + "'s inventory", inventoryXOffset, inventoryYOffset)
-    if (game.player.shovel != null) {
-      font.draw(batch, game.player.shovel.toString, inventoryXOffset, inventoryYOffset + additionalYOffset)
-      additionalYOffset -= 20
-    }
-    for ((gem, count) <- game.player.inventory) {
-      font.draw(batch, gem + ": " + count, inventoryXOffset, inventoryYOffset + additionalYOffset - i * 20)
-      i += 1
-    }
-  }
-
-  private def getTextureOf(obj: GameObject, x: Int, y: Int): Option[Texture] = {
+  
+  private def getTextureOf(obj: GameObject, x: Int, y: Int) : Option[Texture] = {
     this.spriteMap.get(obj) match {
       case Some(textures) => Some(textures(this.randomIds(x)(y) % textures.size))
       case _ => None

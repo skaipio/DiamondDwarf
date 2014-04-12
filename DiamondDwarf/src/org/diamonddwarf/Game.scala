@@ -13,13 +13,18 @@ import org.diamonddwarf.stage._
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.Color
 import org.diamonddwarf.ui.StageRenderer
-import org.diamonddwarf.ui.StageRenderer
-import org.diamonddwarf.ui.StageRenderer
+import org.diamonddwarf.ui.InventoryRenderer
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.Input.Keys
 class Game extends ApplicationListener {
 
+import org.diamonddwarf.ui.InventoryRenderer
+import org.diamonddwarf.ui.InventoryRenderer
+
+class Game extends ApplicationListener {
+  private var batch : SpriteBatch = null
   private var stageRenderer: StageRenderer = null
+  private var inventoryRenderer : InventoryRenderer = null
 
   private var texture: Texture = null
   private var sprite: Sprite = null
@@ -32,9 +37,14 @@ class Game extends ApplicationListener {
   val controller = new Controller(game)
 
   override def create() {
-    stageRenderer = new StageRenderer(game, ResourceLoader.spriteMap)
+    batch = new SpriteBatch
+    stageRenderer = new StageRenderer(game, batch, ResourceLoader.spriteMap)
     stageRenderer.create
     stageRenderer.setNewRandomIds(Stage.stage1)
+    
+    inventoryRenderer = new InventoryRenderer(game, batch)
+    inventoryRenderer.create
+    
 
     //    val region = new TextureRegion(texture, 0, 0, 512, 275)
     //
@@ -47,7 +57,9 @@ class Game extends ApplicationListener {
   }
 
   override def dispose() {
+    this.batch.dispose()
     stageRenderer.dispose;
+    inventoryRenderer.dispose
   }
 
   private def checkInput() {
@@ -74,9 +86,10 @@ class Game extends ApplicationListener {
     checkInput
     player.update(Gdx.graphics.getDeltaTime())
 
-    Gdx.gl.glClearColor(1, 1, 1, 1);
+    Gdx.gl.glClearColor(0,0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     stageRenderer.render
+    inventoryRenderer.render
   }
 
   override def resize(width: Int, height: Int) {

@@ -7,7 +7,7 @@ public class Main {
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "DiamondDwarf";
-		cfg.width = 640;
+		cfg.width = 640+200;
 		cfg.height = 640;
 		
 		new LwjglApplication(new Game(), cfg);
