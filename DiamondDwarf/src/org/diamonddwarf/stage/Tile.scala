@@ -5,10 +5,12 @@ import org.diamonddwarf.items.Gem
 class Tile private (val symbol: String) {
   protected var isPassable = true
   protected var gem = Gem.noGem
-
+  protected var isBase = false
+  private var dug = false
+  
   def passable = this.isPassable
 
-  private var dug = false
+
 
   def dig = {
     this.dug = true
@@ -19,7 +21,8 @@ class Tile private (val symbol: String) {
 
   def hasGem = this.gem != Gem.noGem
   def isDug = this.dug
-
+  def canBeDug = !isDug && !isBase
+  
   override def toString = if (this.dug) "O" else this.symbol
 }
 
@@ -37,6 +40,8 @@ object Tile {
   }
 
   def newBaseTile = {
-    new Tile("x")
+    val t = new Tile("x")
+    t.isBase = true
+    t
   }
 }

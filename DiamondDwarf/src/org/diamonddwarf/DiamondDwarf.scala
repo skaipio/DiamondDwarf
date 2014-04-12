@@ -24,7 +24,7 @@ class DiamondDwarf(val player: Player) {
   }
 
   def playerDig = {
-    if (this.player.dig) {
+    if (this.activeMap.playerTile.canBeDug && this.player.dig) {
       player.give(_activeMap.playerTile.dig)
     }
   }
