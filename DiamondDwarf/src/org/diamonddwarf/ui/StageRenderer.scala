@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import org.diamonddwarf.DiamondDwarf
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Texture.TextureFilter
 
 class StageRenderer(game: DiamondDwarf) {
-  private val shapeR = new ShapeRenderer
   private val batch = new SpriteBatch
   private val font = new BitmapFont
 
@@ -18,38 +20,36 @@ class StageRenderer(game: DiamondDwarf) {
   private val inventoryXOffset = 250
   private val inventoryYOffset = 220
 
+  private val tileSize = 64
+
+  private var playerTexture: Texture = null
+
   font.setColor(Color.BLACK)
 
-  def render() {
-    shapeR.begin(ShapeRenderer.ShapeType.Filled)
+  def create {
+    playerTexture = new Texture(Gdx.files.internal("textures/dwarf2.png"))
+    playerTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear)
+  }
 
-    shapeR.end()
+  def render() {
     batch.begin()
     this.renderTiles
     this.renderPlayerInventory
     batch.end()
   }
 
-  def dispose = batch.dispose(); shapeR.dispose()
+  def dispose = {
+    batch.dispose()
+    playerTexture.dispose()
+  }
 
   private def renderTiles {
-    //    for(y <- 0 until game.activeMap.height; x <- 0 until game.activeMap.width){
-    //      if (game.activeMap.isPlayerAt(x, y)){
-    //        shapeR.setColor(Color.RED)
-    //      }else if (game.activeMap.getTileAt(x, y).isDug){
-    //        shapeR.setColor(Color.ORANGE)
-    //      }else if (!game.activeMap.getTileAt(x, y).passable){
-    //        shapeR.setColor(Color.GRAY)
-    //      }else{
-    //        shapeR.setColor(Color.BLACK)
-    //      }
-    //      shapeR.rect(x*20, y*20, 20, 20)
-    //    }   
     for (y <- 0 until game.activeMap.height; x <- 0 until game.activeMap.width) {
       if (game.activeMap.isPlayerAt(x, y)) {
-        font.draw(batch, "@", x * 20 + mapXOffset, y * 20 + mapYOffset)
+        batch.draw(this.playerTexture, x*tileSize, y*tileSize)
+        //font.draw(batch, "@", x * tileSize + mapXOffset, y * tileSize + mapYOffset)
       } else {
-        font.draw(batch, game.activeMap.getTileAt(x, y).toString, x * 20 + mapXOffset, y * 20 + mapYOffset)
+        font.draw(batch, game.activeMap.getTileAt(x, y).toString, x * tileSize + mapXOffset, y * tileSize + mapYOffset)
       }
     }
 

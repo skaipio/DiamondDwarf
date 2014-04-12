@@ -35,15 +35,14 @@ class Game extends ApplicationListener {
 
     camera = new OrthographicCamera(1, h / w)
     stageRenderer = new StageRenderer(game)
-    texture = new Texture(Gdx.files.internal("data/libgdx.png"))
-    texture.setFilter(TextureFilter.Linear, TextureFilter.Linear)
+    stageRenderer.create
 
-    val region = new TextureRegion(texture, 0, 0, 512, 275)
-
-    sprite = new Sprite(region);
-    sprite.setSize(0.9f, 0.9f * sprite.getHeight() / sprite.getWidth());
-    sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
-    sprite.setPosition(-sprite.getWidth() / 2, -sprite.getHeight() / 2);
+//    val region = new TextureRegion(texture, 0, 0, 512, 275)
+//
+//    sprite = new Sprite(region);
+//    sprite.setSize(0.9f, 0.9f * sprite.getHeight() / sprite.getWidth());
+//    sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+//    sprite.setPosition(-sprite.getWidth() / 2, -sprite.getHeight() / 2);
     
     Gdx.input.setInputProcessor(controller)
   }
@@ -51,7 +50,6 @@ class Game extends ApplicationListener {
   @Override
   def dispose() {
     stageRenderer.dispose;
-    texture.dispose();
   }
 
   @Override
