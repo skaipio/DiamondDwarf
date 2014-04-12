@@ -36,6 +36,20 @@ class Stage(width: Int, height: Int, stones: Int, gemList: Map[Gem, Int]) extend
     
     this.setTileAt(exitToHomeBase, Tile.newEntryToBase)    
   }
+  
+  this.setBaseAround(new Coordinate(4,4))
+  
+  def setBaseAround(c: Coordinate) {
+    if (this.minTilesFromBorders(c.x, c.y, 1))
+      for(x <- c.x - 1 to c.x + 1; y <- c.y - 1 to c.y + 1) {
+        this.setTileAt(x, y, Tile.newBaseTile)
+      }
+  }
+  
+  def isAtBorder(c: Coordinate) = {
+    c.x <= 1 
+  }
+  
 }
 
 

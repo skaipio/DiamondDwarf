@@ -50,4 +50,8 @@ object Tile {
     t.gem = gem
     t
   }
+  
+  def newBaseTile = {
+    new Tile("x")   
+  }
 }
