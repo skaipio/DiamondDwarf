@@ -16,7 +16,7 @@ import org.diamonddwarf.ui.StageRenderer
 import org.diamonddwarf.ui.StageRenderer
 
 class Game extends ApplicationListener {
-  private var camera: OrthographicCamera = null
+  
   private var stageRenderer: StageRenderer = null
 
   private var texture: Texture = null
@@ -26,19 +26,10 @@ class Game extends ApplicationListener {
   game.startStage(Stage.stage1)
   val controller = new Controller(game)
 
-  @Override
-  def create() {
-    val w = Gdx.graphics.getWidth()
-    val h = Gdx.graphics.getHeight()
-
-    val spriteMap: Map[Tile, Texture] = Map(
-      Tile.baseTile -> new Texture(Gdx.files.internal("textures/base.png")),
-      Tile.stoneTile -> new Texture(Gdx.files.internal("textures/stone.png")),
-      Tile.diggableTile -> new Texture(Gdx.files.internal("textures/diggable.png")))
-
-    camera = new OrthographicCamera(1, h / w)
-    stageRenderer = new StageRenderer(game, spriteMap)
+  override def create() {
+    stageRenderer = new StageRenderer(game, ResourceLoader.spriteMap)
     stageRenderer.create
+    
 
     //    val region = new TextureRegion(texture, 0, 0, 512, 275)
     //
@@ -50,33 +41,24 @@ class Game extends ApplicationListener {
     Gdx.input.setInputProcessor(controller)
   }
 
-  @Override
-  def dispose() {
+  override def dispose() {
     stageRenderer.dispose;
   }
 
-  @Override
-  def render() {
+  override def render() {
     Gdx.gl.glClearColor(1, 1, 1, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    //    batch.setProjectionMatrix(camera.combined);
-    //    batch.begin();    
-    //    sprite.draw(batch);
-    //    batch.end();
-
     stageRenderer.render
   }
 
-  @Override
-  def resize(width: Int, height: Int) {
+  override def resize(width: Int, height: Int) {
   }
 
-  @Override
-  def pause() {
+  override def pause() {
   }
 
-  @Override
-  def resume() {
+  override def resume() {
   }
+  
+ 
 }

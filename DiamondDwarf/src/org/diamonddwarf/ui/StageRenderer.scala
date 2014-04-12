@@ -1,7 +1,6 @@
 package org.diamonddwarf.ui
 
 import org.diamonddwarf.stage._
-
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -10,8 +9,11 @@ import org.diamonddwarf.DiamondDwarf
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture.TextureFilter
+import scala.util.Random
+import com.badlogic.gdx.graphics.OrthographicCamera
 
-class StageRenderer(game: DiamondDwarf, spriteMap: Map[Tile, Texture]) {
+class StageRenderer(game: DiamondDwarf, spriteMap: Map[Tile, Array[Texture]]) {
+  private var camera: OrthographicCamera = null
   private val batch = new SpriteBatch
   private val font = new BitmapFont
 
@@ -23,16 +25,24 @@ class StageRenderer(game: DiamondDwarf, spriteMap: Map[Tile, Texture]) {
 
   private val tileSize = 64
 
+  private val tileTextures = scala.collection.mutable.Map[Coordinate, (Tile, Texture)]()
+
   private var playerTexture: Texture = null
 
   font.setColor(Color.BLACK)
 
   def create {
+    val w = Gdx.graphics.getWidth()
+    val h = Gdx.graphics.getHeight()
+
+    camera = new OrthographicCamera(1, h / w)
+
     playerTexture = new Texture(Gdx.files.internal("textures/dwarf2.png"))
     playerTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear)
   }
 
   def render() {
+    //    batch.setProjectionMatrix(camera.combined);
     batch.begin()
     this.renderTiles
     this.renderPlayerInventory
@@ -46,24 +56,47 @@ class StageRenderer(game: DiamondDwarf, spriteMap: Map[Tile, Texture]) {
 
   private def renderTiles {
     for (y <- 0 until game.activeMap.height; x <- 0 until game.activeMap.width) {
-      font.draw(batch, game.activeMap.getTileAt(x, y).toString, x * tileSize + mapXOffset, y * tileSize + mapYOffset)
-      this.spriteMap.get(game.activeMap.getTileAt(x, y)) match {
-        case Some(sprite) => batch.draw(sprite, x * tileSize, y * tileSize)
+      this.getTextureOf(x, y) match {
+        case Some(texture) => batch.draw(texture, x * tileSize, y * tileSize)
         case _ =>
       }
       if (game.activeMap.isPlayerAt(x, y)) {
         batch.draw(this.playerTexture, x * tileSize, y * tileSize)
-        font.draw(batch, "@", x * tileSize + mapXOffset, y * tileSize + mapYOffset)
       }
 
     }
 
   }
 
-  private def matchSprite(tile: Tile) = tile match {
-    case Tile.diggableTile => "YAY"
-    case _ => tile
+  private def getTextureOf(x: Int, y: Int): Option[Texture] = {
+    val tile = game.activeMap.getTileAt(x, y)
+    var textureToReturn: Texture = null
+    this.tileTextures.get(Coordinate(x, y)) match {
+      case Some((keyTile, texture)) =>
+        if (keyTile == tile) {
+          textureToReturn = texture
+        } else {
+          textureToReturn = this.getTextureFromSpriteMap(tile)
+          this.tileTextures += Coordinate(x, y) -> (tile, textureToReturn)
+        }
+      case _ =>
+        textureToReturn = this.getTextureFromSpriteMap(tile)
+        this.tileTextures += Coordinate(x, y) -> (tile, textureToReturn)
+    }
+    if (textureToReturn != null)
+      Some(textureToReturn)
+    else
+      None
+  }
 
+  private def getTextureFromSpriteMap(tile: Tile): Texture = {
+    this.spriteMap.get(tile) match {
+      case Some(textures) =>
+        val rand = Random.nextInt(textures.size)
+        return textures(rand)
+      case _ =>
+        return null
+    }
   }
 
   private def renderPlayerInventory {
