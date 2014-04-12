@@ -1,9 +1,6 @@
 package org.diamonddwarf
 
-import org.diamonddwarf.stage.Stage
-import org.diamonddwarf.stage.Player
-import org.diamonddwarf.stage.TileMap
-import org.diamonddwarf.stage.Coordinate
+import org.diamonddwarf.stage._
 import org.diamonddwarf.items.Shovel
 
 class DiamondDwarf(val player: Player) {
@@ -18,14 +15,17 @@ class DiamondDwarf(val player: Player) {
 
   def movePlayer(direction: Coordinate) {
     val toBePosition = direction + _activeMap.playerPosition
-    if (_activeMap.inBounds(toBePosition) && _activeMap.getTileAt(toBePosition).passable) {
+    if (_activeMap.inBounds(toBePosition) && _activeMap.getTileAt(toBePosition).isPassable) {
       _activeMap.setPlayerPosition(toBePosition)
     }
   }
 
   def playerDig = {
-    if (this.activeMap.playerTile.canBeDug && this.player.dig) {
-      player.give(_activeMap.playerTile.dig)
+    if (this.activeMap.playerTile == Tile.diggableTile) {
+      activeMap.removeGemAt(this.activeMap.playerPosition) match {
+        case Some(gem) => player.give(gem)
+        case _ =>
+      }
     }
   }
 }

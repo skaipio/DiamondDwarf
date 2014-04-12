@@ -1,6 +1,7 @@
 package org.diamonddwarf.ui
 
-import org.diamonddwarf.stage.Stage
+import org.diamonddwarf.stage._
+
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -10,7 +11,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 
-class StageRenderer(game: DiamondDwarf) {
+class StageRenderer(game: DiamondDwarf, spriteMap: Map[Tile, Texture]) {
   private val batch = new SpriteBatch
   private val font = new BitmapFont
 
@@ -45,13 +46,23 @@ class StageRenderer(game: DiamondDwarf) {
 
   private def renderTiles {
     for (y <- 0 until game.activeMap.height; x <- 0 until game.activeMap.width) {
-      if (game.activeMap.isPlayerAt(x, y)) {
-        batch.draw(this.playerTexture, x*tileSize, y*tileSize)
-        //font.draw(batch, "@", x * tileSize + mapXOffset, y * tileSize + mapYOffset)
-      } else {
-        font.draw(batch, game.activeMap.getTileAt(x, y).toString, x * tileSize + mapXOffset, y * tileSize + mapYOffset)
+      font.draw(batch, game.activeMap.getTileAt(x, y).toString, x * tileSize + mapXOffset, y * tileSize + mapYOffset)
+      this.spriteMap.get(game.activeMap.getTileAt(x, y)) match {
+        case Some(sprite) => batch.draw(sprite, x * tileSize, y * tileSize)
+        case _ =>
       }
+      if (game.activeMap.isPlayerAt(x, y)) {
+        batch.draw(this.playerTexture, x * tileSize, y * tileSize)
+        font.draw(batch, "@", x * tileSize + mapXOffset, y * tileSize + mapYOffset)
+      }
+
     }
+
+  }
+
+  private def matchSprite(tile: Tile) = tile match {
+    case Tile.diggableTile => "YAY"
+    case _ => tile
 
   }
 
