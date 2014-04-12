@@ -4,7 +4,7 @@ import scala.collection.mutable.Map
 import org.diamonddwarf.items.Gem
 import org.diamonddwarf.items.Shovel
 
-class Player(val name: String) {
+class Player(val name: String) extends Actor(100) {
   var money = 0
   var shovel: Shovel = null
   val inventory = Map[Gem, Int]()
@@ -19,12 +19,12 @@ class Player(val name: String) {
 
   def canDig: Boolean = this.shovel != null && this.shovel.digsLeft >= 1
 
-  def dig: Boolean = {
-    var canDig = this.canDig
+  def depleteShovel: Boolean = {
     if (canDig) {
       this.shovel.digsLeft -= 1
+      return true
     }
-    canDig
+    return false
   }
 
   /**

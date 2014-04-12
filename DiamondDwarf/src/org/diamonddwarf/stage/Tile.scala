@@ -1,6 +1,6 @@
 package org.diamonddwarf.stage
 
-class Tile private (val symbol: String, val isPassable: Boolean) {
+class Tile private (val symbol: String) extends GameObject {
   
   override def toString = this.symbol
 
@@ -8,9 +8,7 @@ class Tile private (val symbol: String, val isPassable: Boolean) {
 
 object Tile {
   
-  val diggableTile = 	new Tile(".", true)
-  val dugTile = 		new Tile("o", true)
-  val baseTile = 		new Tile("x", true)
-  val stoneTile = 		new Tile("#", false)
+  val diggableTile = 	new Tile(".")
+  val baseTile = 		new Tile("x")
   
 }

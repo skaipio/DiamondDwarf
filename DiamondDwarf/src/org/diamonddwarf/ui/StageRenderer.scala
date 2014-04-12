@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter
 import scala.util.Random
 import com.badlogic.gdx.graphics.OrthographicCamera
 
-class StageRenderer(game: DiamondDwarf, spriteMap: Map[Tile, Array[Texture]]) {
+class StageRenderer(game: DiamondDwarf, spriteMap: Map[GameObject, Array[Texture]]) {
   private var camera: OrthographicCamera = null
   private val batch = new SpriteBatch
   private val font = new BitmapFont
@@ -25,11 +25,15 @@ class StageRenderer(game: DiamondDwarf, spriteMap: Map[Tile, Array[Texture]]) {
 
   private val tileSize = 64
 
-  private val tileTextures = scala.collection.mutable.Map[Coordinate, (Tile, Texture)]()
+  private var randomIds : Array[Array[Int]] = null
 
   private var playerTexture: Texture = null
 
   font.setColor(Color.BLACK)
+  
+  def setNewRandomIds(stage: TileMap){
+    this.randomIds = Array.fill(stage.width, stage.height)(Random.nextInt.abs)
+  }
 
   def create {
     val w = Gdx.graphics.getWidth()
@@ -56,41 +60,26 @@ class StageRenderer(game: DiamondDwarf, spriteMap: Map[Tile, Array[Texture]]) {
 
   private def renderTiles {
     for (y <- 0 until game.activeMap.height; x <- 0 until game.activeMap.width) {
-      this.getTextureOf(x, y) match {
+      val tile = this.game.activeMap.getTileAt(x, y)
+      this.getTextureOf(tile, x, y) match {
         case Some(texture) => batch.draw(texture, x * tileSize, y * tileSize)
         case _ =>
       }
+      val tileObj = this.game.activeMap.getTileObjectAt(x, y)
+      this.getTextureOf(tileObj, x, y) match {
+        case Some(texture) => batch.draw(texture, x * tileSize, y * tileSize)
+        case _ =>
+      }
+
       if (game.activeMap.isPlayerAt(x, y)) {
         batch.draw(this.playerTexture, x * tileSize, y * tileSize)
       }
-
     }
 
   }
 
-  private def getTextureOf(x: Int, y: Int): Option[Texture] = {
-    val tile = game.activeMap.getTileAt(x, y)
-    var textureToReturn: Texture = null
-    this.tileTextures.get(Coordinate(x, y)) match {
-      case Some((keyTile, texture)) =>
-        if (keyTile == tile) {
-          textureToReturn = texture
-        } else {
-          textureToReturn = this.getTextureFromSpriteMap(tile)
-          this.tileTextures += Coordinate(x, y) -> (tile, textureToReturn)
-        }
-      case _ =>
-        textureToReturn = this.getTextureFromSpriteMap(tile)
-        this.tileTextures += Coordinate(x, y) -> (tile, textureToReturn)
-    }
-    if (textureToReturn != null)
-      Some(textureToReturn)
-    else
-      None
-  }
-
-  private def getTextureFromSpriteMap(tile: Tile): Texture = {
-    this.spriteMap.get(tile) match {
+  private def getTextureFromSpriteMap(gameObj: GameObject): Texture = {
+    this.spriteMap.get(gameObj) match {
       case Some(textures) =>
         val rand = Random.nextInt(textures.size)
         return textures(rand)
@@ -111,6 +100,13 @@ class StageRenderer(game: DiamondDwarf, spriteMap: Map[Tile, Array[Texture]]) {
     for ((gem, count) <- game.player.inventory) {
       font.draw(batch, gem + ": " + count, inventoryXOffset, inventoryYOffset + additionalYOffset - i * 20)
       i += 1
+    }
+  }
+  
+  private def getTextureOf(obj: GameObject, x: Int, y: Int) : Option[Texture] = {
+    this.spriteMap.get(obj) match {
+      case Some(textures) => Some(textures(this.randomIds(x)(y) % textures.size))
+      case _ => None
     }
   }
 }

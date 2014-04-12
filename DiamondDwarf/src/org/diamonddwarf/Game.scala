@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.Color
 import org.diamonddwarf.ui.StageRenderer
 import org.diamonddwarf.ui.StageRenderer
+import org.diamonddwarf.ui.StageRenderer
 
 class Game extends ApplicationListener {
   
@@ -24,11 +25,13 @@ class Game extends ApplicationListener {
 
   private var game = new DiamondDwarf(new Player("Hessu"))
   game.startStage(Stage.stage1)
+  
   val controller = new Controller(game)
 
   override def create() {
     stageRenderer = new StageRenderer(game, ResourceLoader.spriteMap)
     stageRenderer.create
+    stageRenderer.setNewRandomIds(Stage.stage1)
     
 
     //    val region = new TextureRegion(texture, 0, 0, 512, 275)

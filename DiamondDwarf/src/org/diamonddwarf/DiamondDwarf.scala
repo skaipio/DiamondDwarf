@@ -15,17 +15,19 @@ class DiamondDwarf(val player: Player) {
 
   def movePlayer(direction: Coordinate) {
     val toBePosition = direction + _activeMap.playerPosition
-    if (_activeMap.inBounds(toBePosition) && _activeMap.getTileAt(toBePosition).isPassable) {
+    if (_activeMap.inBounds(toBePosition) && _activeMap.getTileObjectAt(toBePosition).isPassable) {
       _activeMap.setPlayerPosition(toBePosition)
     }
   }
 
   def playerDig = {
-    if (this.activeMap.playerTile == Tile.diggableTile) {
+    if (this.activeMap.playerTile == Tile.diggableTile && !this.activeMap.isDug(this.activeMap.playerPosition) && player.canDig) {
       activeMap.removeGemAt(this.activeMap.playerPosition) match {
         case Some(gem) => player.give(gem)
         case _ =>
       }
+      activeMap.setDugAt(this.activeMap.playerPosition)
+      player.depleteShovel
     }
   }
 }

@@ -4,14 +4,29 @@ import org.diamonddwarf.items.Gem
 import scala.collection.mutable.Map
 
 abstract class TileMap(val width: Int, val height: Int) extends Traversable[Tile] {
+
   private val tileMap: Array[Array[Tile]] = Array.fill(height, width)(Tile.diggableTile)
   private val gemMap: Map[Coordinate, Gem] = Map()
+  private val topMap: Array[Array[TileObject]] = Array.fill(height, width)(TileObject.empty)
 
   def getTileAt(x: Int, y: Int) = tileMap(y)(x)
   def getTileAt(coordinate: Coordinate): Tile = getTileAt(coordinate.x, coordinate.y)
 
+  def getTileObjectAt(x: Int, y: Int) = topMap(y)(x)
+  def getTileObjectAt(c: Coordinate): TileObject = getTileObjectAt(c.x, c.y)
+
+  def setTileObjectAt(x: Int, y: Int, t: TileObject) = topMap(y)(x) = t
+  def setTileObjectAt(coordinate: Coordinate, t: TileObject): Unit = this.setTileObjectAt(coordinate.x, coordinate.y, t)
+
   def setTileAt(x: Int, y: Int, t: Tile) = tileMap(y)(x) = t
   def setTileAt(coordinate: Coordinate, t: Tile): Unit = this.setTileAt(coordinate.x, coordinate.y, t)
+
+  def setDugAt(c: Coordinate) {
+    require(inBounds(c))
+    this.topMap(c.y)(c.x) = TileObject.hole
+  }
+
+  def isDug(c: Coordinate) = this.topMap(c.y)(c.x) == TileObject.hole
 
   def setGemAt(x: Int, y: Int, gem: Gem) = {
     require(inBounds(x, y))

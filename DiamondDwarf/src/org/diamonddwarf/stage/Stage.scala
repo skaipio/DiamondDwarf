@@ -6,6 +6,7 @@ import scala.collection.mutable.IndexedSeq
 import scala.collection.Iterable
 import scala.util.Random
 import org.diamonddwarf.items.Gem
+import org.diamonddwarf.stage._
 
 object Stage {
 
@@ -21,14 +22,18 @@ object Stage {
 class Stage(width: Int, height: Int, stones: Int, gems: Map[Gem, Int], basePosition: Coordinate) extends TileMap(width, height) {
   require(stones < width*height, "Not enough tiles for "+stones+" stones.")
   require(this.minTilesFromBorders(basePosition.x, basePosition.y, 1), "Not enough room for base at "+basePosition)
-  
+ 
+  this.setBaseAround(basePosition)
+ 
   {
-    var coordinatePairs = (0 until height).flatMap(y => (0 until width).map(x => (x, y)))
+    var coordinatePairs = (0 until height).flatMap(y => (0 until width).map(x => (x, y)))  
+    coordinatePairs = coordinatePairs.filter(c => this.getTileAt(c._1, c._2) != Tile.baseTile)
     coordinatePairs = Random.shuffle(coordinatePairs)
 
     for (gems_ <- gems) {
       for (_ <- 0 until gems_._2) {
         val (x, y) = coordinatePairs.head
+        
         this.setGemAt(x, y, gems_._1)
         coordinatePairs = coordinatePairs.tail
       }
@@ -36,12 +41,11 @@ class Stage(width: Int, height: Int, stones: Int, gems: Map[Gem, Int], basePosit
 
     for (_ <- 0 until stones) {
       val (x, y) = coordinatePairs.head
-      this.setTileAt(x, y, Tile.stoneTile)
+      this.setTileObjectAt(x, y, TileObject.stone)
       coordinatePairs = coordinatePairs.tail
     }  
   }
 
-  this.setBaseAround(basePosition)
   this.setPlayerPosition(basePosition)
   
   def setBaseAround(c: Coordinate) {
