@@ -14,9 +14,14 @@ class DiamondDwarf(val player: Player) {
   }
 
   def movePlayer(direction: Coordinate) {
+
     val toBePosition = direction + _activeMap.playerPosition
     if (_activeMap.inBounds(toBePosition) && _activeMap.getTileObjectAt(toBePosition).isPassable) {
-      _activeMap.setPlayerPosition(toBePosition)
+      if (!player.moving) {
+        player.moving = true
+        player.progress -= player.speed
+        _activeMap.setPlayerPosition(toBePosition)
+      }
     }
   }
 

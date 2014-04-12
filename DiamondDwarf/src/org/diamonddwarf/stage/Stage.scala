@@ -13,7 +13,7 @@ object Stage {
   val stage1 = new Stage(
       width = 8,
       height = 10, 
-      stones = 30, 
+      stones = 10, 
       gems = Map(Gem.goodGem -> 4, Gem.fineGem -> 3),
       basePosition = new Coordinate(4, 4))
 

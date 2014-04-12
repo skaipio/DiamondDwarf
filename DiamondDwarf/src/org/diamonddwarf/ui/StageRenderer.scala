@@ -25,13 +25,13 @@ class StageRenderer(game: DiamondDwarf, spriteMap: Map[GameObject, Array[Texture
 
   private val tileSize = 64
 
-  private var randomIds : Array[Array[Int]] = null
+  private var randomIds: Array[Array[Int]] = null
 
   private var playerTexture: Texture = null
 
   font.setColor(Color.BLACK)
-  
-  def setNewRandomIds(stage: TileMap){
+
+  def setNewRandomIds(stage: TileMap) {
     this.randomIds = Array.fill(stage.width, stage.height)(Random.nextInt.abs)
   }
 
@@ -71,12 +71,23 @@ class StageRenderer(game: DiamondDwarf, spriteMap: Map[GameObject, Array[Texture
         case _ =>
       }
 
+      batch.end()
+      batch.begin()
       if (game.activeMap.isPlayerAt(x, y)) {
-        batch.draw(this.playerTexture, x * tileSize, y * tileSize)
+        val (lerpx, lerpy) = actorDrawPosition(game.player, x, y)
+        batch.draw(this.playerTexture, lerpx, lerpy)
       }
     }
 
   }
+
+  private def actorDrawPosition(a: Actor, x: Int, y: Int) = {
+    val percent = this.game.player.progress / this.game.player.speed
+   (lerp((x - a.direction.x) * tileSize, x * tileSize, percent), 
+       lerp((y - a.direction.y) * tileSize, y * tileSize, percent))
+
+  }
+  private def lerp(start: Float, end: Float, percent: Float) = start + percent * (end - start)
 
   private def getTextureFromSpriteMap(gameObj: GameObject): Texture = {
     this.spriteMap.get(gameObj) match {
@@ -102,8 +113,8 @@ class StageRenderer(game: DiamondDwarf, spriteMap: Map[GameObject, Array[Texture
       i += 1
     }
   }
-  
-  private def getTextureOf(obj: GameObject, x: Int, y: Int) : Option[Texture] = {
+
+  private def getTextureOf(obj: GameObject, x: Int, y: Int): Option[Texture] = {
     this.spriteMap.get(obj) match {
       case Some(textures) => Some(textures(this.randomIds(x)(y) % textures.size))
       case _ => None
