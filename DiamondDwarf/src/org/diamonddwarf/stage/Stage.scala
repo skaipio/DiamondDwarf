@@ -9,16 +9,17 @@ import org.diamonddwarf.items.Gem
 
 object Stage {
 
-  val stage1 = new Stage(10, 10, 10, Map(Gem.goodGem -> 4, Gem.fineGem -> 3))
+  val stage1 = new Stage(25, 10, 30, Map(Gem.goodGem -> 4, Gem.fineGem -> 3))
 
 }
 
 class Stage(width: Int, height: Int, stones: Int, gemList: Map[Gem, Int]) extends TileMap(width, height) {
+  require(stones < width*height, "Not enough tiles for "+stones+" stones.")
   val exitToHomeBase : Coordinate = new Coordinate(width/2, 0)
   this.playerPosition = exitToHomeBase
   
   {
-    var coordinatePairs = (0 until height).flatMap(x => (0 until width).map(y => (x, y)))
+    var coordinatePairs = (0 until height).flatMap(y => (0 until width).map(x => (x, y)))
     coordinatePairs = Random.shuffle(coordinatePairs)
 
     for (gems <- gemList) {
