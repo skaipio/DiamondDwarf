@@ -62,8 +62,9 @@ class Game extends ApplicationListener {
     //    sprite.setPosition(-sprite.getWidth() / 2, -sprite.getHeight() / 2);
 
     Gdx.input.setInputProcessor(controller)
-    
+    println(resourceLoader)
     if (resourceLoader.tracks.size >= 1)
+      resourceLoader.tracks(0).setLooping(true)
       resourceLoader.tracks(0).play()
   }
 

@@ -23,8 +23,8 @@ class ResourceLoader {
   val tracks = this.loadAllTracks
 
   def loadAllTracks = {
-    val handles = Gdx.files.internal("tracks").list();
-    for (file <- handles) yield Gdx.audio.newMusic(file)   
+    val handles = Gdx.files.internal("bin/tracks").list();
+    for (file <- handles) yield Gdx.audio.newMusic(file)
   }
 
   def associateActorWithRegion(actor: Actor, region: String) {
