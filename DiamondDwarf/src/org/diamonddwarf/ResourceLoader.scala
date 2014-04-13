@@ -5,27 +5,37 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 import scala.collection.mutable.MutableList
 import org.diamonddwarf.stage._
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.utils.Array
 
-protected object ResourceLoader {
-  def getBaseTiles = getTexturesFromPaths("textures/base.png")
-  def getStoneTiles = getTexturesFromPaths("textures/stone.png")
-  def getDiggableTiles = getTexturesFromPaths("textures/grass1.png","textures/grass2.png")
-  def getHoleObjects = getTexturesFromPaths("textures/hole.png")
-  def getStoneObjects = getTexturesFromPaths("textures/stone.png")
-  
-  // TODO: Textures need to be disposed of on game.dispose() call
-   def spriteMap = Map(
-    Tile.baseTile -> ResourceLoader.getBaseTiles,
-    Tile.diggableTile -> ResourceLoader.getDiggableTiles,
-    TileObject.stone -> ResourceLoader.getStoneObjects,
-    TileObject.hole -> ResourceLoader.getHoleObjects)
-    
-  private def getTexturesFromPaths(paths : String*) = {
-    val textures = for (path <- paths) yield {
-      val tex = new Texture(Gdx.files.internal(path))
-      tex.setFilter(TextureFilter.Linear, TextureFilter.Linear)
-      tex
+class ResourceLoader {
+  val atlas = new TextureAtlas(Gdx.files.internal("packedTextures.atlas"))
+  val textureRegionMapForActors = scala.collection.mutable.Map[Actor, Array[AtlasRegion]]()
+  val textureRegionMapForVariants = Map(
+    Tile.baseTile -> this.getBaseTiles,
+    Tile.diggableTile -> this.getDiggableTiles,
+    TileObject.stone -> this.getStoneObjects,
+    TileObject.hole -> this.getHoleObjects)
+
+  def associateActorWithRegion(actor: Actor, region: String) {
+    this.textureRegionMapForActors.get(actor) match {
+      case Some(_) =>
+      case _ =>
+        val regions = this.atlas.findRegions(region)
+        this.textureRegionMapForActors += actor -> regions
     }
-    textures.toArray
+
   }
+
+  // TODO: Textures need to be disposed of on game.dispose() call
+  // TODO: Call dispose in Game.dispose()
+  def dispose() = this.atlas.dispose()
+
+  private def getBaseTiles = atlas.findRegions("tile/base")
+  private def getDiggableTiles = atlas.findRegions("tile/grass")
+  private def getHoleObjects = atlas.findRegions("tileobj/hole")
+  private def getStoneObjects = atlas.findRegions("tileobj/stone")
+
 }

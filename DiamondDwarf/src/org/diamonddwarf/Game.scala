@@ -16,11 +16,14 @@ import org.diamonddwarf.ui.StageRenderer
 import org.diamonddwarf.ui.InventoryRenderer
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.Input.Keys
+import org.diamonddwarf.ui.AnimationFactory
 
 class Game extends ApplicationListener {
   private var batch : SpriteBatch = null
   private var stageRenderer: StageRenderer = null
   private var inventoryRenderer : InventoryRenderer = null
+  private var resourceLoader : ResourceLoader = null
+  private var animFactory : AnimationFactory = null
 
   private var texture: Texture = null
   private var sprite: Sprite = null
@@ -34,12 +37,21 @@ class Game extends ApplicationListener {
 
   override def create() {
     batch = new SpriteBatch
-    stageRenderer = new StageRenderer(game, batch, ResourceLoader.spriteMap)
+    
+    resourceLoader = new ResourceLoader
+    resourceLoader.associateActorWithRegion(game.player, "tileobj/dwarf")
+    
+    stageRenderer = new StageRenderer(game, batch, resourceLoader)
     stageRenderer.create
     stageRenderer.setNewRandomIds(Stage.stage1)
     
     inventoryRenderer = new InventoryRenderer(game, batch)
     inventoryRenderer.create
+    
+    animFactory = new AnimationFactory(resourceLoader)
+    
+    player.defaultTextureRegion = animFactory.dwarfIdle
+    player.associateStateWithAnim(Moving(), animFactory.createDwarfMoveAnim)
     
 
     //    val region = new TextureRegion(texture, 0, 0, 512, 275)
@@ -56,20 +68,25 @@ class Game extends ApplicationListener {
     this.batch.dispose()
     stageRenderer.dispose;
     inventoryRenderer.dispose
+    resourceLoader.dispose
   }
 
   private def checkInput() {
     if (player.moving) return
     if (Gdx.input.isKeyPressed(Keys.A)) {
+      game.player.state = Moving()
       game.player.direction = Coordinate.Left
       game.movePlayer(Coordinate.Left)
     } else if (Gdx.input.isKeyPressed(Keys.D)) {
+      game.player.state = Moving()
       game.player.direction = Coordinate.Right
       game.movePlayer(Coordinate.Right)
     } else if (Gdx.input.isKeyPressed(Keys.W)) {
+      game.player.state = Moving()
       game.player.direction = Coordinate.Up
       game.movePlayer(Coordinate.Up)
     } else if (Gdx.input.isKeyPressed(Keys.S)) {
+      game.player.state = Moving()
       game.player.direction = Coordinate.Down
       game.movePlayer(Coordinate.Down)
 
