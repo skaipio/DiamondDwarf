@@ -62,6 +62,9 @@ class Game extends ApplicationListener {
     //    sprite.setPosition(-sprite.getWidth() / 2, -sprite.getHeight() / 2);
 
     Gdx.input.setInputProcessor(controller)
+    
+    if (resourceLoader.tracks.size >= 1)
+      resourceLoader.tracks(0).play()
   }
 
   override def dispose() {

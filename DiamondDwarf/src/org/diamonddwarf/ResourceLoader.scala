@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.audio.Music
 
 class ResourceLoader {
   val atlas = new TextureAtlas(Gdx.files.internal("packedTextures.atlas"))
@@ -18,6 +19,13 @@ class ResourceLoader {
     Tile.diggableTile -> this.getDiggableTiles,
     TileObject.stone -> this.getStoneObjects,
     TileObject.hole -> this.getHoleObjects)
+
+  val tracks = this.loadAllTracks
+
+  def loadAllTracks = {
+    val handles = Gdx.files.internal("tracks").list();
+    for (file <- handles) yield Gdx.audio.newMusic(file)   
+  }
 
   def associateActorWithRegion(actor: Actor, region: String) {
     this.textureRegionMapForActors.get(actor) match {
