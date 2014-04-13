@@ -11,8 +11,8 @@ import org.diamonddwarf.stage._
 object Stage {
 
   val stage1 = new Stage(
-      width = 8,
-      height = 10, 
+      width = 18,
+      height = 12, 
       stones = 10, 
       gems = Map(Gem.goodGem -> 4, Gem.fineGem -> 3),
       basePosition = new Coordinate(4, 4))

@@ -50,7 +50,7 @@ class StageRenderer(game: DiamondDwarf, private val batch : SpriteBatch, private
   }
 
   def render() {
-    //    batch.setProjectionMatrix(camera.combined);
+       // batch.setProjectionMatrix(camera.combined);
     batch.begin()
     this.renderTiles
     batch.end()
@@ -82,6 +82,10 @@ class StageRenderer(game: DiamondDwarf, private val batch : SpriteBatch, private
         	batch.draw(game.player.getTextureRegion, lerpx, lerpy)
       }
     }
+  //  if (game.activeMap.isPlayerAt(x, y)) {
+        val (lerpx, lerpy) = actorDrawPosition(game.player, game.activeMap.playerPosition.x, game.activeMap.playerPosition.y)
+        batch.draw(this.playerTexture, lerpx, lerpy)
+      
 
   }
 
