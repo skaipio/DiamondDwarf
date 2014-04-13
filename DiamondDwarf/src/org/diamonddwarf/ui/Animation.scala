@@ -23,13 +23,14 @@ class Animation(private val frames : Array[(TextureRegion, Float)]) {
   }
   
   def update(delta: Float) {
-//    if (stopped) return
+    if (stopped) return
     timer += delta
     val currentFrame = frames(currentFrameIndex)
     if (timer >= currentFrame._2){
       currentFrameIndex += 1
       currentFrameIndex = currentFrameIndex % frames.size
       timer -= currentFrame._2
+    
     }
   }
   

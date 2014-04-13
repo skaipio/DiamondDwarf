@@ -72,32 +72,33 @@ class Game extends ApplicationListener {
   }
 
   private def checkInput() {
-    if (player.moving) return
+	if (player.state == Moving()) return
     if (Gdx.input.isKeyPressed(Keys.A)) {
-      game.player.state = Moving()
       game.player.direction = Coordinate.Left
+      game.player.facing = Coordinate.Left
       game.movePlayer(Coordinate.Left)
     } else if (Gdx.input.isKeyPressed(Keys.D)) {
-      game.player.state = Moving()
       game.player.direction = Coordinate.Right
+      game.player.facing = Coordinate.Right
       game.movePlayer(Coordinate.Right)
     } else if (Gdx.input.isKeyPressed(Keys.W)) {
-      game.player.state = Moving()
       game.player.direction = Coordinate.Up
       game.movePlayer(Coordinate.Up)
     } else if (Gdx.input.isKeyPressed(Keys.S)) {
-      game.player.state = Moving()
       game.player.direction = Coordinate.Down
       game.movePlayer(Coordinate.Down)
 
     } else if (Gdx.input.isKeyPressed(Keys.SPACE)) {
       game.playerDig
     }
+   // else player.state = Idle()
   }
 
   override def render() {
-    checkInput
+  
+   
     player.update(Gdx.graphics.getDeltaTime())
+     checkInput
 
     Gdx.gl.glClearColor(0,0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

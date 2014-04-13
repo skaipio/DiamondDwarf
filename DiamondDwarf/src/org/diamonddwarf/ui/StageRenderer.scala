@@ -15,11 +15,11 @@ import org.diamonddwarf.ResourceLoader
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import scala.util.control.Exception
 
-class StageRenderer(game: DiamondDwarf, private val batch : SpriteBatch, private val rl: ResourceLoader) {
+class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch, private val rl: ResourceLoader) {
   private var camera: OrthographicCamera = null
   private val font = new BitmapFont
 
-  private val mapXOffset = 20 
+  private val mapXOffset = 20
   private val mapYOffset = 50
 
   private val inventoryXOffset = 250
@@ -50,14 +50,14 @@ class StageRenderer(game: DiamondDwarf, private val batch : SpriteBatch, private
   }
 
   def render() {
-       // batch.setProjectionMatrix(camera.combined);
+    // batch.setProjectionMatrix(camera.combined);
     batch.begin()
     this.renderTiles
     batch.end()
   }
 
   def dispose = {
-   
+
   }
 
   private def renderTiles {
@@ -75,24 +75,21 @@ class StageRenderer(game: DiamondDwarf, private val batch : SpriteBatch, private
 
       batch.end()
       batch.begin()
-      if (game.activeMap.isPlayerAt(x, y)) {
-        val (lerpx, lerpy) = actorDrawPosition(game.player, x, y)
-        val textureRegion = game.player.getTextureRegion
-        if (textureRegion != null)
-        	batch.draw(game.player.getTextureRegion, lerpx, lerpy)
-      }
+
     }
-  //  if (game.activeMap.isPlayerAt(x, y)) {
-        val (lerpx, lerpy) = actorDrawPosition(game.player, game.activeMap.playerPosition.x, game.activeMap.playerPosition.y)
-        batch.draw(this.playerTexture, lerpx, lerpy)
-      
+
+    val (lerpx, lerpy) = actorDrawPosition(game.player, game.activeMap.playerPosition.x, game.activeMap.playerPosition.y)
+    val textureRegion = game.player.getTextureRegion
+    if (textureRegion != null)
+     
+      batch.draw(game.player.getTextureRegion, lerpx, lerpy)
 
   }
 
   private def actorDrawPosition(a: Actor, x: Int, y: Int) = {
     val percent = this.game.player.progress / this.game.player.speed
-   (lerp((x - a.direction.x) * tileSize, x * tileSize, percent), 
-       lerp((y - a.direction.y) * tileSize, y * tileSize, percent))
+    (lerp((x - a.direction.x) * tileSize, x * tileSize, percent),
+      lerp((y - a.direction.y) * tileSize, y * tileSize, percent))
 
   }
   private def lerp(start: Float, end: Float, percent: Float) = start + percent * (end - start)
@@ -106,8 +103,8 @@ class StageRenderer(game: DiamondDwarf, private val batch : SpriteBatch, private
         return null
     }
   }
-  
-  private def getTextureOf(obj: GameObject, x: Int, y: Int) : Option[TextureRegion] = {
+
+  private def getTextureOf(obj: GameObject, x: Int, y: Int): Option[TextureRegion] = {
     this.rl.textureRegionMapForVariants.get(obj) match {
       case Some(textures) =>
         if (textures.size == 0) throw new Exception("No textures found for " + obj.toString())
