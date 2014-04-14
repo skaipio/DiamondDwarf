@@ -81,16 +81,21 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch, private 
     val (lerpx, lerpy) = actorDrawPosition(game.player, game.activeMap.playerPosition.x, game.activeMap.playerPosition.y)
     val textureRegion = game.player.getTextureRegion
     if (textureRegion != null)
-     
+
       batch.draw(game.player.getTextureRegion, lerpx, lerpy)
 
   }
 
   private def actorDrawPosition(a: Actor, x: Int, y: Int) = {
-    val percent = this.game.player.progress / this.game.player.speed
+    var percent = 1.0f
+    this.game.player.state match {
+      case s: Moving =>
+        percent = s.progress / s.speed
+        
+      case _ =>
+    }
     (lerp((x - a.direction.x) * tileSize, x * tileSize, percent),
-      lerp((y - a.direction.y) * tileSize, y * tileSize, percent))
-
+          lerp((y - a.direction.y) * tileSize, y * tileSize, percent))
   }
   private def lerp(start: Float, end: Float, percent: Float) = start + percent * (end - start)
 

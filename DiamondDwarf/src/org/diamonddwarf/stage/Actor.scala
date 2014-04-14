@@ -3,12 +3,12 @@ package org.diamonddwarf.stage
 import org.diamonddwarf.ui.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 
-class Actor(val speed: Float) {
+class Actor() {
   var state: State = Idle()
   var nextState: State = Idle()
   var direction = Coordinate.Zero
   var facing = Coordinate.Right
-  var progress = speed
+  //var progress = speed
   var defaultTextureRegion: TextureRegion = null
   private var animationMap = scala.collection.mutable.Map[State, Animation]()
 
@@ -38,10 +38,19 @@ class Actor(val speed: Float) {
 
   def update(delta: Float) {
     this.updateAnim(delta)
-    if (state == Moving()) {
-      progress += delta
-      if (progress >= speed) { state = Idle(); }
-    } else { progress = speed; }
+    this.state match{
+      case s : Moving =>
+        s.progress += delta
+        if (s.progress >= s.speed)
+          this.state = Idle()
+        else s.progress += delta
+      case s : Digging =>
+        s.progress += delta
+        if (s.progress >= s.speed)
+          this.state = Idle()
+        else s.progress += delta
+      case _ =>
+    }
   }
 
   def updateAnim(delta: Float) {

@@ -32,3 +32,5 @@ local.properties
 #AndroidProguard
 proguard_cache/
 .cache
+
+packedTextures*

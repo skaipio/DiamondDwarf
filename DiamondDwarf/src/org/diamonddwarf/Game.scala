@@ -51,7 +51,8 @@ class Game extends ApplicationListener {
     animFactory = new AnimationFactory(resourceLoader)
     
     player.defaultTextureRegion = animFactory.dwarfIdle
-    player.associateStateWithAnim(Moving(), animFactory.createDwarfMoveAnim)
+    player.associateStateWithAnim(Moving(0.3f), animFactory.createDwarfMoveAnim)
+    player.associateStateWithAnim(Digging(1.0f), animFactory.createDwarDigAnim)
     
 
     //    val region = new TextureRegion(texture, 0, 0, 512, 275)
@@ -76,7 +77,11 @@ class Game extends ApplicationListener {
   }
 
   private def checkInput() {
-	if (player.state == Moving()) return
+    player.state match {
+      case _ : Moving => return
+      case _ : Digging => return
+      case _ =>
+    }
     if (Gdx.input.isKeyPressed(Keys.A)) {
       game.player.direction = Coordinate.Left
       game.player.facing = Coordinate.Left
@@ -95,7 +100,6 @@ class Game extends ApplicationListener {
     } else if (Gdx.input.isKeyPressed(Keys.SPACE)) {
       game.playerDig
     }
-   // else player.state = Idle()
   }
 
   override def render() {
