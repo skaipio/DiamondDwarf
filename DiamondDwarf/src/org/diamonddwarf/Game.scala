@@ -51,8 +51,8 @@ class Game extends ApplicationListener {
     animFactory = new AnimationFactory(resourceLoader)
     
     player.defaultTextureRegion = animFactory.dwarfIdle
-    player.associateStateWithAnim(Moving(0.3f), animFactory.createDwarfMoveAnim)
-    player.associateStateWithAnim(Digging(1.0f), animFactory.createDwarDigAnim)
+    player.associateStateWithAnim(Moving(), animFactory.createDwarfMoveAnim)
+    player.associateStateWithAnim(Digging(), animFactory.createDwarfDigAnim)
     
 
     //    val region = new TextureRegion(texture, 0, 0, 512, 275)

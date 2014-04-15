@@ -11,15 +11,20 @@ class Animation(private val frames : Array[(TextureRegion, Float)]) {
     stopped = false
   }
   def stop{
-    timer = 0.0f
+    this.reset
     stopped = true
   }
   def pause{
     stopped = true
   }
   def restart{
-    timer = 0.0f
+    this.reset
     stopped = false
+  }
+  
+  def reset {
+    currentFrameIndex = 0
+    timer = 0.0f
   }
   
   def update(delta: Float) {

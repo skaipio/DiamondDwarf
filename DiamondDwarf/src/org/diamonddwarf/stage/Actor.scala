@@ -35,6 +35,14 @@ class Actor() {
   def associateStateWithAnim(state: State, anim: Animation) {
     this.animationMap += state -> anim
   }
+  
+  def resetAnimOfState(state: State){
+    this.animationMap.get(state) match {
+      case Some(anim) =>
+        anim.restart
+      case _ =>
+    }
+  }
 
   def update(delta: Float) {
     this.updateAnim(delta)
