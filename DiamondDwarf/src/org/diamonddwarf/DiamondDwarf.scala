@@ -21,20 +21,21 @@ class DiamondDwarf(val player: Player) {
     }
   }
 
-  def playerDig = {    
-    player.states.activate(player.states.digging)
-    player.states.activeState.onceComplete(digFinished)
-    player.resetAnimOfState(player.states.digging)
+  def playerDig = {
+    if (this.activeMap.playerTile == Tile.diggableTile && !this.activeMap.isDug(this.activeMap.playerPosition) && player.canDig) {
+      player.states.activate(player.states.digging)
+      player.states.activeState.onceComplete(digFinished)
+      player.resetAnimOfState(player.states.digging)
+    }
   }
 
   private def digFinished {
-    if (this.activeMap.playerTile == Tile.diggableTile && !this.activeMap.isDug(this.activeMap.playerPosition) && player.canDig) {
-      activeMap.removeGemAt(this.activeMap.playerPosition) match {
-        case Some(gem) => player.give(gem)
-        case _ =>
-      }
-      activeMap.setDugAt(this.activeMap.playerPosition)
-      player.depleteShovel
+    activeMap.removeGemAt(this.activeMap.playerPosition) match {
+      case Some(gem) => player.give(gem)
+      case _ =>
     }
+    activeMap.setDugAt(this.activeMap.playerPosition)
+    player.depleteShovel
+
   }
 }
