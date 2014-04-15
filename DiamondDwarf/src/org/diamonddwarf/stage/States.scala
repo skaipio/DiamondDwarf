@@ -9,18 +9,17 @@ class States(moveSpeed: Float, digSpeed: Float) {
   var activeState: State = idle
   var nextState: State = idle
 
-  def activate(state: State) {
-    this.activeState = state
+  def activate(state: State) {   
     if (this.activeState.toBePerformed != null) {
       this.activeState.toBePerformed()
     }
+    this.activeState = state
     state.reset
   }
 
   def update(delta: Float) {
     this.activeState.progress += delta
     if (this.activeState.progress >= this.activeState.speed) {
-
       this.activate(nextState)
     }
   }

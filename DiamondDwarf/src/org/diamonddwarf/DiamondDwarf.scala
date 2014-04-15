@@ -16,17 +16,18 @@ class DiamondDwarf(val player: Player) {
   def movePlayer(direction: Coordinate) {
     val toBePosition = direction + _activeMap.playerPosition
     if (_activeMap.inBounds(toBePosition) && _activeMap.getTileObjectAt(toBePosition).isPassable) {
-      player.states.activate(player.states.moving) 
+      player.states.activate(player.states.moving)
       _activeMap.setPlayerPosition(toBePosition)
     }
   }
 
-  def hessu { println("hessu") }
-  
-  def playerDig = {
-    player.states.activeState.onceComplete(hessu)
-    player.states.activate(player.states.digging) 
+  def playerDig = {    
+    player.states.activate(player.states.digging)
+    player.states.activeState.onceComplete(digFinished)
     player.resetAnimOfState(player.states.digging)
+  }
+
+  private def digFinished {
     if (this.activeMap.playerTile == Tile.diggableTile && !this.activeMap.isDug(this.activeMap.playerPosition) && player.canDig) {
       activeMap.removeGemAt(this.activeMap.playerPosition) match {
         case Some(gem) => player.give(gem)
