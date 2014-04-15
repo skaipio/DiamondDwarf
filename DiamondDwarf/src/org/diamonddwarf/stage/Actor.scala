@@ -4,17 +4,18 @@ import org.diamonddwarf.ui.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 
 class Actor() {
-  var state: State = Idle()
-  var nextState: State = Idle()
+  
+  var states : States = null
+  
   var direction = Coordinate.Zero
   var facing = Coordinate.Right
-  //var progress = speed
+
   var defaultTextureRegion: TextureRegion = null
   private var animationMap = scala.collection.mutable.Map[State, Animation]()
 
   def getTextureRegion = {
     var region: TextureRegion = null
-    this.animationMap.get(state) match {
+    this.animationMap.get(states.activeState) match {
       case Some(anim) =>
         region = anim.getCurrentFrame
       case _ => region = defaultTextureRegion
@@ -46,23 +47,11 @@ class Actor() {
 
   def update(delta: Float) {
     this.updateAnim(delta)
-    this.state match{
-      case s : Moving =>
-        s.progress += delta
-        if (s.progress >= s.speed)
-          this.state = Idle()
-        else s.progress += delta
-      case s : Digging =>
-        s.progress += delta
-        if (s.progress >= s.speed)
-          this.state = Idle()
-        else s.progress += delta
-      case _ =>
-    }
+    this.states.update(delta)
   }
 
   def updateAnim(delta: Float) {
-    this.animationMap.get(state) match {
+    this.animationMap.get(this.states.activeState) match {
       case Some(anim) => anim.update(delta)
       case _ =>
     }

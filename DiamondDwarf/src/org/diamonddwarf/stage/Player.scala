@@ -5,8 +5,12 @@ import org.diamonddwarf.items.Gem
 import org.diamonddwarf.items.Shovel
 
 class Player(val name: String) extends Actor() {
+
   var movingSpeed = 0.3f
   var diggingSpeed = 4*0.6f
+  
+  this.states = new States(movingSpeed, diggingSpeed)
+  
   var money = 0
   var shovel: Shovel = null
   val inventory = Map[Gem, Int]()

@@ -51,8 +51,8 @@ class Game extends ApplicationListener {
     animFactory = new AnimationFactory(resourceLoader)
     
     player.defaultTextureRegion = animFactory.dwarfIdle
-    player.associateStateWithAnim(Moving(), animFactory.createDwarfMoveAnim)
-    player.associateStateWithAnim(Digging(), animFactory.createDwarfDigAnim)
+    player.associateStateWithAnim(player.states.moving, animFactory.createDwarfMoveAnim)
+    player.associateStateWithAnim(player.states.digging, animFactory.createDwarfDigAnim)
     
 
     //    val region = new TextureRegion(texture, 0, 0, 512, 275)
@@ -77,7 +77,7 @@ class Game extends ApplicationListener {
   }
 
   private def checkInput() {
-    player.state match {
+    player.states.activeState match {
       case _ : Moving => return
       case _ : Digging => return
       case _ =>
