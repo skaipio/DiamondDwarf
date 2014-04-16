@@ -11,6 +11,9 @@ class Player(val name: String) extends Actor() {
   
   this.states = new States(movingSpeed, diggingSpeed)
   
+  this.activeState = states.idle
+  this.nextState = states.idle
+  
   var money = 0
   var shovel: Shovel = null
   val inventory = Map[Gem, Int]()

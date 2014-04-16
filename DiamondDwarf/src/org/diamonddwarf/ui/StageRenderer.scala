@@ -88,7 +88,7 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch, private 
 
   private def actorDrawPosition(a: Actor, x: Int, y: Int) = {
     var percent = 1.0f
-    val state = this.game.player.states.activeState
+    val state = this.game.player.activeState
     if (state == this.game.player.states.moving)
         percent = state.progress / state.speed
   

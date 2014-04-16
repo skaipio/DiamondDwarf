@@ -17,21 +17,21 @@ class DiamondDwarf(val player: Player) {
   def movePlayer(direction: Coordinate) {
     val toBePosition = direction + _activeMap.playerPosition
     if (_activeMap.inBounds(toBePosition) && _activeMap.getTileObjectAt(toBePosition).isPassable) {
-      player.states.activate(player.states.moving)
+      player.activate(player.states.moving)
       _activeMap.setPlayerPosition(toBePosition)
     }
   }
 
   def playerDig {
     if (this.activeMap.playerTile == Tile.diggableTile && !this.activeMap.isDug(this.activeMap.playerPosition) && player.canDig) {
-      player.states.activate(player.states.digging)
-      player.states.activeState.onceComplete(digFinished)
+      player.activate(player.states.digging)
+      player.activeState.onceComplete(digFinished)
       player.resetAnimOfState(player.states.digging)
     }
   }
   
-  def detectOre = {
-    player.states.activate(player.states.detectingGems)
+  def detectGems = {
+    player.activate(player.states.detectingGems)
     val playerPos = this.activeMap.playerPosition
     this.activeMap.gemsBetween(playerPos+Coordinate(-1, -1), playerPos+Coordinate(1, 1)).length
   }

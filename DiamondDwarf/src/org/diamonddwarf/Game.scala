@@ -19,6 +19,7 @@ import com.badlogic.gdx.Input.Keys
 import org.diamonddwarf.ui.AnimationFactory
 import org.diamonddwarf.resources.ResourceLoader
 import org.diamonddwarf.factories.StageFactory
+import org.diamonddwarf.resources.Sounds
 
 class Game extends ApplicationListener {
   private var batch: SpriteBatch = null
@@ -40,12 +41,12 @@ class Game extends ApplicationListener {
   override def create() {
     batch = new SpriteBatch
     resourceLoader = new ResourceLoader
+    resourceLoader.associateActorWithRegion(game.player, "tileobj/dwarf")
+    
     val stageFactory = new StageFactory(resourceLoader)
-    val stage = stageFactory.createStage(2)
+    val stage = stageFactory.createStage(0)
     
     game.startStage(stage)
-    
-    resourceLoader.associateActorWithRegion(game.player, "tileobj/dwarf")
 
     stageRenderer = new StageRenderer(game, batch, resourceLoader)
     stageRenderer.create
@@ -55,22 +56,19 @@ class Game extends ApplicationListener {
     inventoryRenderer.create
 
     animFactory = new AnimationFactory(resourceLoader)
+    
+    val sounds = new Sounds(this.resourceLoader)
 
     player.defaultTextureRegion = animFactory.dwarfIdle
     player.associateStateWithAnim(player.states.moving, animFactory.createDwarfMoveAnim)
     player.associateStateWithAnim(player.states.digging, animFactory.createDwarfDigAnim)
-
-    //    val region = new TextureRegion(texture, 0, 0, 512, 275)
-    //
-    //    sprite = new Sprite(region);
-    //    sprite.setSize(0.9f, 0.9f * sprite.getHeight() / sprite.getWidth());
-    //    sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
-    //    sprite.setPosition(-sprite.getWidth() / 2, -sprite.getHeight() / 2);
+    player.associateStateWithSound(player.states.detectingGems, sounds.dwarfNope)
 
     Gdx.input.setInputProcessor(controller)
-    if (resourceLoader.tracks.size >= 1)
-      resourceLoader.tracks(0).setLooping(true)
-    resourceLoader.tracks(0).play()
+    if (resourceLoader.hasTrack(0)){}
+     val track = resourceLoader.getTrack(0)
+     track.setLooping(true)
+     track.play()
   }
 
   override def dispose() {
@@ -81,7 +79,7 @@ class Game extends ApplicationListener {
   }
 
   private def checkInput() {
-    if (player.states.activeState != player.states.idle) return
+    if (player.activeState != player.states.idle) return
     if (Gdx.input.isKeyPressed(Keys.A)) {
       game.player.direction = Coordinate.Left
       game.player.facing = Coordinate.Left
@@ -101,8 +99,7 @@ class Game extends ApplicationListener {
       game.playerDig
 
     } else if (Gdx.input.isKeyPressed(Keys.F)) {
-      resourceLoader.tracks(1).play()
-      println(game.detectOre)
+      println(game.detectGems)
     }
   }
 
