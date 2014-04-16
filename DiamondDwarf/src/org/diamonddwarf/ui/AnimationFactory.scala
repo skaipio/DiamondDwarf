@@ -1,6 +1,6 @@
 package org.diamonddwarf.ui
 
-import org.diamonddwarf.ResourceLoader
+import org.diamonddwarf.resources.ResourceLoader
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 

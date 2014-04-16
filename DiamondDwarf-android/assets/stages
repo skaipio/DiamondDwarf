@@ -1,0 +1,18 @@
+[
+	{
+		gemCounts:[5,4,3,2,1],
+		width:10,
+		height:10,
+		stones:10,
+		baseX:4,
+		baseY:4
+	},	
+	{
+		gemCounts:[1,2,3,4,5],
+		width:8,
+		height:8,
+		stones:5,
+		baseX:4,
+		baseY:4
+	}
+]

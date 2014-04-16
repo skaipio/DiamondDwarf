@@ -8,17 +8,6 @@ import scala.util.Random
 import org.diamonddwarf.items.Gem
 import org.diamonddwarf.stage._
 
-object Stage {
-
-  val stage1 = new Stage(
-      width = 18,
-      height = 12,
-      stones = 10, 
-      gems = Map(Gem.goodGem -> 40, Gem.fineGem -> 30),
-      basePosition = new Coordinate(4, 4))
-
-}
-
 class Stage(width: Int, height: Int, stones: Int, gems: Map[Gem, Int], basePosition: Coordinate) extends TileMap(width, height) {
   require(stones < width*height, "Not enough tiles for "+stones+" stones.")
   require(this.minTilesFromBorders(basePosition.x, basePosition.y, 1), "Not enough room for base at "+basePosition)

@@ -11,7 +11,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 import scala.util.Random
 import com.badlogic.gdx.graphics.OrthographicCamera
-import org.diamonddwarf.ResourceLoader
+import org.diamonddwarf.resources.ResourceLoader
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import scala.util.control.Exception
 

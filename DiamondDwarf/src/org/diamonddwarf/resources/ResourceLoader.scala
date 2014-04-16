@@ -1,19 +1,15 @@
-package org.diamonddwarf
-
-import com.badlogic.gdx.graphics.Texture
+package org.diamonddwarf.resources
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture.TextureFilter
-import scala.collection.mutable.MutableList
 import org.diamonddwarf.stage._
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
-import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.audio.Music
+import com.google.gson.JsonObject
+import com.google.gson.Gson
+import java.nio.file.Files
 
 class ResourceLoader {
   val atlas = new TextureAtlas(Gdx.files.internal("packedTextures.atlas"))
-  val textureRegionMapForActors = scala.collection.mutable.Map[Actor, Array[AtlasRegion]]()
+  val textureRegionMapForActors = scala.collection.mutable.Map[Actor, com.badlogic.gdx.utils.Array[AtlasRegion]]()
   val textureRegionMapForVariants = Map(
     Tile.baseTile -> this.getBaseTiles,
     Tile.diggableTile -> this.getDiggableTiles,
@@ -21,6 +17,25 @@ class ResourceLoader {
     TileObject.hole -> this.getHoleObjects)
 
   val tracks = this.loadAllTracks
+  
+  // Load stage data from "assets/stages"-file
+  private val stageData = {
+    val file = Gdx.files.internal("stages")
+    if (file.exists()){
+      val content = new String(file.readBytes())
+      val gson = new Gson()
+      gson.fromJson(content, classOf[Array[StageData]])
+    }else{
+      throw new Exception("File \"assets/stages\" is required for instantiating stages, but was not found.")
+      Array[StageData]()
+    }
+    
+  }
+  
+  def getStageDataFor(stageNum: Int) = {
+    require(stageNum-1 >= 0 && stageNum-1 <= stageData.length, "Stage number " + stageNum+ " does not exist.")
+    stageData(stageNum-1)
+  }
 
   def loadAllTracks = {
     val handles = Gdx.files.internal("bin/tracks").list();

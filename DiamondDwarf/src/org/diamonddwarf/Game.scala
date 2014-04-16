@@ -17,6 +17,8 @@ import org.diamonddwarf.ui.InventoryRenderer
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.Input.Keys
 import org.diamonddwarf.ui.AnimationFactory
+import org.diamonddwarf.resources.ResourceLoader
+import org.diamonddwarf.factories.StageFactory
 
 class Game extends ApplicationListener {
   private var batch: SpriteBatch = null
@@ -31,20 +33,24 @@ class Game extends ApplicationListener {
   private var player = new Player("Hessu")
   private var game = new DiamondDwarf(player)
 
-  game.startStage(Stage.stage1)
+  
 
   val controller = new Controller(game)
 
   override def create() {
     batch = new SpriteBatch
-
     resourceLoader = new ResourceLoader
+    val stageFactory = new StageFactory(resourceLoader)
+    val stage = stageFactory.createStage(2)
+    
+    game.startStage(stage)
+    
     resourceLoader.associateActorWithRegion(game.player, "tileobj/dwarf")
 
     stageRenderer = new StageRenderer(game, batch, resourceLoader)
     stageRenderer.create
-    stageRenderer.setNewRandomIds(Stage.stage1)
-
+    stageRenderer.setNewRandomIds(stage)
+    
     inventoryRenderer = new InventoryRenderer(game, batch)
     inventoryRenderer.create
 
@@ -62,7 +68,6 @@ class Game extends ApplicationListener {
     //    sprite.setPosition(-sprite.getWidth() / 2, -sprite.getHeight() / 2);
 
     Gdx.input.setInputProcessor(controller)
-    println(resourceLoader)
     if (resourceLoader.tracks.size >= 1)
       resourceLoader.tracks(0).setLooping(true)
     resourceLoader.tracks(0).play()
