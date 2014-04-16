@@ -14,7 +14,7 @@ object Stage {
       width = 18,
       height = 12, 
       stones = 10, 
-      gems = Map(Gem.goodGem -> 4, Gem.fineGem -> 3),
+      gems = Map(Gem.goodGem -> 40, Gem.fineGem -> 30),
       basePosition = new Coordinate(4, 4))
 
 }

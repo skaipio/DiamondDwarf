@@ -5,5 +5,5 @@ case class Shovel private(val name: String, var digsLeft: Int) {
 }
 
 object Shovel{
-  val shabbyShovel = new Shovel("Shabby shovel", 3)
+  val shabbyShovel = new Shovel("Shabby shovel", 30)
 }
