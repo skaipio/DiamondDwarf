@@ -34,41 +34,43 @@ class Game extends ApplicationListener {
   private var player = new Player("Hessu")
   private var game = new DiamondDwarf(player)
 
-  
-
   val controller = new Controller(game)
 
   override def create() {
     batch = new SpriteBatch
     resourceLoader = new ResourceLoader
     resourceLoader.associateActorWithRegion(game.player, "tileobj/dwarf")
-    
+
     val stageFactory = new StageFactory(resourceLoader)
     val stage = stageFactory.createStage(0)
-    
+
     game.startStage(stage)
 
     stageRenderer = new StageRenderer(game, batch, resourceLoader)
     stageRenderer.create
     stageRenderer.setNewRandomIds(stage)
-    
+
     inventoryRenderer = new InventoryRenderer(game, batch)
     inventoryRenderer.create
 
     animFactory = new AnimationFactory(resourceLoader)
-    
+
     val sounds = new Sounds(this.resourceLoader)
 
     player.defaultTextureRegion = animFactory.dwarfIdle
+
     player.associateStateWithAnim(player.states.moving, animFactory.createDwarfMoveAnim)
     player.associateStateWithAnim(player.states.digging, animFactory.createDwarfDigAnim)
-    player.associateStateWithSound(player.states.detectingGems, sounds.dwarfNope)
+    // player.associateStateWithSound(player.states.detectingGems, sounds.dwarfNope)
+    player.associateStateWithSound(player.states.noGemsFound, sounds.dwarfNope)
+    player.associateStateWithSound(player.states.foundGems, sounds.foundGems)
+    player.associateStateWithSound(player.states.digging, sounds.digging)
 
     Gdx.input.setInputProcessor(controller)
-    if (resourceLoader.hasTrack(0)){}
-     val track = resourceLoader.getTrack(0)
-     track.setLooping(true)
-     track.play()
+    if (resourceLoader.hasTrack(0)) {}
+    val track = resourceLoader.getTrack(0)
+    track.setLooping(true)
+    track.play()
   }
 
   override def dispose() {

@@ -9,7 +9,9 @@ import com.badlogic.gdx.Audio
 class Sounds(private val resources: ResourceLoader) {
   private val logger = Logger.getAnonymousLogger()
   
+  val digging = this.getSound("dig")
   val dwarfNope = this.getSound("nope")
+  val foundGems = this.getSound("foundgems")
 
   private def getSound(name: String) = {
     this.resources.getSound(name) match {

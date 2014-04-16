@@ -7,7 +7,7 @@ import org.diamonddwarf.items.Shovel
 class Player(val name: String) extends Actor() {
 
   var movingSpeed = 0.3f
-  var diggingSpeed = 4*0.6f
+  var diggingSpeed = 0.4f
   
   this.states = new States(movingSpeed, diggingSpeed)
   

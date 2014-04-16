@@ -33,7 +33,14 @@ class DiamondDwarf(val player: Player) {
   def detectGems = {
     player.activate(player.states.detectingGems)
     val playerPos = this.activeMap.playerPosition
-    this.activeMap.gemsBetween(playerPos+Coordinate(-1, -1), playerPos+Coordinate(1, 1)).length
+    val gemsFound = this.activeMap.gemsBetween(playerPos+Coordinate(-1, -1), playerPos+Coordinate(1, 1)).length
+    if (gemsFound == 0) {
+      player.nextState = player.states.noGemsFound
+    }
+    else {
+      player.nextState = player.states.foundGems
+    }
+    gemsFound
   }
   
 

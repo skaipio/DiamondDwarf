@@ -76,6 +76,7 @@ class Actor() {
     this.activeState.progress += delta
     if (this.activeState.progress >= this.activeState.speed) {
       this.activate(nextState)
+      this.nextState = this.states.idle
     }
   }
 

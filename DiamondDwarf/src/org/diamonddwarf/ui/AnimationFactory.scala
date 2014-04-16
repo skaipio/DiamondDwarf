@@ -16,9 +16,9 @@ final class AnimationFactory(private val resourceLoader: ResourceLoader) {
   
   def createDwarfDigAnim = {
     val frames = new Array[(TextureRegion,Float)](3);
-    frames(0) = (dwarfDig.get(0), 0.5f)
-    frames(1) = (dwarfDig.get(1), 0.4f)
-    frames(2) = (dwarfDig.get(2), 0.4f)
+    frames(0) = (dwarfDig.get(0), 0.1f)
+    frames(1) = (dwarfDig.get(1), 0.1f)
+    frames(2) = (dwarfDig.get(2), 0.2f)
     new Animation(frames)
   }
 }

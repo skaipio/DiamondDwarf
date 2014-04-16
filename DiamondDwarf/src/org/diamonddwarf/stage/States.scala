@@ -6,4 +6,6 @@ class States(moveSpeed: Float, digSpeed: Float) {
   val moving = new State(moveSpeed)
   val digging = new State(digSpeed)
   val detectingGems = new State(0.2f)
+  val noGemsFound = new State(0)
+  val foundGems = new State(0)
 }
