@@ -19,11 +19,11 @@ import com.badlogic.gdx.Input.Keys
 import org.diamonddwarf.ui.AnimationFactory
 
 class Game extends ApplicationListener {
-  private var batch : SpriteBatch = null
+  private var batch: SpriteBatch = null
   private var stageRenderer: StageRenderer = null
-  private var inventoryRenderer : InventoryRenderer = null
-  private var resourceLoader : ResourceLoader = null
-  private var animFactory : AnimationFactory = null
+  private var inventoryRenderer: InventoryRenderer = null
+  private var resourceLoader: ResourceLoader = null
+  private var animFactory: AnimationFactory = null
 
   private var texture: Texture = null
   private var sprite: Sprite = null
@@ -37,23 +37,22 @@ class Game extends ApplicationListener {
 
   override def create() {
     batch = new SpriteBatch
-    
+
     resourceLoader = new ResourceLoader
     resourceLoader.associateActorWithRegion(game.player, "tileobj/dwarf")
-    
+
     stageRenderer = new StageRenderer(game, batch, resourceLoader)
     stageRenderer.create
     stageRenderer.setNewRandomIds(Stage.stage1)
-    
+
     inventoryRenderer = new InventoryRenderer(game, batch)
     inventoryRenderer.create
-    
+
     animFactory = new AnimationFactory(resourceLoader)
-    
+
     player.defaultTextureRegion = animFactory.dwarfIdle
     player.associateStateWithAnim(player.states.moving, animFactory.createDwarfMoveAnim)
     player.associateStateWithAnim(player.states.digging, animFactory.createDwarfDigAnim)
-    
 
     //    val region = new TextureRegion(texture, 0, 0, 512, 275)
     //
@@ -66,7 +65,7 @@ class Game extends ApplicationListener {
     println(resourceLoader)
     if (resourceLoader.tracks.size >= 1)
       resourceLoader.tracks(0).setLooping(true)
-      resourceLoader.tracks(0).play()
+    resourceLoader.tracks(0).play()
   }
 
   override def dispose() {
@@ -77,11 +76,7 @@ class Game extends ApplicationListener {
   }
 
   private def checkInput() {
-    player.states.activeState match {
-      case _ : Moving => return
-      case _ : Digging => return
-      case _ =>
-    }
+    if (player.states.activeState != player.states.idle) return
     if (Gdx.input.isKeyPressed(Keys.A)) {
       game.player.direction = Coordinate.Left
       game.player.facing = Coordinate.Left
@@ -99,16 +94,19 @@ class Game extends ApplicationListener {
 
     } else if (Gdx.input.isKeyPressed(Keys.SPACE)) {
       game.playerDig
+
+    } else if (Gdx.input.isKeyPressed(Keys.F)) {
+      resourceLoader.tracks(1).play()
+      println(game.detectOre)
     }
   }
 
   override def render() {
-  
-   
-    player.update(Gdx.graphics.getDeltaTime())
-     checkInput
 
-    Gdx.gl.glClearColor(0,0, 0, 1);
+    player.update(Gdx.graphics.getDeltaTime())
+    checkInput
+
+    Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     stageRenderer.render
     inventoryRenderer.render

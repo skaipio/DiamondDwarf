@@ -88,12 +88,11 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch, private 
 
   private def actorDrawPosition(a: Actor, x: Int, y: Int) = {
     var percent = 1.0f
-    this.game.player.states.activeState match {
-      case s: Moving =>
-        percent = s.progress / s.speed
-        
-      case _ =>
-    }
+    val state = this.game.player.states.activeState
+    if (state == this.game.player.states.moving)
+        percent = state.progress / state.speed
+  
+    
     (lerp((x - a.direction.x) * tileSize, x * tileSize, percent),
           lerp((y - a.direction.y) * tileSize, y * tileSize, percent))
   }

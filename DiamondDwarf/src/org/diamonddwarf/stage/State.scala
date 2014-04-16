@@ -1,6 +1,6 @@
 package org.diamonddwarf.stage
 
-abstract class State(var speed: Float) {
+class State(var speed: Float) {
 
   var progress = 0.0f
   var toBePerformed: () => Unit = null
@@ -16,6 +16,3 @@ abstract class State(var speed: Float) {
 
 }
 
-case class Idle extends State(0)
-case class Moving(_speed: Float) extends State(_speed)
-case class Digging(_speed: Float) extends State(_speed)

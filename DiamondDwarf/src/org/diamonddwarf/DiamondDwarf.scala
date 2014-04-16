@@ -8,6 +8,7 @@ class DiamondDwarf(val player: Player) {
 
   def activeMap = this._activeMap
 
+
   def startStage(stage: Stage) {
     this._activeMap = stage
     this.player.shovel = Shovel.shabbyShovel
@@ -21,13 +22,20 @@ class DiamondDwarf(val player: Player) {
     }
   }
 
-  def playerDig = {
+  def playerDig {
     if (this.activeMap.playerTile == Tile.diggableTile && !this.activeMap.isDug(this.activeMap.playerPosition) && player.canDig) {
       player.states.activate(player.states.digging)
       player.states.activeState.onceComplete(digFinished)
       player.resetAnimOfState(player.states.digging)
     }
   }
+  
+  def detectOre = {
+    player.states.activate(player.states.detectingGems)
+    val playerPos = this.activeMap.playerPosition
+    this.activeMap.gemsBetween(playerPos+Coordinate(-1, -1), playerPos+Coordinate(1, 1)).length
+  }
+  
 
   private def digFinished {
     activeMap.removeGemAt(this.activeMap.playerPosition) match {

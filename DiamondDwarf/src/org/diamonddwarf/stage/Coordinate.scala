@@ -3,8 +3,8 @@ package org.diamonddwarf.stage
 case class Coordinate(val x: Int, val y: Int) extends Equals {
 
 	def +(a: Coordinate) = new Coordinate(this.x + a.x, this.y + a.y) 
-	
-	
+	def to(that: Coordinate) = for (dx <- this.x to that.x; dy <- this.y to that.y) yield Coordinate(dx, dy)
+	  
 	override def toString = "(" + x + ", " + y + ")"
   
   def canEqual(other: Any) = {

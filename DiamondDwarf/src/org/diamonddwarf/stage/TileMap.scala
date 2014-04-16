@@ -9,6 +9,11 @@ abstract class TileMap(val width: Int, val height: Int) extends Traversable[Tile
   private val gemMap: Map[Coordinate, Gem] = Map()
   private val topMap: Array[Array[TileObject]] = Array.fill(height, width)(TileObject.empty)
 
+  def tilesBetween(a: Coordinate, b: Coordinate) = for (x <- a to b if inBounds(x)) yield this.getTileAt(x)
+  def gemsBetween(a: Coordinate, b: Coordinate) = for (x <- a to b if inBounds(x) && hasGemAt(x)) yield this.getGemAt(x)
+  def tileObjectsBetween(a: Coordinate, b: Coordinate) = for (x <- a to b if inBounds(x)) yield this.getTileObjectAt(x)
+  
+  
   def getTileAt(x: Int, y: Int) = tileMap(y)(x)
   def getTileAt(coordinate: Coordinate): Tile = getTileAt(coordinate.x, coordinate.y)
 
@@ -32,6 +37,9 @@ abstract class TileMap(val width: Int, val height: Int) extends Traversable[Tile
     require(inBounds(x, y))
     this.gemMap += Coordinate(x, y) -> gem
   }
+  
+  def getGemAt(c: Coordinate) = this.gemMap.get(c)
+  def hasGemAt(c: Coordinate) = this.gemMap.contains(c)
 
   def removeGemAt(c: Coordinate) = {
     require(inBounds(c))
