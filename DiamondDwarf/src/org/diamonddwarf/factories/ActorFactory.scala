@@ -40,6 +40,7 @@ final class ActorFactory(private val resources: ResourceLoader, private val effe
     setStateSound(player.states.foundGems, sounds.foundGems)
     setStateSound(player.states.digging, sounds.digging)
     setStateSound(player.states.gotGem, sounds.gotGem)
+    setStateSound(player.states.moving, sounds.moving)
     
     player.shovel = Shovel.shabbyShovel
 
