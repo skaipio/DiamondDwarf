@@ -16,3 +16,7 @@ class State(var speed: Float) {
 
 }
 
+class GemsFound extends State(0f){
+  var gemsFound = 0
+}
+

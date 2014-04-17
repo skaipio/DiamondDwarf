@@ -4,10 +4,11 @@ import org.diamonddwarf.ui.Effect
 import org.diamonddwarf.stage.Coordinate
 
 class EffectFactory(val animFactory: AnimationFactory) {
-  def createGemsDetectedPopup(x: Int, y: Int) = {
+  def createGemsDetectedPopup(x: Int, y: Int, gemsFound: Int) = {
     val effect = new Effect(1.5f)
     val gem = animFactory.createGemWithQuestionMarkAnim
     val times = animFactory.createTimesMarkAnim
+    val number = animFactory.createNumberAnim(gemsFound)
     effect.animations = Array((gem, Coordinate(0, 0)), (times, Coordinate(40, 10)))
     effect.x = x
     effect.y = y

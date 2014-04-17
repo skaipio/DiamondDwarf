@@ -18,7 +18,7 @@ class Actor(val states : States) {
   var defaultTextureRegion: TextureRegion = null
   private var animationMap = scala.collection.mutable.Map[State, Animation]()
   private val soundMap = scala.collection.mutable.Map[State, Sound]()
-  private val methodMap = scala.collection.mutable.Map[State, () => Unit]()
+  private val methodMap = scala.collection.mutable.Map[State, State => Unit]()
   private var effects = MutableList[Effect]()
 
   def getTextureRegion = {
@@ -52,7 +52,7 @@ class Actor(val states : States) {
       case _ =>
     }
     this.methodMap.get(state) match {
-      case Some(method) => method()
+      case Some(method) => method(state)
       case _ =>
     }
   }
@@ -67,7 +67,7 @@ class Actor(val states : States) {
     this.soundMap += state -> sound
   } 
   
-  def associateStateWithMethod(state: State, method: () => Unit){
+  def associateStateWithMethod(state: State, method: State => Unit){
     this.methodMap += state -> method
   }
   

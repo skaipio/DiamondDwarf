@@ -7,6 +7,6 @@ class States() {
   val digging = new State(0.4f)
   val detectingGems = new State(0.5f)
   val noGemsFound = new State(0)
-  val foundGems = new State(0)
+  val foundGems = new GemsFound()
   val gotGem = new State(0)
 }
