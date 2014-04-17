@@ -14,9 +14,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import org.diamonddwarf.resources.ResourceLoader
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import scala.util.control.Exception
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
 
-class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch, private val rl: ResourceLoader) {
-  private var camera: OrthographicCamera = null
+class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch,
+    private val textureRegionMap: Map[GameObject, com.badlogic.gdx.utils.Array[AtlasRegion]]) {
   private val font = new BitmapFont
 
   private val mapXOffset = 20
@@ -29,8 +30,6 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch, private 
 
   private var randomIds: Array[Array[Int]] = null
 
-  private var playerTextureRegion: TextureRegion = null
-
   font.setColor(Color.BLACK)
 
   def setNewRandomIds(stage: TileMap) {
@@ -40,17 +39,9 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch, private 
   def create {
     val w = Gdx.graphics.getWidth()
     val h = Gdx.graphics.getHeight()
-
-    camera = new OrthographicCamera(1, h / w)
-
-    playerTextureRegion = this.rl.textureRegionMapForActors.get(game.player) match {
-      case Some(region) => region.get(0)
-      case _ => null
-    }
   }
 
   def render() {
-    // batch.setProjectionMatrix(camera.combined);
     batch.begin()
     batch.setColor(1f, 1f, 1f, 1f)
     this.renderTiles
@@ -99,27 +90,18 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch, private 
 
   private def actorDrawPosition(a: Actor, x: Int, y: Int) = {
     var percent = 1.0f
-    val state = this.game.player.activeState
-    if (state == this.game.player.states.moving)
+    val state = a.activeState
+    if (state == a.states.moving)
       percent = state.progress / state.speed
 
     (lerp((x - a.direction.x) * tileSize, x * tileSize, percent),
       lerp((y - a.direction.y) * tileSize, y * tileSize, percent))
   }
+  
   private def lerp(start: Float, end: Float, percent: Float) = start + percent * (end - start)
 
-  private def getTextureFromSpriteMap(gameObj: GameObject): TextureRegion = {
-    this.rl.textureRegionMapForVariants.get(gameObj) match {
-      case Some(textures) =>
-        val rand = Random.nextInt(textures.size)
-        return textures.get(rand)
-      case _ =>
-        return null
-    }
-  }
-
   private def getTextureOf(obj: GameObject, x: Int, y: Int): Option[TextureRegion] = {
-    this.rl.textureRegionMapForVariants.get(obj) match {
+    this.textureRegionMap.get(obj) match {
       case Some(textures) =>
         if (textures.size == 0) throw new Exception("No textures found for " + obj.toString())
         Some(textures.get(this.randomIds(x)(y) % textures.size))
