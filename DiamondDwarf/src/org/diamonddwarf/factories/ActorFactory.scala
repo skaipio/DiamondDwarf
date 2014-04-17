@@ -24,7 +24,7 @@ final class ActorFactory(private val resources: ResourceLoader, private val effe
     
      def addEffect(s: State) = s match {
       case state : GemsFound =>      
-    	val x = player.position.x*64
+    	val x = player.position.x*64-9
     	val y = player.position.y*64+65
     	player.addEffect(effectFactory.createGemsDetectedPopup(x, y, state.gemsFound))	
       case _ =>

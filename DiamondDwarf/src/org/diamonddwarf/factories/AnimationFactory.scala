@@ -14,7 +14,7 @@ final class AnimationFactory(private val resourceLoader: ResourceLoader) {
   val dwarfDig = this.getRegions("tileobj/dwarf_dig")
   val gemWithQuestionMark = this.getRegion("effects/gems_question")
   val timesMark = this.getRegion("effects/times")
-  val numbers = this.getRegions("effects/number")
+  val numbers = this.getRegions("effects/digits")
 
   def createDwarfIdleAnim = {
     val frames = Array[(TextureRegion, Float)]((dwarfIdle, 1.0f))

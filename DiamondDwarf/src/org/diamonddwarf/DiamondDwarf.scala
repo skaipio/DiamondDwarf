@@ -39,6 +39,7 @@ class DiamondDwarf(val player: Player) {
     }
     else {
       player.nextState = player.states.foundGems
+      player.states.foundGems.gemsFound = gemsFound
     }
     gemsFound
   }

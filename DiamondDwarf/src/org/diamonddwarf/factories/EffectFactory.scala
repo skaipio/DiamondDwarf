@@ -9,7 +9,7 @@ class EffectFactory(val animFactory: AnimationFactory) {
     val gem = animFactory.createGemWithQuestionMarkAnim
     val times = animFactory.createTimesMarkAnim
     val number = animFactory.createNumberAnim(gemsFound)
-    effect.animations = Array((gem, Coordinate(0, 0)), (times, Coordinate(40, 10)))
+    effect.animations = Array((gem, Coordinate(0, 0)), (times, Coordinate(40, 10)), (number, Coordinate(58,6)))
     effect.x = x
     effect.y = y
     effect.deltaY = 0.3f
