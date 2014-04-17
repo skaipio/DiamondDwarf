@@ -55,7 +55,7 @@ class Game extends ApplicationListener {
     
     game = new DiamondDwarf(this.player)
     
-    stageRenderer = new StageRenderer(game, batch, this.resourceLoader.textureRegionMapForVariants)
+    stageRenderer = new StageRenderer(game, batch, this.resourceLoader.textureRegionMapForVariants, this.resourceLoader.seamMap)
     stageRenderer.create
     stageRenderer.setNewRandomIds(stage)
 
