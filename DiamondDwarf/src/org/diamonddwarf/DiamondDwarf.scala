@@ -46,7 +46,7 @@ class DiamondDwarf(val player: Player) {
 
   private def digFinished {
     activeMap.removeGemAt(this.activeMap.playerPosition) match {
-      case Some(gem) => player.give(gem)
+      case Some(gem) => player.give(gem); player.activate(player.states.gotGem)
       case _ =>
     }
     activeMap.setDugAt(this.activeMap.playerPosition)

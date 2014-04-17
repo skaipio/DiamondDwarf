@@ -12,6 +12,7 @@ class Sounds(private val resources: ResourceLoader) {
   val digging = this.getSound("dig")
   val dwarfNope = this.getSound("nope")
   val foundGems = this.getSound("foundgems")
+  val gotGem = this.getSound("gem")
 
   private def getSound(name: String) = {
     this.resources.getSound(name) match {
