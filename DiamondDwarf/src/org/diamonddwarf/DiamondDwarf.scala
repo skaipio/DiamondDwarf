@@ -18,6 +18,7 @@ class DiamondDwarf(val player: Player) {
     if (_activeMap.inBounds(toBePosition) && _activeMap.getTileObjectAt(toBePosition).isPassable) {
       player.activate(player.states.moving)
       _activeMap.setPlayerPosition(toBePosition)
+      player.position = toBePosition
     }
   }
 

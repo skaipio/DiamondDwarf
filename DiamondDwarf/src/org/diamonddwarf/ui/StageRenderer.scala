@@ -52,6 +52,7 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch, private 
   def render() {
     // batch.setProjectionMatrix(camera.combined);
     batch.begin()
+    batch.setColor(1f, 1f, 1f, 1f)
     this.renderTiles
     batch.end()
   }
@@ -81,20 +82,29 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch, private 
     val (lerpx, lerpy) = actorDrawPosition(game.player, game.activeMap.playerPosition.x, game.activeMap.playerPosition.y)
     val textureRegion = game.player.getTextureRegion
     if (textureRegion != null)
-
       batch.draw(game.player.getTextureRegion, lerpx, lerpy)
 
+    this.drawEffects
+  }
+
+  private def drawEffects {
+    for (effect <- game.player.getEffects) {
+      batch.setColor(effect.red, effect.green, effect.blue, effect.alpha)
+      for ((anim, c) <- effect.animations) {
+        val frame = anim.getCurrentFrame
+        batch.draw(frame, effect.x+c.x, effect.y+c.y)
+      }
+    }
   }
 
   private def actorDrawPosition(a: Actor, x: Int, y: Int) = {
     var percent = 1.0f
     val state = this.game.player.activeState
     if (state == this.game.player.states.moving)
-        percent = state.progress / state.speed
-  
-    
+      percent = state.progress / state.speed
+
     (lerp((x - a.direction.x) * tileSize, x * tileSize, percent),
-          lerp((y - a.direction.y) * tileSize, y * tileSize, percent))
+      lerp((y - a.direction.y) * tileSize, y * tileSize, percent))
   }
   private def lerp(start: Float, end: Float, percent: Float) = start + percent * (end - start)
 

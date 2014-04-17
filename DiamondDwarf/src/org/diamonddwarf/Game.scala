@@ -16,11 +16,12 @@ import org.diamonddwarf.ui.StageRenderer
 import org.diamonddwarf.ui.InventoryRenderer
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.Input.Keys
-import org.diamonddwarf.ui.AnimationFactory
+import org.diamonddwarf.factories.AnimationFactory
 import org.diamonddwarf.resources.ResourceLoader
 import org.diamonddwarf.factories.StageFactory
 import org.diamonddwarf.resources.Sounds
 import org.diamonddwarf.factories.ActorFactory
+import org.diamonddwarf.factories.EffectFactory
 
 class Game extends ApplicationListener {
   private var batch: SpriteBatch = null
@@ -40,15 +41,15 @@ class Game extends ApplicationListener {
   override def create() {
     batch = new SpriteBatch
     resourceLoader = new ResourceLoader
-    // resourceLoader.associateActorWithRegion(game.player, "tileobj/dwarf")
     
     val sounds = new Sounds(this.resourceLoader)
     animFactory = new AnimationFactory(resourceLoader)
+    val effectFactory = new EffectFactory(animFactory)
     
     val stageFactory = new StageFactory(resourceLoader)
     val stage = stageFactory.createStage(0)
     
-    val actorFactory = new ActorFactory(this.resourceLoader, this.animFactory, sounds)
+    val actorFactory = new ActorFactory(this.resourceLoader, effectFactory, this.animFactory, sounds)
     
     this.player = actorFactory.createPlayer
     
