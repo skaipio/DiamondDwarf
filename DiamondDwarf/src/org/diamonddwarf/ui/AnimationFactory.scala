@@ -8,6 +8,11 @@ final class AnimationFactory(private val resourceLoader: ResourceLoader) {
   val dwarfIdle = resourceLoader.atlas.findRegion("tileobj/dwarf")
   val dwarfWalk = resourceLoader.atlas.findRegions("tileobj/dwarf_walk")
   val dwarfDig = resourceLoader.atlas.findRegions("tileobj/dwarf_dig")
+  
+  def createDwarfIdleAnim = {
+    val frames = Array[(TextureRegion, Float)]((dwarfIdle, 1.0f))
+    new Animation(frames)
+  }
 
   def createDwarfMoveAnim = {
     val frames = for (i <- 0 until dwarfWalk.size) yield (dwarfWalk.get(i), 0.1f)

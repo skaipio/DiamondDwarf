@@ -15,9 +15,6 @@ class InventoryRenderer(game: DiamondDwarf, private val batch : SpriteBatch) {
   private val font = new BitmapFont
   private val tileSize = 64
 
-  private val offsetX = game.activeMap.width * tileSize + 20
-  private val offsetY = game.activeMap.height * tileSize - 20
-
   font.setColor(Color.BLACK)
 
   def create {
@@ -34,6 +31,8 @@ class InventoryRenderer(game: DiamondDwarf, private val batch : SpriteBatch) {
   }
 
   private def renderPlayerInventory {
+    val offsetX = game.activeMap.width * tileSize + 20
+    val offsetY = game.activeMap.height * tileSize - 20
     var i = 1
     var additionalXOffset = 0
     var additionalYOffset = -20

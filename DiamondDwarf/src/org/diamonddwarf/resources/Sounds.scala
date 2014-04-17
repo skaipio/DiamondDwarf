@@ -17,12 +17,12 @@ class Sounds(private val resources: ResourceLoader) {
     this.resources.getSound(name) match {
       case Some(sound) => sound
       case _ =>
-        this.warnNoSoundFound(name)
+        this.noSound(name)
         null
     }
   }
 
-  private def warnNoSoundFound(name: String) {
-    logger.log(Level.WARNING, "could not find sound matching " + name)
+  private def noSound(name: String) {
+    logger.log(Level.WARNING, "could not find sound matching \"" + name + "\"")
   }
 }

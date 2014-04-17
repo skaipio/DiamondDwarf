@@ -4,16 +4,7 @@ import scala.collection.mutable.Map
 import org.diamonddwarf.items.Gem
 import org.diamonddwarf.items.Shovel
 
-class Player(val name: String) extends Actor() {
-
-  var movingSpeed = 0.3f
-  var diggingSpeed = 0.4f
-  
-  this.states = new States(movingSpeed, diggingSpeed)
-  
-  this.activeState = states.idle
-  this.nextState = states.idle
-  
+class Player(val name: String) extends Actor(new States) {
   var money = 0
   var shovel: Shovel = null
   val inventory = Map[Gem, Int]()

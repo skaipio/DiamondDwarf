@@ -4,9 +4,7 @@ import org.diamonddwarf.ui.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.audio.Sound
 
-class Actor() {
-  var states: States = null
-  
+class Actor(val states : States) {
   var activeState: State = null
   var nextState: State = null
   

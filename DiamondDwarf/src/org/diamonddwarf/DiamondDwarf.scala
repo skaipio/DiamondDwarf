@@ -11,7 +11,6 @@ class DiamondDwarf(val player: Player) {
 
   def startStage(stage: Stage) {
     this._activeMap = stage
-    this.player.shovel = Shovel.shabbyShovel
   }
 
   def movePlayer(direction: Coordinate) {

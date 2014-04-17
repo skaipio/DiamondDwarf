@@ -57,15 +57,15 @@ class ResourceLoader {
 
   
 
-  def associateActorWithRegion(actor: Actor, region: String) {
-    this.textureRegionMapForActors.get(actor) match {
-      case Some(_) =>
-      case _ =>
-        val regions = this.atlas.findRegions(region)
-        this.textureRegionMapForActors += actor -> regions
-    }
-
-  }
+//  def associateActorWithRegion(actor: Actor, region: String) {
+//    this.textureRegionMapForActors.get(actor) match {
+//      case Some(_) =>
+//      case _ =>
+//        val regions = this.atlas.findRegions(region)
+//        this.textureRegionMapForActors += actor -> regions
+//    }
+//
+//  }
 
   // TODO: Textures need to be disposed of on game.dispose() call
   // TODO: Call dispose in Game.dispose()
