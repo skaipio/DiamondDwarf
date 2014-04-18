@@ -16,10 +16,12 @@ class ResourceLoader {
   val atlas = new TextureAtlas(Gdx.files.internal("packedTextures.atlas"))
   val textureRegionMapForActors = scala.collection.mutable.Map[Actor, com.badlogic.gdx.utils.Array[AtlasRegion]]()
   val textureRegionMapForVariants = Map(
-    Tile.baseTile -> this.getBaseTiles,
-    Tile.diggableTile -> this.getDiggableTiles,
-    TileObject.stone -> this.getStoneObjects,
-    TileObject.hole -> this.getHoleObjects)
+    Tile.baseTile -> regions("tile/base"),
+    Tile.diggableTile -> regions("tile/grass"),
+    TileObject.stone -> regions("tileobj/stone"),
+    TileObject.hole -> regions("tileobj/hole"),
+    Workshop.refinery -> regions("tileobj/refinery"),
+    Workshop.replenisher -> regions("tileobj/replenisher"))
 
   val seamMap = {
     val regions = this.getRegions("tile/seam")
@@ -69,9 +71,9 @@ class ResourceLoader {
   // TODO: Textures need to be disposed of on game.dispose() call
   // TODO: Call dispose in Game.dispose()
   def dispose() = this.atlas.dispose()
-
-  def getRegions(name: String) = {
-    val regions = atlas.findRegions(name)
+  
+  private def regions(path: String) =  {
+    val regions = atlas.findRegions(path)
     if (regions.size == 0)
       this.noRegion(name)
     regions
@@ -81,8 +83,4 @@ class ResourceLoader {
     logger.log(Level.WARNING, "Could not find region \"" + name + "\" in texture atlas.")
   }
 
-  private def getBaseTiles = atlas.findRegions("tile/base")
-  private def getDiggableTiles = atlas.findRegions("tile/grass")
-  private def getHoleObjects = atlas.findRegions("tileobj/hole")
-  private def getStoneObjects = atlas.findRegions("tileobj/stone")
 }

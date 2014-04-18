@@ -4,8 +4,9 @@ import scala.collection.mutable.Map
 import org.diamonddwarf.items.Gem
 import org.diamonddwarf.items.Shovel
 
-class Player(val name: String) extends Actor(new States) {
-  var money = 0
+class Player(val name: String) extends Actor() {
+  
+  var score = 0
   var shovel: Shovel = null
   val inventory = Map[Gem, Int]()
 
@@ -15,10 +16,16 @@ class Player(val name: String) extends Actor(new States) {
       case Some(oldCount) => this.inventory += gem -> (1 + oldCount)
       case None => this.inventory += gem -> 1
     }
+    updateScore
   }
 
   def canDig: Boolean = this.shovel != null && this.shovel.digsLeft >= 1
 
+  def setShovelUsages(times: Int) {
+    require(times >= 0)
+    this.shovel.digsLeft = times
+  }
+  
   def depleteShovel: Boolean = {
     if (canDig) {
       this.shovel.digsLeft -= 1
@@ -30,7 +37,7 @@ class Player(val name: String) extends Actor(new States) {
   /**
    * Total sum of gem values in the inventory.
    */
-  def totalValue = inventory.foldLeft(0)((sum, kv) => sum + kv._1.value * kv._2)
+  private def updateScore { this.score = inventory.foldLeft(0)((sum, kv) => sum + kv._1.value * kv._2) }
 
   override def toString = "Player: " + this.name
 

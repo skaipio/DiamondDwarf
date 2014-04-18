@@ -33,42 +33,40 @@ class Game extends ApplicationListener {
   private var texture: Texture = null
   private var sprite: Sprite = null
 
-  private var player : Player = null
-  private var game : DiamondDwarf = null
-
-  val controller = new Controller(game)
+  private var player: Player = null
+  private var game: DiamondDwarf = null
 
   override def create() {
     batch = new SpriteBatch
     resourceLoader = new ResourceLoader
-    
+
     val sounds = new Sounds(this.resourceLoader)
     animFactory = new AnimationFactory(resourceLoader)
     val effectFactory = new EffectFactory(animFactory)
-    
+
     val stageFactory = new StageFactory(resourceLoader)
     val stage = stageFactory.createStage(0)
-    
+
     val actorFactory = new ActorFactory(this.resourceLoader, effectFactory, this.animFactory, sounds)
-    
+
     this.player = actorFactory.createPlayer
-    
+
     game = new DiamondDwarf(this.player)
-    
+    val controller = new Controller(game)
     stageRenderer = new StageRenderer(game, batch, this.resourceLoader.textureRegionMapForVariants, this.resourceLoader.seamMap)
     stageRenderer.create
     stageRenderer.setNewRandomIds(stage)
 
     inventoryRenderer = new InventoryRenderer(game, batch)
     inventoryRenderer.create
-    
+
     Gdx.input.setInputProcessor(controller)
-    
+
     if (resourceLoader.hasTrack(0)) {}
     val track = resourceLoader.getTrack(0)
     track.setLooping(true)
     track.play()
-    
+
     game.startStage(stage)
   }
 
@@ -79,34 +77,50 @@ class Game extends ApplicationListener {
     resourceLoader.dispose
   }
 
+  private def move(c: Coordinate) {
+    game.player.direction = c
+    game.movePlayer(c)
+  }
+
   private def checkInput() {
+    var shift = false
     if (player.activeState != player.states.idle) return
+    if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
+      shift = true
+    }
     if (Gdx.input.isKeyPressed(Keys.A)) {
-      game.player.direction = Coordinate.Left
       game.player.facing = Coordinate.Left
-      game.movePlayer(Coordinate.Left)
+      if (!shift) move(Coordinate.Left)
+
     } else if (Gdx.input.isKeyPressed(Keys.D)) {
-      game.player.direction = Coordinate.Right
       game.player.facing = Coordinate.Right
-      game.movePlayer(Coordinate.Right)
+      if (!shift) move(Coordinate.Right)
+
     } else if (Gdx.input.isKeyPressed(Keys.W)) {
-      game.player.direction = Coordinate.Up
-      game.movePlayer(Coordinate.Up)
+      if (!shift) move(Coordinate.Up)
+
     } else if (Gdx.input.isKeyPressed(Keys.S)) {
-      game.player.direction = Coordinate.Down
-      game.movePlayer(Coordinate.Down)
+      if (!shift) move(Coordinate.Down)
 
     } else if (Gdx.input.isKeyPressed(Keys.SPACE)) {
       game.playerDig
 
     } else if (Gdx.input.isKeyPressed(Keys.F)) {
-      println(game.detectGems)
+      game.detectGems
+    } else if (Gdx.input.isKeyPressed(Keys.E)) {
+      game.build
+    } else if (Gdx.input.isKeyPressed(Keys.Q)) {
+      game.use
+
     }
   }
 
-  override def render() {
+  def updateActors(delta: Float) {
+    game.actors.foreach(_.update(delta))
+  }
 
-    player.update(Gdx.graphics.getDeltaTime())
+  override def render() {
+    this.updateActors(Gdx.graphics.getDeltaTime())
     checkInput
 
     Gdx.gl.glClearColor(0, 0, 0, 1);

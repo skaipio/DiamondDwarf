@@ -1,7 +1,8 @@
 package org.diamonddwarf.stage
 
-
 class States() {
+  
+  // player
   val idle = new State(0)
   val moving = new State(0.3f)
   val digging = new State(0.4f)
@@ -9,4 +10,8 @@ class States() {
   val noGemsFound = new State(0)
   val foundGems = new GemsFound()
   val gotGem = new State(0)
+
+  // workshop
+  val working = new State(1f)
+
 }

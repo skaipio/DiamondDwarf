@@ -35,8 +35,9 @@ class InventoryRenderer(game: DiamondDwarf, private val batch : SpriteBatch) {
     val offsetY = game.activeMap.height * tileSize - 20
     var i = 1
     var additionalXOffset = 0
-    var additionalYOffset = -20
+    var additionalYOffset = -40
     font.draw(batch, game.player.name + "'s inventory", offsetX, offsetY)
+    font.draw(batch, "score: "+ game.player.score, offsetX, offsetY - 20)
     if (game.player.shovel != null) {
       font.draw(batch, game.player.shovel.toString, offsetX, offsetY + additionalYOffset)
       additionalYOffset -= 20

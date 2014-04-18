@@ -6,12 +6,14 @@ import com.badlogic.gdx.audio.Sound
 import scala.collection.mutable.MutableList
 import org.diamonddwarf.ui.Effect
 
-class Actor(val states : States) {
-  var activeState: State = null
-  var nextState: State = null
-  
-  var position = Coordinate(0,0)
-  
+trait Actor {
+  val states = new States
+  var activeState: State = states.idle
+  var nextState: State = states.idle
+
+  var position = Coordinate(0, 0)
+  def front = position + facing
+
   var direction = Coordinate.Zero
   var facing = Coordinate.Right
 
@@ -41,10 +43,7 @@ class Actor(val states : States) {
 
   }
 
-  def activate(state: State) {   
-    if (this.activeState.toBePerformed != null) {
-      this.activeState.toBePerformed()
-    }
+  def activate(state: State) {
     this.activeState = state
     state.reset
     this.soundMap.get(state) match {
@@ -57,27 +56,25 @@ class Actor(val states : States) {
     }
   }
 
-  
-
   def associateStateWithAnim(state: State, anim: Animation) {
     this.animationMap += state -> anim
   }
-  
+
   def associateStateWithSound(state: State, sound: Sound) {
     this.soundMap += state -> sound
-  } 
-  
-  def associateStateWithMethod(state: State, method: State => Unit){
+  }
+
+  def associateStateWithMethod(state: State, method: State => Unit) {
     this.methodMap += state -> method
   }
-  
+
   def getEffects = this.effects
-  
-  def addEffect(effect: Effect){
+
+  def addEffect(effect: Effect) {
     effect +=: this.effects
   }
-  
-  def resetAnimOfState(state: State){
+
+  def resetAnimOfState(state: State) {
     this.animationMap.get(state) match {
       case Some(anim) =>
         anim.restart
@@ -90,15 +87,18 @@ class Actor(val states : States) {
     this.updateEffects(delta)
     this.updateState(delta)
   }
-  
-  private def updateEffects(delta: Float){
+
+  private def updateEffects(delta: Float) {
     this.effects = this.effects.filter(!_.isFinished)
-    for(effect <- this.effects) effect.update(delta)
+    for (effect <- this.effects) effect.update(delta)
   }
-  
+
   private def updateState(delta: Float) {
     this.activeState.progress += delta
     if (this.activeState.progress >= this.activeState.speed) {
+      if (this.activeState.toBePerformed != null) {
+        this.activeState.toBePerformed()
+      }
       this.activate(nextState)
       this.nextState = this.states.idle
     }

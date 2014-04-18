@@ -17,6 +17,8 @@ abstract class TileMap(val width: Int, val height: Int) extends Traversable[Tile
   def getTileAt(x: Int, y: Int) = tileMap(y)(x)
   def getTileAt(coordinate: Coordinate): Tile = getTileAt(coordinate.x, coordinate.y)
 
+  def hasTileObjectAt(c: Coordinate) = this.getTileObjectAt(c) != TileObject.empty
+  
   def getTileObjectAt(x: Int, y: Int) = topMap(y)(x)
   def getTileObjectAt(c: Coordinate): TileObject = getTileObjectAt(c.x, c.y)
 
