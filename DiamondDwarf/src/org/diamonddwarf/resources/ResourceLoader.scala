@@ -24,7 +24,7 @@ class ResourceLoader {
     Workshop.replenisher -> regions("tileobj/replenisher"))
 
   val seamMap = {
-    val regions = this.getRegions("tile/seam")
+    val regions = this.regions("tile/seam")
     val grassBaseSeam = (Tile.diggableTile, Tile.baseTile) -> regions.get(0)
     Map(grassBaseSeam)
   }
@@ -75,7 +75,7 @@ class ResourceLoader {
   private def regions(path: String) =  {
     val regions = atlas.findRegions(path)
     if (regions.size == 0)
-      this.noRegion(name)
+      this.noRegion(path)
     regions
   }
 
