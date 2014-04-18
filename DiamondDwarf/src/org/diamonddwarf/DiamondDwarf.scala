@@ -2,12 +2,12 @@ package org.diamonddwarf
 
 import org.diamonddwarf.stage._
 import org.diamonddwarf.items.Shovel
-import scala.collection.mutable.MutableList
+import scala.collection.mutable.Set
 
 class DiamondDwarf(val player: Player) {
   private var _activeMap: Stage = null
 
-  val actors = MutableList[Actor](player)
+  val actors = Set[Actor](player)
 
   def activeMap = this._activeMap
 
@@ -61,7 +61,7 @@ class DiamondDwarf(val player: Player) {
   def build {
     val buildPos = this.player.front
     if (this.activeMap.hasBaseAt(buildPos) && !this.activeMap.hasTileObjectAt(buildPos)) {
-      val toBuild = this.activeMap.buildables(this.activeMap.buildableIndex);
+      val toBuild = this.activeMap.buildables(this.activeMap.buildableIndex);q
       actors += toBuild
       this.activeMap.setTileObjectAt(buildPos, toBuild)
     }

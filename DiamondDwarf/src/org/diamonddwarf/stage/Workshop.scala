@@ -1,6 +1,7 @@
 package org.diamonddwarf.stage
 
 import org.diamonddwarf.items.Gem
+import org.diamonddwarf.factories.AnimationFactory
 
 abstract class Workshop extends TileObject(false) with Actor {
   def use(p: Player)

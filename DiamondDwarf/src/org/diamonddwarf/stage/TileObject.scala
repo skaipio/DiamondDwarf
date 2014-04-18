@@ -1,6 +1,6 @@
 package org.diamonddwarf.stage
 
-class TileObject(val isPassable: Boolean) extends GameObject
+class TileObject(val isPassable: Boolean) extends Actor
 
 object TileObject {
 

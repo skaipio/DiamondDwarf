@@ -6,7 +6,7 @@ import com.badlogic.gdx.audio.Sound
 import scala.collection.mutable.MutableList
 import org.diamonddwarf.ui.Effect
 
-trait Actor {
+trait Actor extends GameObject with Drawable {
   val states = new States
   var activeState: State = states.idle
   var nextState: State = states.idle
@@ -22,15 +22,16 @@ trait Actor {
   private val soundMap = scala.collection.mutable.Map[State, Sound]()
   private val methodMap = scala.collection.mutable.Map[State, State => Unit]()
   private var effects = MutableList[Effect]()
-
-  def getTextureRegion = {
+  
+  def getTexture = {
     var region: TextureRegion = null
     this.animationMap.get(this.activeState) match {
       case Some(anim) =>
         region = anim.getCurrentFrame
       case _ => region = defaultTextureRegion
     }
-    flipToDirection(region)
+    if (region != null)
+    	flipToDirection(region)
     region
   }
 

@@ -63,10 +63,10 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch,
         case _ =>
       }
       val tileObj = this.game.activeMap.getTileObjectAt(x, y)
-      this.getTextureOf(tileObj, x, y) match {
-        case Some(texture) => batch.draw(texture, x * tileSize, y * tileSize)
-        case _ =>
-      }
+      val texture = tileObj.getTexture
+      if (texture != null)
+    	  batch.draw(tileObj.getTexture(), x * tileSize, y * tileSize)
+
     }
     batch.end()
   }
@@ -74,9 +74,9 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch,
   private def drawActors = {
     batch.begin()
     val (lerpx, lerpy) = actorDrawPosition(game.player, game.activeMap.playerPosition.x, game.activeMap.playerPosition.y)
-    val textureRegion = game.player.getTextureRegion
+    val textureRegion = game.player.getTexture
     if (textureRegion != null)
-      batch.draw(game.player.getTextureRegion, lerpx, lerpy)
+      batch.draw(game.player.getTexture, lerpx, lerpy)
     batch.end()
   }
 
@@ -96,26 +96,26 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch,
     batch.begin()
     for (y <- 0 until game.activeMap.height - 1; x <- 0 until game.activeMap.width - 1) {
       val tile = this.game.activeMap.getTileAt(x, y)
-      val top = this.game.activeMap.getTileAt(x, y+1)
-      val right = this.game.activeMap.getTileAt(x+1, y)
-      this.seamMap.get((tile, top)) match{
+      val top = this.game.activeMap.getTileAt(x, y + 1)
+      val right = this.game.activeMap.getTileAt(x + 1, y)
+      this.seamMap.get((tile, top)) match {
         case Some(region) =>
-          this.batch.draw(region, x*tileSize+tileSize, y*tileSize+tileSize-4, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 90f)
+          this.batch.draw(region, x * tileSize + tileSize, y * tileSize + tileSize - 4, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 90f)
         case _ =>
       }
-      this.seamMap.get((top, tile)) match{
-        case Some(region) =>          
-          this.batch.draw(region, x*tileSize, y*tileSize+tileSize+4, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, -90f)
+      this.seamMap.get((top, tile)) match {
+        case Some(region) =>
+          this.batch.draw(region, x * tileSize, y * tileSize + tileSize + 4, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, -90f)
         case _ =>
       }
-      this.seamMap.get((tile, right)) match{
-        case Some(region) =>          
-          this.batch.draw(region, x*tileSize+tileSize-4, y*tileSize, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 0f)
+      this.seamMap.get((tile, right)) match {
+        case Some(region) =>
+          this.batch.draw(region, x * tileSize + tileSize - 4, y * tileSize, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 0f)
         case _ =>
       }
-      this.seamMap.get((right, tile)) match{
-        case Some(region) =>          
-          this.batch.draw(region, x*tileSize+tileSize+4, y*tileSize+tileSize, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 180f)
+      this.seamMap.get((right, tile)) match {
+        case Some(region) =>
+          this.batch.draw(region, x * tileSize + tileSize + 4, y * tileSize + tileSize, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 180f)
         case _ =>
       }
     }
