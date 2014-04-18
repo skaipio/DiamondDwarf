@@ -8,12 +8,12 @@ import scala.util.Random
 import org.diamonddwarf.items.Gem
 import org.diamonddwarf.stage._
 
-class Stage(width: Int, height: Int, stones: Int, gems: Map[Gem, Int], basePosition: Coordinate) extends TileMap(width, height) {
+class Stage(width: Int, height: Int, stones: Int, gems: Map[Gem, Int], 
+    basePosition: Coordinate, time: Int, val buildables: Array[Workshop]) extends TileMap(width, height) {
   require(stones < width * height, "Not enough tiles for " + stones + " stones.")
   require(this.minTilesFromBorders(basePosition.x, basePosition.y, 1), "Not enough room for base at " + basePosition)
 
   var buildableIndex = 0
-  val buildables = List(Workshop.refinery, Workshop.replenisher)
   
   this.setBaseAround(basePosition)
 

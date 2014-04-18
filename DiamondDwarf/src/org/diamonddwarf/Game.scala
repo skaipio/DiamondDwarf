@@ -45,7 +45,7 @@ class Game extends ApplicationListener {
     val effectFactory = new EffectFactory(animFactory)
 
     val stageFactory = new StageFactory(resourceLoader)
-    val stage = stageFactory.createStage(0)
+    val stage = stageFactory.createStage(1)
 
     val actorFactory = new ActorFactory(this.resourceLoader, effectFactory, this.animFactory, sounds)
 

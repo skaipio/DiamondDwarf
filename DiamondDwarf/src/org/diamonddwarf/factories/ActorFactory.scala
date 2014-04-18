@@ -14,11 +14,16 @@ final class ActorFactory(private val resources: ResourceLoader, private val effe
   private val animFactory: AnimationFactory, private val sounds: Sounds) {
 
   Workshop.refinery.associateStateWithAnim(Workshop.refinery.states.idle, animFactory.createRefineryWorkAnim)
+  Workshop.replenisher.associateStateWithAnim(Workshop.replenisher.states.idle, animFactory.createReplenisherWorkAnim)
+ 
   TileObject.stone.associateStateWithAnim(TileObject.stone.states.idle, animFactory.createStoneIdle)
   TileObject.hole.associateStateWithAnim(TileObject.hole.states.idle, this.animFactory.getDefault(TileObject.hole.states.idle))
 
   def createPlayer = {
     val player = new Player("Hessu")
+
+    Workshop.refinery.states.working.doLast = () => Workshop.refinery.use(player)
+
     player.activeState = player.states.idle
     player.nextState = player.states.idle
 

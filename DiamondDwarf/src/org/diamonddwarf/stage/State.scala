@@ -11,9 +11,23 @@ class State(var speed: Float) {
 
   def reset {
     this.progress = 0
-    this.toBePerformed = null
+  }
+  
+  def completed = this.progress >= this.speed
+  
+  def update(delta: Float) {
+    if (progress == 0) 
+      doFirst()
+    this.progress += delta
+    if (this.progress >= this.speed) {
+      doLast()
+
+    }
   }
 
+  var doFirst : () => Unit = () => {}
+  var doLast : () => Unit  = () => {}
+  
 }
 
 class GemsFound extends State(0f){

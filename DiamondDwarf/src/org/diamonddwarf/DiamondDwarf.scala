@@ -27,7 +27,7 @@ class DiamondDwarf(val player: Player) {
   def playerDig {
     if (this.activeMap.playerTile == Tile.diggableTile && !this.activeMap.isDug(this.activeMap.playerPosition) && player.canDig) {
       player.activate(player.states.digging)
-      player.activeState.onceComplete(digFinished)
+      player.activeState.doLast = () => digFinished
       player.resetAnimOfState(player.states.digging)
     }
   }
@@ -61,19 +61,19 @@ class DiamondDwarf(val player: Player) {
   def build {
     val buildPos = this.player.front
     if (this.activeMap.hasBaseAt(buildPos) && !this.activeMap.hasTileObjectAt(buildPos)) {
-      val toBuild = this.activeMap.buildables(this.activeMap.buildableIndex);q
+      val toBuild = this.activeMap.buildables(this.activeMap.buildableIndex);
       actors += toBuild
       this.activeMap.setTileObjectAt(buildPos, toBuild)
     }
   }
-
+  
   def use {
     val usePosition = this.player.front
     if (this.activeMap.hasWorkshopAt(usePosition)) {
       val workshop = this.activeMap.getWorkshopAt(usePosition)
       if (workshop.activeState == workshop.states.idle) {
         workshop.activate(workshop.states.working)
-        workshop.use(this.player)
+
       }
     }
   }

@@ -65,7 +65,7 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch,
       val tileObj = this.game.activeMap.getTileObjectAt(x, y)
       val texture = tileObj.getTexture
       if (texture != null)
-    	  batch.draw(tileObj.getTexture(), x * tileSize, y * tileSize)
+        batch.draw(texture, x * tileSize, y * tileSize)
 
     }
     batch.end()

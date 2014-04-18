@@ -22,4 +22,6 @@ class Replenisher extends Workshop {
 object Workshop {
 	val refinery = new Refinery
 	val replenisher = new Replenisher
+	
+	val buildables = Map("refinery" -> refinery, "replenisher" -> replenisher)
 }

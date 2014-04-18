@@ -15,6 +15,7 @@ final class AnimationFactory(private val resourceLoader: ResourceLoader) {
   val dwarfWalk = this.getRegions("tileobj/dwarf_walk")
   val dwarfDig = this.getRegions("tileobj/dwarf_dig")
   val refineryWork = this.getRegions("tileobj/refinery_working")
+  val replenisherWork = this.getRegions("tileobj/replenisher_working")
   val gemWithQuestionMark = this.getRegion("effects/gems_question")
   val timesMark = this.getRegion("effects/times")
   val numbers = this.getRegions("effects/digits")
@@ -26,6 +27,11 @@ final class AnimationFactory(private val resourceLoader: ResourceLoader) {
 
   def createRefineryWorkAnim = {
     val frames = for (i <- 0 until refineryWork.size) yield (refineryWork.get(i), 0.1f)
+    new Animation(frames.toArray)
+  }
+
+  def createReplenisherWorkAnim = {
+    val frames = for (i <- 0 until replenisherWork.size) yield (replenisherWork.get(i), 0.1f)
     new Animation(frames.toArray)
   }
 
@@ -74,7 +80,7 @@ final class AnimationFactory(private val resourceLoader: ResourceLoader) {
     new Animation(frames)
   }
 
-  def getDefault(state: State) = this.defaultAnimMap.get(state) match{
+  def getDefault(state: State) = this.defaultAnimMap.get(state) match {
     case Some(anim) => anim
     case _ => null
   }

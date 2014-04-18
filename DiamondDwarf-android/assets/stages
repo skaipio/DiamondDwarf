@@ -5,7 +5,9 @@
 		height:10,
 		stones:10,
 		baseX:4,
-		baseY:4
+		baseY:4,
+		time:100,
+		buildables:["refinery"]
 	},	
 	{
 		gemCounts:[1,2,3,4,5],
@@ -13,6 +15,8 @@
 		height:8,
 		stones:5,
 		baseX:4,
-		baseY:4
+		baseY:4,
+		time:200,
+        buildables:["refinery", "replenisher"]
 	}
 ]

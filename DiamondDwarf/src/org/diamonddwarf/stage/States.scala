@@ -10,8 +10,14 @@ class States() {
   val noGemsFound = new State(0)
   val foundGems = new GemsFound()
   val gotGem = new State(0)
-
-  // workshop
   val working = new State(1f)
 
+
+}
+
+class WorkshopStates() extends States() {
+  
+  
+  
+  
 }

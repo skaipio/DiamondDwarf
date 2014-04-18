@@ -22,16 +22,21 @@ trait Actor extends GameObject with Drawable {
   private val soundMap = scala.collection.mutable.Map[State, Sound]()
   private val methodMap = scala.collection.mutable.Map[State, State => Unit]()
   private var effects = MutableList[Effect]()
-  
+
   def getTexture = {
     var region: TextureRegion = null
     this.animationMap.get(this.activeState) match {
       case Some(anim) =>
         region = anim.getCurrentFrame
-      case _ => region = defaultTextureRegion
+      case _ =>
+        this.animationMap.get(this.states.idle) match {
+          case Some(anim) =>
+            region = anim.getCurrentFrame
+          case _ => region = defaultTextureRegion
+        }
     }
     if (region != null)
-    	flipToDirection(region)
+      flipToDirection(region)
     region
   }
 
@@ -95,11 +100,8 @@ trait Actor extends GameObject with Drawable {
   }
 
   private def updateState(delta: Float) {
-    this.activeState.progress += delta
-    if (this.activeState.progress >= this.activeState.speed) {
-      if (this.activeState.toBePerformed != null) {
-        this.activeState.toBePerformed()
-      }
+    this.activeState.update(delta)
+    if (this.activeState.completed) {
       this.activate(nextState)
       this.nextState = this.states.idle
     }
