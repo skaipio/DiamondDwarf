@@ -3,12 +3,12 @@ package org.diamonddwarf.factories
 import org.diamonddwarf.resources.ResourceLoader
 import org.diamonddwarf.stage.Player
 import org.diamonddwarf.resources.Sounds
-import org.diamonddwarf.items.Shovel
 import org.diamonddwarf.stage.State
 import org.diamonddwarf.stage.GemsFound
 import com.badlogic.gdx.audio.Sound
 import org.diamonddwarf.stage.Workshop
 import org.diamonddwarf.stage.TileObject
+import org.diamonddwarf.items.Equipment
 
 final class ActorFactory(private val resources: ResourceLoader, private val effectFactory: EffectFactory,
   private val animFactory: AnimationFactory, private val sounds: Sounds) {
@@ -53,7 +53,7 @@ final class ActorFactory(private val resources: ResourceLoader, private val effe
     setStateSound(player.states.gotGem, sounds.gotGem)
     setStateSound(player.states.moving, sounds.moving)
 
-    player.shovel = Shovel.shabbyShovel
+    player.shovel = Equipment.shabbyShovel
 
     player
   }

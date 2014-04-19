@@ -26,7 +26,7 @@ import org.diamonddwarf.factories.EffectFactory
 class Game extends ApplicationListener {
   private var batch: SpriteBatch = null
   private var stageRenderer: StageRenderer = null
-  private var inventoryRenderer: InventoryRenderer = null
+  private var interfaceRenderer: InventoryRenderer = null
   private var resourceLoader: ResourceLoader = null
   private var animFactory: AnimationFactory = null
 
@@ -57,8 +57,8 @@ class Game extends ApplicationListener {
     stageRenderer.create
     stageRenderer.setNewRandomIds(stage)
 
-    inventoryRenderer = new InventoryRenderer(game, batch)
-    inventoryRenderer.create
+    interfaceRenderer = new InventoryRenderer(game, batch, resourceLoader)
+    interfaceRenderer.create
 
     Gdx.input.setInputProcessor(controller)
 
@@ -73,13 +73,13 @@ class Game extends ApplicationListener {
   override def dispose() {
     this.batch.dispose()
     stageRenderer.dispose;
-    inventoryRenderer.dispose
+    interfaceRenderer.dispose
     resourceLoader.dispose
   }
 
   private def move(c: Coordinate) {
     game.player.direction = c
-    game.movePlayer(c)
+    game.moveOrBreakStone(c)
   }
 
   private def checkInput() {
@@ -126,8 +126,9 @@ class Game extends ApplicationListener {
 
     Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    
     stageRenderer.render
-    inventoryRenderer.render
+    interfaceRenderer.render
   }
 
   override def resize(width: Int, height: Int) {

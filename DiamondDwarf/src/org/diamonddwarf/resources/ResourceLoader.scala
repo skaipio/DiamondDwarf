@@ -23,6 +23,9 @@ class ResourceLoader {
     Workshop.refinery -> regions("tileobj/refinery"),
     Workshop.replenisher -> regions("tileobj/replenisher"))
 
+  val timerSprite = regions("ui/timer").get(0)
+  val timerBackground = regions("ui/timerbg").get(0)
+    
   val seamMap = {
     val regions = this.regions("tile/seam")
     val grassBaseSeam = (Tile.diggableTile, Tile.baseTile) -> regions.get(0)

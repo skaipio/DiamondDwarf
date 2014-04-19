@@ -2,12 +2,13 @@ package org.diamonddwarf.stage
 
 import scala.collection.mutable.Map
 import org.diamonddwarf.items.Gem
-import org.diamonddwarf.items.Shovel
+import org.diamonddwarf.items.Equipment
 
 class Player(val name: String) extends Actor() {
   
   var score = 0
-  var shovel: Shovel = null
+  var shovel: Equipment = null
+
   val inventory = Map[Gem, Int]()
 
   def give(gem: Gem) {
@@ -19,16 +20,16 @@ class Player(val name: String) extends Actor() {
     updateScore
   }
 
-  def canDig: Boolean = this.shovel != null && this.shovel.digsLeft >= 1
+  def canDig: Boolean = this.shovel != null && this.shovel.usesLeft >= 1
 
   def setShovelUsages(times: Int) {
     require(times >= 0)
-    this.shovel.digsLeft = times
+    this.shovel.usesLeft = times
   }
   
   def depleteShovel: Boolean = {
     if (canDig) {
-      this.shovel.digsLeft -= 1
+      this.shovel.usesLeft -= 1
       return true
     }
     return false

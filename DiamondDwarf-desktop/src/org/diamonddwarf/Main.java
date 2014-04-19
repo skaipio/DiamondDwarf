@@ -13,8 +13,8 @@ public class Main {
 		cfg.height = 12*64;
 		
 		Settings settings = new Settings();
-        settings.maxWidth = 512;
-        settings.maxHeight = 512;
+        settings.maxWidth = 1024;
+        settings.maxHeight = 1024;
         settings.useIndexes = true;
 		
 		TexturePacker2.process(settings, "../unpackedTextures", "../DiamondDwarf-android/assets", "packedTextures");

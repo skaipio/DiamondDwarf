@@ -6,7 +6,7 @@
 		stones:30,
 		baseX:4,
 		baseY:4,
-		time:100,
+		time:10,
 		buildables:["refinery", "replenisher"]
 	},	
 	{

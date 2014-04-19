@@ -1,7 +1,7 @@
 package org.diamonddwarf
 
 import org.diamonddwarf.stage._
-import org.diamonddwarf.items.Shovel
+import org.diamonddwarf.items.Equipment
 import scala.collection.mutable.Set
 
 class DiamondDwarf(val player: Player) {
@@ -13,6 +13,21 @@ class DiamondDwarf(val player: Player) {
 
   def startStage(stage: Stage) {
     this._activeMap = stage
+  }
+
+  def moveOrBreakStone(direction: Coordinate) {
+    val toBePosition = direction + _activeMap.playerPosition
+    if (_activeMap.inBounds(toBePosition)) {
+      if (_activeMap.getTileObjectAt(toBePosition).isPassable) {
+        movePlayer(direction)
+      } else if (_activeMap.getTileObjectAt(toBePosition) == TileObject.stone && player.canDig) {
+        println("mining")
+        player.activate(player.states.mining)
+        player.activeState.doLast = () => miningFinished
+        player.resetAnimOfState(player.states.digging)
+      }
+    }
+
   }
 
   def movePlayer(direction: Coordinate) {
@@ -30,6 +45,11 @@ class DiamondDwarf(val player: Player) {
       player.activeState.doLast = () => digFinished
       player.resetAnimOfState(player.states.digging)
     }
+  }
+
+  private def miningFinished {
+    activeMap.setTileObjectAt(this.activeMap.playerPosition+player.direction, TileObject.minedStone)
+    player.depleteShovel
   }
 
   private def digFinished {
@@ -66,7 +86,7 @@ class DiamondDwarf(val player: Player) {
       this.activeMap.setTileObjectAt(buildPos, toBuild)
     }
   }
-  
+
   def use {
     val usePosition = this.player.front
     if (this.activeMap.hasWorkshopAt(usePosition)) {

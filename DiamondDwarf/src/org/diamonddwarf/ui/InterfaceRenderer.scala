@@ -10,8 +10,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 import scala.util.Random
 import com.badlogic.gdx.graphics.OrthographicCamera
+import org.diamonddwarf.resources.ResourceLoader
 
-class InventoryRenderer(game: DiamondDwarf, private val batch : SpriteBatch) {
+class InventoryRenderer(game: DiamondDwarf, private val batch: SpriteBatch, private val resourceLoader: ResourceLoader) {
   private val font = new BitmapFont
   private val tileSize = 64
 
@@ -23,11 +24,20 @@ class InventoryRenderer(game: DiamondDwarf, private val batch : SpriteBatch) {
 
   def render() {
     batch.begin()
+    this.renderTimer
     this.renderPlayerInventory
     batch.end()
   }
 
   def dispose = {
+  }
+
+  private def lerp(start: Float, end: Float, percent: Float) = start + percent * (end - start)
+
+  private def renderTimer {
+    val timerProgress = game.activeMap.currentTime / game.activeMap.timelimit
+    batch.draw(resourceLoader.timerBackground, 100, 700)
+    batch.draw(resourceLoader.timerSprite, lerp(100, 700-64, Math.min(1, timerProgress)), 700)
   }
 
   private def renderPlayerInventory {
@@ -36,9 +46,9 @@ class InventoryRenderer(game: DiamondDwarf, private val batch : SpriteBatch) {
     var i = 1
     var additionalXOffset = 0
     var additionalYOffset = -60
-     font.draw(batch, "time: "+ game.activeMap.currentTime.toInt, offsetX, offsetY - 40)
+    font.draw(batch, "time: " + game.activeMap.currentTime.toInt, offsetX, offsetY - 40)
     font.draw(batch, game.player.name + "'s inventory", offsetX, offsetY)
-    font.draw(batch, "score: "+ game.player.score, offsetX, offsetY - 20)
+    font.draw(batch, "score: " + game.player.score, offsetX, offsetY - 20)
     if (game.player.shovel != null) {
       font.draw(batch, game.player.shovel.toString, offsetX, offsetY + additionalYOffset)
       additionalYOffset -= 20
