@@ -1,13 +1,13 @@
 [
 	{
-		gemCounts:[5,4,3,2,1],
-		width:10,
-		height:10,
-		stones:10,
+		gemCounts:[10,7,6,4,2],
+		width:12,
+		height:12,
+		stones:30,
 		baseX:4,
 		baseY:4,
 		time:100,
-		buildables:["refinery"]
+		buildables:["refinery", "replenisher"]
 	},	
 	{
 		gemCounts:[1,2,3,4,5],
@@ -17,6 +17,6 @@
 		baseX:4,
 		baseY:4,
 		time:200,
-        buildables:["refinery", "replenisher"]
+        buildables:["refinery"]
 	}
 ]

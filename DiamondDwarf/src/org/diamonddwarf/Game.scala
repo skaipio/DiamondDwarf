@@ -45,7 +45,7 @@ class Game extends ApplicationListener {
     val effectFactory = new EffectFactory(animFactory)
 
     val stageFactory = new StageFactory(resourceLoader)
-    val stage = stageFactory.createStage(1)
+    val stage = stageFactory.createStage(0)
 
     val actorFactory = new ActorFactory(this.resourceLoader, effectFactory, this.animFactory, sounds)
 
@@ -120,6 +120,7 @@ class Game extends ApplicationListener {
   }
 
   override def render() {
+    game.activeMap.currentTime += Gdx.graphics.getDeltaTime()
     this.updateActors(Gdx.graphics.getDeltaTime())
     checkInput
 

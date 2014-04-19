@@ -14,6 +14,7 @@ class Stage(width: Int, height: Int, stones: Int, gems: Map[Gem, Int],
   require(this.minTilesFromBorders(basePosition.x, basePosition.y, 1), "Not enough room for base at " + basePosition)
 
   var buildableIndex = 0
+  var currentTime = 0f
   
   this.setBaseAround(basePosition)
 

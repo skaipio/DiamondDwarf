@@ -9,8 +9,8 @@ public class Main {
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "DiamondDwarf";
-		cfg.width = 1200+200;
-		cfg.height = 800;
+		cfg.width = 900+200;
+		cfg.height = 12*64;
 		
 		Settings settings = new Settings();
         settings.maxWidth = 512;
