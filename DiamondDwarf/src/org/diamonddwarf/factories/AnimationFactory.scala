@@ -7,99 +7,81 @@ import java.util.logging.Logger
 import java.util.logging.Level
 import org.diamonddwarf.stage.State
 import org.diamonddwarf.stage.TileObject
+import org.diamonddwarf.ui.AnimationTemplate
+import org.diamonddwarf.resources.ResourceLoader
+import org.diamonddwarf.ui.AnimationTemplate
 
-final class AnimationFactory(private val resourceLoader: ResourceLoader) {
+/**
+ * Animations are fetched from animationTemplateMap that is built from a file of JSON format.
+ * The animation object has a name e.g. "dwarfIdle", and it contains two arrays: "frames" and "times".
+ * The "frames"-array lists paths that will be used to fetch texture regions from a texture atlas.
+ * Note that a path might be associated with more than one region. For example the "dwarfWalk"-animation
+ * is associated with more than one regions and uses the same time, 0.1f, for all regions. Times are
+ * associated in order, so for example if the "dwarfWalk"-animation had times 0.1f and 0.2f, then 0.2f
+ * would be used for the second region that would be found with the single given path. The last float time in
+ * the array will be used for all the rest of the regions if there are not enough times specified.
+ */
+final class AnimationFactory(defaultTexture: TextureRegion, animationTemplateMap: Map[String, AnimationTemplate], numberMap: Map[Int, TextureRegion]) {
   private val logger = Logger.getAnonymousLogger() // Keep this at top
 
-  val dwarfIdle = this.getRegion("tileobj/dwarf")
-  val dwarfWalk = this.getRegions("tileobj/dwarf_walk")
-  val dwarfDig = this.getRegions("tileobj/dwarf_dig")
-  val refineryWork = this.getRegions("tileobj/refinery_working")
-  val replenisherWork = this.getRegions("tileobj/replenisher_working")
-  val gemWithQuestionMark = this.getRegion("effects/gems_question")
-  val timesMark = this.getRegion("effects/times")
-  val numbers = this.getRegions("effects/digits")
-  val stoneIdle = this.getRegion("tileobj/stone")
-  val holeIdle = this.getRegion("tileobj/hole")
-
-  val defaultAnimMap = Map[State, Animation](
-    TileObject.hole.states.idle -> new Animation(Array[(TextureRegion, Float)]((holeIdle, 1.0f))))
-
   def createRefineryWorkAnim = {
-    val frames = for (i <- 0 until refineryWork.size) yield (refineryWork.get(i), 0.1f)
-    new Animation(frames.toArray)
+    this.createAnimation("refineryWork")
   }
 
   def createReplenisherWorkAnim = {
-    val frames = for (i <- 0 until replenisherWork.size) yield (replenisherWork.get(i), 0.1f)
-    new Animation(frames.toArray)
+    this.createAnimation("replenisherWork")
   }
 
   def createDwarfIdleAnim = {
-    val frames = Array[(TextureRegion, Float)]((dwarfIdle, 1.0f))
-    new Animation(frames)
+    this.createAnimation("dwarfIdle")
   }
 
   def createDwarfMoveAnim = {
-    val frames = for (i <- 0 until dwarfWalk.size) yield (dwarfWalk.get(i), 0.1f)
-    new Animation(frames.toArray)
+    this.createAnimation("dwarfMove")
   }
 
   def createDwarfDigAnim = {
-    val frames = new Array[(TextureRegion, Float)](3);
-    frames(0) = (dwarfDig.get(0), 0.1f)
-    frames(1) = (dwarfDig.get(1), 0.1f)
-    frames(2) = (dwarfDig.get(2), 0.2f)
-    new Animation(frames)
+    this.createAnimation("dwarfDig")
   }
 
   def createGemWithQuestionMarkAnim = {
-    val frames = Array[(TextureRegion, Float)]((gemWithQuestionMark, 1.0f))
-    new Animation(frames)
+    this.createAnimation("gemWithQuestionMark")
   }
 
   def createTimesMarkAnim = {
-    val frames = Array[(TextureRegion, Float)]((timesMark, 1.0f))
-    new Animation(frames)
+    this.createAnimation("timesMark")
+  }
+  
+  def createStoneIdle = {
+    this.createAnimation("stoneIdle")
+  }
+  
+  def createHoleIdle = {
+    this.createAnimation("holeIdle")
   }
 
   def createNumberAnim(number: Int) = {
-    //require(number >= 0 && number < this.numbers.size, "No assets/effects/number textures found")
-    var anim: Animation = null
-    if (number >= 0 && number < this.numbers.size) {
-      val region = this.numbers.get(number)
-      anim = new Animation(Array((region, 1.0f)))
-    } else {
-      anim = new Animation(Array())
+    this.numberMap.get(number) match {
+      case Some(region) => new Animation(Array((region, 1.0f)))
+      case _ => new Animation(Array())
     }
-    anim
   }
 
-  def createStoneIdle = {
-    val frames = Array[(TextureRegion, Float)]((stoneIdle, 1.0f))
-    new Animation(frames)
+  def createAnimation(name: String) = {
+    this.animationTemplateMap.get(name) match {
+      case Some(template) =>
+        this.buildAnimFromTemplate(template)
+      case _ =>
+        this.noAnimation(name)
+        new Animation(Array((defaultTexture, 1.0f)))
+    }
   }
 
-  def getDefault(state: State) = this.defaultAnimMap.get(state) match {
-    case Some(anim) => anim
-    case _ => null
-  }
-
-  private def getRegion(name: String) = {
-    val region = resourceLoader.atlas.findRegion(name)
-    if (region == null)
-      this.noAnimation(name)
-    region
-  }
-
-  private def getRegions(name: String) = {
-    val regions = resourceLoader.atlas.findRegions(name)
-    if (regions.size == 0)
-      this.noAnimation(name)
-    regions
+  private def buildAnimFromTemplate(template: AnimationTemplate) = {
+    new Animation(template.frames)
   }
 
   private def noAnimation(name: String) {
-    logger.log(Level.WARNING, "could not find animation matching \"" + name + "\"")
+    logger.log(Level.WARNING, "Could not find animation \"" + name + "\".")
   }
 }

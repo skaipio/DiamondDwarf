@@ -16,9 +16,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import scala.util.control.Exception
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
 
-class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch,
-  private val textureRegionMap: Map[GameObject, com.badlogic.gdx.utils.Array[AtlasRegion]],
-  private val seamMap: Map[(Tile, Tile), AtlasRegion]) {
+class StageRenderer(game: DiamondDwarf, batch: SpriteBatch, seamMap: Map[(Int, Int), AtlasRegion]) {
+
   private val font = new BitmapFont
 
   private val mapXOffset = 20
@@ -29,13 +28,7 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch,
 
   private val tileSize = 64
 
-  private var randomIds: Array[Array[Int]] = null
-
   font.setColor(Color.BLACK)
-
-  def setNewRandomIds(stage: TileMap) {
-    this.randomIds = Array.fill(stage.width, stage.height)(Random.nextInt.abs)
-  }
 
   def create {
     val w = Gdx.graphics.getWidth()
@@ -45,7 +38,8 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch,
   def render() {
     batch.setColor(1f, 1f, 1f, 1f)
     this.renderTiles
-    this.drawSeams
+    this.renderSeams
+    this.renderTileObjects
     this.drawActors
     this.drawEffects
   }
@@ -58,10 +52,16 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch,
     batch.begin()
     for (y <- 0 until game.activeMap.height; x <- 0 until game.activeMap.width) {
       val tile = this.game.activeMap.getTileAt(x, y)
-      this.getTextureOf(tile, x, y) match {
-        case Some(texture) => batch.draw(texture, x * tileSize, y * tileSize)
-        case _ =>
+      if (tile.getTexture != null) {
+        batch.draw(tile.getTexture, x * tileSize, y * tileSize)
       }
+    }
+    batch.end()
+  }
+
+  private def renderTileObjects {
+    batch.begin()
+    for (y <- 0 until game.activeMap.height; x <- 0 until game.activeMap.width) {
       val tileObj = this.game.activeMap.getTileObjectAt(x, y)
       val texture = tileObj.getTexture
       if (texture != null)
@@ -92,28 +92,28 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch,
     batch.end()
   }
 
-  private def drawSeams {
+  private def renderSeams {
     batch.begin()
     for (y <- 0 until game.activeMap.height - 1; x <- 0 until game.activeMap.width - 1) {
       val tile = this.game.activeMap.getTileAt(x, y)
       val top = this.game.activeMap.getTileAt(x, y + 1)
       val right = this.game.activeMap.getTileAt(x + 1, y)
-      this.seamMap.get((tile, top)) match {
+      this.seamMap.get((tile.id, top.id)) match {
         case Some(region) =>
           this.batch.draw(region, x * tileSize + tileSize, y * tileSize + tileSize - 4, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 90f)
         case _ =>
       }
-      this.seamMap.get((top, tile)) match {
+      this.seamMap.get((top.id, tile.id)) match {
         case Some(region) =>
           this.batch.draw(region, x * tileSize, y * tileSize + tileSize + 4, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, -90f)
         case _ =>
       }
-      this.seamMap.get((tile, right)) match {
+      this.seamMap.get((tile.id, right.id)) match {
         case Some(region) =>
           this.batch.draw(region, x * tileSize + tileSize - 4, y * tileSize, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 0f)
         case _ =>
       }
-      this.seamMap.get((right, tile)) match {
+      this.seamMap.get((right.id, tile.id)) match {
         case Some(region) =>
           this.batch.draw(region, x * tileSize + tileSize + 4, y * tileSize + tileSize, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 180f)
         case _ =>
@@ -133,13 +133,4 @@ class StageRenderer(game: DiamondDwarf, private val batch: SpriteBatch,
   }
 
   private def lerp(start: Float, end: Float, percent: Float) = start + percent * (end - start)
-
-  private def getTextureOf(obj: GameObject, x: Int, y: Int): Option[TextureRegion] = {
-    this.textureRegionMap.get(obj) match {
-      case Some(textures) =>
-        if (textures.size == 0) throw new Exception("No textures found for " + obj.toString())
-        Some(textures.get(this.randomIds(x)(y) % textures.size))
-      case _ => None
-    }
-  }
 }

@@ -7,9 +7,11 @@ import scala.collection.Iterable
 import scala.util.Random
 import org.diamonddwarf.items.Gem
 import org.diamonddwarf.stage._
+import org.diamonddwarf.factories.TileFactory
 
-class Stage(width: Int, height: Int, stones: Int, gems: Map[Gem, Int], 
-    basePosition: Coordinate, val timelimit: Int, val buildables: Array[Workshop]) extends TileMap(width, height) {
+class Stage(width: Int, height: Int, tileFactory: TileFactory, stones: Int, gems: Map[Gem, Int], 
+    basePosition: Coordinate, val timelimit: Int, val buildables: Array[Workshop]) extends TileMap(width, height, tileFactory) {
+  
   require(stones < width * height, "Not enough tiles for " + stones + " stones.")
   require(this.minTilesFromBorders(basePosition.x, basePosition.y, 1), "Not enough room for base at " + basePosition)
 
@@ -20,7 +22,7 @@ class Stage(width: Int, height: Int, stones: Int, gems: Map[Gem, Int],
 
   {
     var coordinatePairs = (0 until height).flatMap(y => (0 until width).map(x => (x, y)))
-    coordinatePairs = coordinatePairs.filter(c => this.getTileAt(c._1, c._2) != Tile.baseTile)
+    coordinatePairs = coordinatePairs.filter(c => !this.getTileAt(c._1, c._2).isBase)
     coordinatePairs = Random.shuffle(coordinatePairs)
 
     for (gems_ <- gems) {
@@ -51,12 +53,12 @@ class Stage(width: Int, height: Int, stones: Int, gems: Map[Gem, Int],
     case _ => null
   }
 
-  def hasBaseAt(c: Coordinate) = this.getTileAt(c) == Tile.baseTile
+  def hasBaseAt(c: Coordinate) = this.getTileAt(c).isBase
 
   def setBaseAround(c: Coordinate) {
     if (this.minTilesFromBorders(c.x, c.y, 1)) {
       for (x <- c.x - 1 to c.x + 1; y <- c.y - 1 to c.y + 1) {
-        this.setTileAt(x, y, Tile.baseTile)
+        this.setTileAt(x, y, tileFactory.createBaseTile)
       }
 
     }

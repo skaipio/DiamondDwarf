@@ -40,7 +40,7 @@ class DiamondDwarf(val player: Player) {
   }
 
   def playerDig {
-    if (this.activeMap.playerTile == Tile.diggableTile && !this.activeMap.isDug(this.activeMap.playerPosition) && player.canDig) {
+    if (this.activeMap.playerTile.isDiggable && !this.activeMap.isDug(this.activeMap.playerPosition) && player.canDig) {
       player.activate(player.states.digging)
       player.activeState.doLast = () => digFinished
       player.resetAnimOfState(player.states.digging)

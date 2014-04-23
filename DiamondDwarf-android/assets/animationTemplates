@@ -1,0 +1,38 @@
+{
+	"dwarfIdle" : {
+			"frames": ["tileobj/dwarf"],
+			"times" : [1.0f]
+	},
+	"dwarfMove" : {
+			"frames":["tileobj/dwarf_walk"],
+			"times" : [0.1f]
+	},
+	"dwarfDig" : {
+		    "frames" : ["tileobj/dwarf_dig"],
+		    "times" : [0.1f, 0.1f, 0.2f]
+  	},  		
+  	"refineryWork" : {
+	    	"frames" : ["tileobj/refinery_working"],
+			"times" : [0.1f]
+  	},
+  	"replenisherWork" : {
+	    	"frames" : ["tileobj/replenisher_working"],
+			"times" : [0.1f]
+  	},
+  	"gemWithQuestionMark" : {
+	    	"frames" : ["effects/gems_question"],
+			"times" : [1.0f]
+  	},
+  	"timesMark" : {
+	    	"frames" : ["effects/times"],
+			"times" : [1.0f]
+  	},
+  	"stoneIdle" : {
+	    	"frames" : ["tileobj/stone"],
+			"times" : [1.0f]
+  	},
+  	"holeIdle" : {
+	    	"frames" : ["tileobj/hole"],
+			"times" : [1.0f]
+  	}
+}

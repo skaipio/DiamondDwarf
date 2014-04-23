@@ -1,14 +1,10 @@
 package org.diamonddwarf.stage
 
-class Tile private (val symbol: String) extends GameObject {
-  
-  override def toString = this.symbol
+import org.diamonddwarf.ui.Drawable
 
-}
+class Tile(val id : Int, val isDiggable : Boolean, val isBase : Boolean) extends Drawable
 
 object Tile {
-  
-  val diggableTile = 	new Tile(".")
-  val baseTile = 		new Tile("x")
-  
+  val diggableID = 0
+  val baseID = 1
 }

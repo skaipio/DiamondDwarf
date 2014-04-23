@@ -2,10 +2,11 @@ package org.diamonddwarf.stage
 
 import org.diamonddwarf.items.Gem
 import scala.collection.mutable.Map
+import org.diamonddwarf.factories.TileFactory
 
-abstract class TileMap(val width: Int, val height: Int) extends Traversable[Tile] {
+abstract class TileMap(val width: Int, val height: Int, tileFactory: TileFactory) extends Traversable[Tile] {
 
-  private val tileMap: Array[Array[Tile]] = Array.fill(height, width)(Tile.diggableTile)
+  private val tileMap: Array[Array[Tile]] = Array.fill(height, width)(tileFactory.createDiggableTile)
   private val gemMap: Map[Coordinate, Gem] = Map()
   private val topMap: Array[Array[TileObject]] = Array.fill(height, width)(TileObject.empty)
 

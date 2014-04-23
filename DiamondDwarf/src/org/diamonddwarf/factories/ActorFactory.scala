@@ -10,24 +10,20 @@ import org.diamonddwarf.stage.Workshop
 import org.diamonddwarf.stage.TileObject
 import org.diamonddwarf.items.Equipment
 
-final class ActorFactory(private val resources: ResourceLoader, private val effectFactory: EffectFactory,
-  private val animFactory: AnimationFactory, private val sounds: Sounds) {
+final class ActorFactory(resources: ResourceLoader, effectFactory: EffectFactory, animFactory: AnimationFactory, sounds: Sounds) {
 
   Workshop.refinery.associateStateWithAnim(Workshop.refinery.states.idle, animFactory.createRefineryWorkAnim)
   Workshop.replenisher.associateStateWithAnim(Workshop.replenisher.states.idle, animFactory.createReplenisherWorkAnim)
  
   TileObject.stone.associateStateWithAnim(TileObject.stone.states.idle, animFactory.createStoneIdle)
-  TileObject.hole.associateStateWithAnim(TileObject.hole.states.idle, this.animFactory.getDefault(TileObject.hole.states.idle))
+  TileObject.hole.associateStateWithAnim(TileObject.hole.states.idle, animFactory.createHoleIdle)
 
   def createPlayer = {
     val player = new Player("Hessu")
 
     Workshop.refinery.states.working.doLast = () => Workshop.refinery.use(player)
 
-    player.activeState = player.states.idle
-    player.nextState = player.states.idle
-
-    player.defaultTextureRegion = animFactory.dwarfIdle
+    player.defaultTexture = resources.defaultTexture
 
     player.associateStateWithAnim(player.states.idle, animFactory.createDwarfIdleAnim)
     player.associateStateWithAnim(player.states.moving, animFactory.createDwarfMoveAnim)

@@ -6,10 +6,10 @@ import org.diamonddwarf.stage.Stage
 import org.diamonddwarf.stage.Coordinate
 import org.diamonddwarf.stage.Workshop
 
-class StageFactory(private val resources: ResourceLoader) {
+class StageFactory(resources: ResourceLoader, tileFactory : TileFactory) {
 
   def createStage(stageNumber: Int) = {
-    val stageData = resources.getStageData(stageNumber)
+    val stageData = resources.getStageTemplate(stageNumber)
     val okayGems = stageData.gemCounts(0)
     val goodGems = stageData.gemCounts(1)
     val fineGems = stageData.gemCounts(2)
@@ -19,6 +19,7 @@ class StageFactory(private val resources: ResourceLoader) {
     new Stage(
       stageData.width,
       stageData.height,
+      tileFactory,
       stageData.stones,
       gemMap,
       Coordinate(stageData.baseX, stageData.baseY),

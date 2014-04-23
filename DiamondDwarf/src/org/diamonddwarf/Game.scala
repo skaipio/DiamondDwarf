@@ -22,13 +22,14 @@ import org.diamonddwarf.factories.StageFactory
 import org.diamonddwarf.resources.Sounds
 import org.diamonddwarf.factories.ActorFactory
 import org.diamonddwarf.factories.EffectFactory
+import org.diamonddwarf.factories.TileFactory
+import org.diamonddwarf.resources.ResourceLoader
 
 class Game extends ApplicationListener {
-  private var batch: SpriteBatch = null
+  private var batch : SpriteBatch = null
+  private var resourceLoader : ResourceLoader = null
   private var stageRenderer: StageRenderer = null
   private var interfaceRenderer: InventoryRenderer = null
-  private var resourceLoader: ResourceLoader = null
-  private var animFactory: AnimationFactory = null
 
   private var texture: Texture = null
   private var sprite: Sprite = null
@@ -40,22 +41,21 @@ class Game extends ApplicationListener {
     batch = new SpriteBatch
     resourceLoader = new ResourceLoader
 
-    val sounds = new Sounds(this.resourceLoader)
-    animFactory = new AnimationFactory(resourceLoader)
+    val sounds = new Sounds(resourceLoader)
+    val animFactory = new AnimationFactory(resourceLoader.defaultTexture, resourceLoader.animationTemplateMap, resourceLoader.numberMap)
     val effectFactory = new EffectFactory(animFactory)
-
-    val stageFactory = new StageFactory(resourceLoader)
+    val tileFactory = new TileFactory(resourceLoader.defaultTexture, resourceLoader.tileTextureMap)
+    val stageFactory = new StageFactory(resourceLoader, tileFactory)
     val stage = stageFactory.createStage(0)
 
-    val actorFactory = new ActorFactory(this.resourceLoader, effectFactory, this.animFactory, sounds)
+    val actorFactory = new ActorFactory(resourceLoader, effectFactory, animFactory, sounds)
 
     this.player = actorFactory.createPlayer
 
     game = new DiamondDwarf(this.player)
     val controller = new Controller(game)
-    stageRenderer = new StageRenderer(game, batch, this.resourceLoader.textureRegionMapForVariants, this.resourceLoader.seamMap)
+    stageRenderer = new StageRenderer(game, batch, resourceLoader.seamMap)
     stageRenderer.create
-    stageRenderer.setNewRandomIds(stage)
 
     interfaceRenderer = new InventoryRenderer(game, batch, resourceLoader)
     interfaceRenderer.create

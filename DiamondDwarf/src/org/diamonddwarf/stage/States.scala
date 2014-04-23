@@ -15,10 +15,3 @@ class States() {
 
 
 }
-
-class WorkshopStates() extends States() {
-  
-  
-  
-  
-}
