@@ -5,11 +5,17 @@ import org.diamonddwarf.items.Gem
 import org.diamonddwarf.stage.Stage
 import org.diamonddwarf.stage.Coordinate
 import org.diamonddwarf.stage.Workshop
+import org.diamonddwarf.resources.StageTemplate
 
-class StageFactory(resources: ResourceLoader, tileFactory : TileFactory) {
+class StageFactory(val stageTemplates: Array[StageTemplate], tileFactory: TileFactory) {
+
+  def getStageTemplate(stageNum: Int) = {
+    require(stageNum >= 0 && stageNum <= stageTemplates.length, "Stage number " + stageNum + " does not exist.")
+    stageTemplates(stageNum)
+  }
 
   def createStage(stageNumber: Int) = {
-    val stageData = resources.getStageTemplate(stageNumber)
+    val stageData = getStageTemplate(stageNumber)
     val okayGems = stageData.gemCounts(0)
     val goodGems = stageData.gemCounts(1)
     val fineGems = stageData.gemCounts(2)

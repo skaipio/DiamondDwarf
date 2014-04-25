@@ -31,12 +31,6 @@ class ResourceLoader {
     Tile.diggableID -> getRegions("tile/grass"),
     Tile.baseID -> getRegions("tile/base"))
 
-  val tileObjectMap = Map(
-    TileObject.stone -> getRegions("tileobj/stone"),
-    TileObject.hole -> getRegions("tileobj/hole"),
-    Workshop.refinery -> getRegions("tileobj/refinery"),
-    Workshop.replenisher -> getRegions("tileobj/replenisher"))
-
   val timerSprite = getRegions("ui/timer").get(0)
   val timerBackground = getRegions("ui/timerbg").get(0)
 
@@ -84,15 +78,15 @@ class ResourceLoader {
   }
 
   // Load stage data from "assets/stages"-file
-  private val stageTemplates = {
+  val stageTemplates = {
     val file = Gdx.files.internal("stageTemplates")
     if (file.exists()) {
       val content = new String(file.readBytes())
       val gson = new Gson()
-      gson.fromJson(content, classOf[Array[StageData]])
+      gson.fromJson(content, classOf[Array[StageTemplate]])
     } else {
       throw new Exception("File \"assets/stageTemplates\" is required for instantiating stages, but was not found.")
-      Array[StageData]()
+      Array[StageTemplate]()
     }
 
   }
@@ -105,11 +99,6 @@ class ResourceLoader {
   def hasTrack(trackNum: Int) = trackNum >= 0 && trackNum < tracks.length
 
   def getSound(name: String) = this.sounds.get(name)
-
-  def getStageTemplate(stageNum: Int) = {
-    require(stageNum >= 0 && stageNum <= stageTemplates.length, "Stage number " + stageNum + " does not exist.")
-    stageTemplates(stageNum)
-  }
 
   // TODO: Textures need to be disposed of on game.dispose() call
   // TODO: Call dispose in Game.dispose()

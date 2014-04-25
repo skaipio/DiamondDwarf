@@ -24,6 +24,7 @@ import org.diamonddwarf.factories.ActorFactory
 import org.diamonddwarf.factories.EffectFactory
 import org.diamonddwarf.factories.TileFactory
 import org.diamonddwarf.resources.ResourceLoader
+import org.diamonddwarf.menu.StageMenu
 
 class Game extends ApplicationListener {
   private var batch : SpriteBatch = null
@@ -45,8 +46,8 @@ class Game extends ApplicationListener {
     val animFactory = new AnimationFactory(resourceLoader.defaultTexture, resourceLoader.animationTemplateMap, resourceLoader.numberMap)
     val effectFactory = new EffectFactory(animFactory)
     val tileFactory = new TileFactory(resourceLoader.defaultTexture, resourceLoader.tileTextureMap)
-    val stageFactory = new StageFactory(resourceLoader, tileFactory)
-    val stage = stageFactory.createStage(0)
+    val stageMenu = new StageMenu(new StageFactory(resourceLoader.stageTemplates, tileFactory))
+    val stage = stageMenu.createStage(0)
 
     val actorFactory = new ActorFactory(resourceLoader, effectFactory, animFactory, sounds)
 
