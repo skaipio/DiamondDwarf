@@ -6,12 +6,12 @@ import scala.collection.mutable.MutableList
 import org.diamonddwarf.stage.Coordinate
 import com.badlogic.gdx.Input
 
-class Controller(val game: DiamondDwarf) extends InputProcessor {
+class Controller() extends InputProcessor {
   override def keyTyped(character: Char): Boolean = character match {
     case '\t' =>
-      game.activeMap.buildableIndex =
-        (game.activeMap.buildableIndex + 1) % game.activeMap.buildables.length
-      println(game.activeMap.buildableIndex)
+      DiamondDwarf.activeMap.buildableIndex =
+        (DiamondDwarf.activeMap.buildableIndex + 1) % DiamondDwarf.activeMap.buildables.length
+      println(DiamondDwarf.activeMap.buildableIndex)
       true
     case _ =>
       false

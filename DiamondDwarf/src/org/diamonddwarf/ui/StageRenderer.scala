@@ -16,7 +16,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import scala.util.control.Exception
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
 
-class StageRenderer(game: DiamondDwarf, batch: SpriteBatch, seamMap: Map[(Int, Int), AtlasRegion]) {
+class StageRenderer(batch: SpriteBatch, seamMap: Map[(Int, Int), AtlasRegion]) {
 
   private val font = new BitmapFont
 
@@ -50,8 +50,8 @@ class StageRenderer(game: DiamondDwarf, batch: SpriteBatch, seamMap: Map[(Int, I
 
   private def renderTiles {
     batch.begin()
-    for (y <- 0 until game.activeMap.height; x <- 0 until game.activeMap.width) {
-      val tile = this.game.activeMap.getTileAt(x, y)
+    for (y <- 0 until DiamondDwarf.activeMap.height; x <- 0 until DiamondDwarf.activeMap.width) {
+      val tile = DiamondDwarf.activeMap.getTileAt(x, y)
       if (tile.getTexture != null) {
         batch.draw(tile.getTexture, x * tileSize, y * tileSize)
       }
@@ -61,8 +61,8 @@ class StageRenderer(game: DiamondDwarf, batch: SpriteBatch, seamMap: Map[(Int, I
 
   private def renderTileObjects {
     batch.begin()
-    for (y <- 0 until game.activeMap.height; x <- 0 until game.activeMap.width) {
-      val tileObj = this.game.activeMap.getTileObjectAt(x, y)
+    for (y <- 0 until DiamondDwarf.activeMap.height; x <- 0 until DiamondDwarf.activeMap.width) {
+      val tileObj = DiamondDwarf.activeMap.getTileObjectAt(x, y)
       val texture = tileObj.getTexture
       if (texture != null)
         batch.draw(texture, x * tileSize, y * tileSize)
@@ -73,16 +73,17 @@ class StageRenderer(game: DiamondDwarf, batch: SpriteBatch, seamMap: Map[(Int, I
 
   private def drawActors = {
     batch.begin()
-    val (lerpx, lerpy) = actorDrawPosition(game.player, game.activeMap.playerPosition.x, game.activeMap.playerPosition.y)
-    val textureRegion = game.player.getTexture
+    val (lerpx, lerpy) = actorDrawPosition(DiamondDwarf.player, DiamondDwarf.activeMap.playerPosition.x, DiamondDwarf.activeMap.playerPosition.y)
+    val textureRegion = DiamondDwarf.player.getTexture
     if (textureRegion != null)
-      batch.draw(game.player.getTexture, lerpx, lerpy)
+      batch.draw(DiamondDwarf.player.getTexture, lerpx, lerpy)
     batch.end()
   }
 
   private def drawEffects {
+    val oldColor = batch.getColor()
     batch.begin()
-    for (effect <- game.player.getEffects) {
+    for (effect <- DiamondDwarf.player.getEffects) {
       batch.setColor(effect.red, effect.green, effect.blue, effect.alpha)
       for ((anim, c) <- effect.animations) {
         val frame = anim.getCurrentFrame
@@ -90,14 +91,15 @@ class StageRenderer(game: DiamondDwarf, batch: SpriteBatch, seamMap: Map[(Int, I
       }
     }
     batch.end()
+    batch.setColor(oldColor)
   }
 
   private def renderSeams {
     batch.begin()
-    for (y <- 0 until game.activeMap.height - 1; x <- 0 until game.activeMap.width - 1) {
-      val tile = this.game.activeMap.getTileAt(x, y)
-      val top = this.game.activeMap.getTileAt(x, y + 1)
-      val right = this.game.activeMap.getTileAt(x + 1, y)
+    for (y <- 0 until DiamondDwarf.activeMap.height - 1; x <- 0 until DiamondDwarf.activeMap.width - 1) {
+      val tile = DiamondDwarf.activeMap.getTileAt(x, y)
+      val top = DiamondDwarf.activeMap.getTileAt(x, y + 1)
+      val right = DiamondDwarf.activeMap.getTileAt(x + 1, y)
       this.seamMap.get((tile.id, top.id)) match {
         case Some(region) =>
           this.batch.draw(region, x * tileSize + tileSize, y * tileSize + tileSize - 4, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 90f)

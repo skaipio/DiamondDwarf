@@ -4,15 +4,18 @@ import org.diamonddwarf.stage._
 import org.diamonddwarf.items.Equipment
 import scala.collection.mutable.Set
 
-class DiamondDwarf(val player: Player) {
-  private var _activeMap: Stage = null
+object DiamondDwarf {
 
-  val actors = Set[Actor](player)
+  private var _activeMap: Stage = null
+  var player : Player = null
+  val actors : Set[Actor] = Set()
 
   def activeMap = this._activeMap
 
   def startStage(stage: Stage) {
+    require(this.player != null)
     this._activeMap = stage
+    actors += this.player
   }
 
   def moveOrBreakStone(direction: Coordinate) {
@@ -40,7 +43,13 @@ class DiamondDwarf(val player: Player) {
   }
 
   def playerDig {
-    if (this.activeMap.playerTile.isDiggable && !this.activeMap.isDug(this.activeMap.playerPosition) && player.canDig) {
+
+    val canDig = this.activeMap.playerTile.isDiggable &&
+      this.activeMap.getTileObjectAt(player.position) == TileObject.empty &&
+      !this.activeMap.isDug(this.activeMap.playerPosition) &&
+      player.canDig
+
+    if (canDig) {
       player.activate(player.states.digging)
       player.activeState.doLast = () => digFinished
       player.resetAnimOfState(player.states.digging)
@@ -48,7 +57,7 @@ class DiamondDwarf(val player: Player) {
   }
 
   private def miningFinished {
-    activeMap.setTileObjectAt(this.activeMap.playerPosition+player.direction, TileObject.minedStone)
+    activeMap.setTileObjectAt(this.activeMap.playerPosition + player.direction, TileObject.minedStone)
     player.depleteShovel
   }
 
@@ -93,7 +102,6 @@ class DiamondDwarf(val player: Player) {
       val workshop = this.activeMap.getWorkshopAt(usePosition)
       if (workshop.activeState == workshop.states.idle) {
         workshop.activate(workshop.states.working)
-
       }
     }
   }

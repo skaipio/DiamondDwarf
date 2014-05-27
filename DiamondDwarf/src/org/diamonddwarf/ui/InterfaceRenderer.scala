@@ -12,9 +12,11 @@ import scala.util.Random
 import com.badlogic.gdx.graphics.OrthographicCamera
 import org.diamonddwarf.resources.ResourceLoader
 
-class InventoryRenderer(game: DiamondDwarf, private val batch: SpriteBatch, private val resourceLoader: ResourceLoader) {
+class InventoryRenderer(batch: SpriteBatch, resourceLoader: ResourceLoader) {
   private val font = new BitmapFont
   private val tileSize = 64
+  
+  private val stageTimer = new StageTimer(batch, resourceLoader)
 
   font.setColor(Color.BLACK)
 
@@ -24,7 +26,7 @@ class InventoryRenderer(game: DiamondDwarf, private val batch: SpriteBatch, priv
 
   def render() {
     batch.begin()
-    this.renderTimer
+    this.stageTimer.renderTimer
     this.renderPlayerInventory
     batch.end()
   }
@@ -32,28 +34,20 @@ class InventoryRenderer(game: DiamondDwarf, private val batch: SpriteBatch, priv
   def dispose = {
   }
 
-  private def lerp(start: Float, end: Float, percent: Float) = start + percent * (end - start)
-
-  private def renderTimer {
-    val timerProgress = game.activeMap.currentTime / game.activeMap.timelimit
-    batch.draw(resourceLoader.timerBackground, 100, 700)
-    batch.draw(resourceLoader.timerSprite, lerp(100, 700-64, Math.min(1, timerProgress)), 700)
-  }
-
   private def renderPlayerInventory {
-    val offsetX = game.activeMap.width * tileSize + 20
-    val offsetY = game.activeMap.height * tileSize - 20
+    val offsetX = DiamondDwarf.activeMap.width * tileSize + 20
+    val offsetY = DiamondDwarf.activeMap.height * tileSize - 20
     var i = 1
     var additionalXOffset = 0
     var additionalYOffset = -60
-    font.draw(batch, "time: " + game.activeMap.currentTime.toInt, offsetX, offsetY - 40)
-    font.draw(batch, game.player.name + "'s inventory", offsetX, offsetY)
-    font.draw(batch, "score: " + game.player.score, offsetX, offsetY - 20)
-    if (game.player.shovel != null) {
-      font.draw(batch, game.player.shovel.toString, offsetX, offsetY + additionalYOffset)
+    font.draw(batch, "time: " + DiamondDwarf.activeMap.currentTime.toInt, offsetX, offsetY - 40)
+    font.draw(batch, DiamondDwarf.player.name + "'s inventory", offsetX, offsetY)
+    font.draw(batch, "score: " + DiamondDwarf.player.score, offsetX, offsetY - 20)
+    if (DiamondDwarf.player.shovel != null) {
+      font.draw(batch, DiamondDwarf.player.shovel.toString, offsetX, offsetY + additionalYOffset)
       additionalYOffset -= 20
     }
-    for ((gem, count) <- game.player.inventory) {
+    for ((gem, count) <- DiamondDwarf.player.inventory) {
       font.draw(batch, gem + ": " + count, offsetX, offsetY + additionalYOffset - i * 20)
       i += 1
     }
