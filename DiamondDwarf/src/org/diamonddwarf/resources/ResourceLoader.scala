@@ -33,6 +33,8 @@ class ResourceLoader {
 
   val timerSprite = getRegions("ui/timer").get(0)
   val timerBackground = getRegions("ui/timerbg").get(0)
+  
+  val stageMenuCell = getRegions("ui/stageMenuCell").get(0)
 
   val seamMap = {
     val regions = this.getRegions("tile/seam")

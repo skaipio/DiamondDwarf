@@ -36,7 +36,6 @@ class StageRenderer(batch: SpriteBatch, seamMap: Map[(Int, Int), AtlasRegion]) {
   }
 
   def render() {
-    batch.setColor(1f, 1f, 1f, 1f)
     this.renderTiles
     this.renderSeams
     this.renderTileObjects

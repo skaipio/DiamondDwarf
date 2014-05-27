@@ -25,21 +25,29 @@ import org.diamonddwarf.factories.EffectFactory
 import org.diamonddwarf.factories.TileFactory
 import org.diamonddwarf.resources.ResourceLoader
 import org.diamonddwarf.menu.StageMenu
+import org.diamonddwarf.ui.MenuRenderer
+import org.diamonddwarf.menu.StageMenuGrid
+import org.diamonddwarf.ui.MenuInputProcessor
 
 class Game extends ApplicationListener {
   private var batch: SpriteBatch = null
   private var resourceLoader: ResourceLoader = null
+
   private var stageRenderer: StageRenderer = null
   private var interfaceRenderer: InventoryRenderer = null
+  private var menuRenderer: MenuRenderer = null
 
   private var texture: Texture = null
   private var sprite: Sprite = null
 
   private var player: Player = null
 
-  private var currentScreen = Screens.menu
+  private var currentScreen = Screen.menu
+
+  private var stageController: Controller = null
 
   private var stageMenu: StageMenu = null
+  private var stageMenuGrid: StageMenuGrid = null
 
   override def create() {
     batch = new SpriteBatch
@@ -57,14 +65,18 @@ class Game extends ApplicationListener {
     this.player = actorFactory.createPlayer
 
     DiamondDwarf.player = this.player
-    val controller = new Controller()
+    stageController = new Controller()
     stageRenderer = new StageRenderer(batch, resourceLoader.seamMap)
     stageRenderer.create
 
     interfaceRenderer = new InventoryRenderer(batch, resourceLoader)
     interfaceRenderer.create
 
-    Gdx.input.setInputProcessor(controller)
+    stageMenuGrid = new StageMenuGrid(4, 5, stageMenu)
+    menuRenderer = new MenuRenderer(batch, resourceLoader, stageMenu, stageMenuGrid)
+    val menuController = new MenuInputProcessor(stageMenuGrid)
+
+    Gdx.input.setInputProcessor(menuController)
 
     if (resourceLoader.hasTrack(0)) {}
     val track = resourceLoader.getTrack(0)
@@ -119,17 +131,10 @@ class Game extends ApplicationListener {
   }
 
   private def checkMenuInput() {
-
-    if (Gdx.input.isKeyPressed(Keys.NUM_1)) {
-      this.stageMenu.selectStage(0)
-
-    } else if (Gdx.input.isKeyPressed(Keys.NUM_2)) {
-      this.stageMenu.selectStage(1)
-
-    } else if (Gdx.input.isKeyPressed(Keys.SPACE)) {
-      this.currentScreen = Screens.stage
-      DiamondDwarf.startStage(this.stageMenu.createStage)
-
+    if (Gdx.input.isKeyPressed(Keys.SPACE)) {
+      this.currentScreen = Screen.stage
+      Gdx.input.setInputProcessor(stageController)
+      DiamondDwarf.startStage(this.stageMenu.createStage(stageMenuGrid.selectedStage))
     }
   }
 
@@ -137,24 +142,31 @@ class Game extends ApplicationListener {
     DiamondDwarf.actors.foreach(_.update(delta))
   }
 
+  private def renderStageScreen {
+    DiamondDwarf.activeMap.currentTime += Gdx.graphics.getDeltaTime()
+    this.updateActors(Gdx.graphics.getDeltaTime())
+    checkStageInput
+    stageRenderer.render
+    interfaceRenderer.render
+  }
+
+  private def renderMenuScreen {
+    this.menuRenderer.render
+    checkMenuInput
+  }
+
   override def render() {
-    if (currentScreen == Screens.stage) {
-      DiamondDwarf.activeMap.currentTime += Gdx.graphics.getDeltaTime()
-      this.updateActors(Gdx.graphics.getDeltaTime())
-      checkStageInput
-
-      Gdx.gl.glClearColor(0, 0, 0, 1);
-      Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-      stageRenderer.render
-      interfaceRenderer.render
-    } else if (currentScreen == Screens.menu) {
-      checkMenuInput
+    Gdx.gl.glClearColor(0, 0, 0, 1);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    if (currentScreen == Screen.stage) {
+      renderStageScreen
+    } else if (currentScreen == Screen.menu) {
+      renderMenuScreen
     }
   }
 
   private def startStage {
-    currentScreen = Screens.stage
+    currentScreen = Screen.stage
   }
 
   override def resize(width: Int, height: Int) {
