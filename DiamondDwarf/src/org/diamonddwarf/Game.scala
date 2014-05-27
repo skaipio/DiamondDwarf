@@ -28,6 +28,8 @@ import org.diamonddwarf.menu.StageMenu
 import org.diamonddwarf.ui.MenuRenderer
 import org.diamonddwarf.menu.StageMenuGrid
 import org.diamonddwarf.ui.MenuInputProcessor
+import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.audio.Music
 
 class Game extends ApplicationListener {
   private var batch: SpriteBatch = null
@@ -48,6 +50,8 @@ class Game extends ApplicationListener {
 
   private var stageMenu: StageMenu = null
   private var stageMenuGrid: StageMenuGrid = null
+  
+  private var track: Music = null
 
   override def create() {
     batch = new SpriteBatch
@@ -79,9 +83,9 @@ class Game extends ApplicationListener {
     Gdx.input.setInputProcessor(menuController)
 
     if (resourceLoader.hasTrack(0)) {}
-    val track = resourceLoader.getTrack(0)
-    track.setLooping(true)
-    track.play()
+    track = resourceLoader.getTrack(0)
+
+    DiamondDwarf.startStage(this.stageMenu.createStage(0))
 
   }
 
@@ -135,6 +139,8 @@ class Game extends ApplicationListener {
       this.currentScreen = Screen.stage
       Gdx.input.setInputProcessor(stageController)
       DiamondDwarf.startStage(this.stageMenu.createStage(stageMenuGrid.selectedStage))
+      track.setLooping(true)
+      track.play()
     }
   }
 
@@ -151,8 +157,12 @@ class Game extends ApplicationListener {
   }
 
   private def renderMenuScreen {
+    batch.setColor(Color.GRAY)
+    stageRenderer.render
+    batch.setColor(Color.WHITE)
     this.menuRenderer.render
     checkMenuInput
+
   }
 
   override def render() {
