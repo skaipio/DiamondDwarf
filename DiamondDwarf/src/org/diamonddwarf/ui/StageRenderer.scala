@@ -28,11 +28,12 @@ class StageRenderer(batch: SpriteBatch, seamMap: Map[(Int, Int), AtlasRegion]) {
 
   private val tileSize = 64
 
+  val w = Gdx.graphics.getWidth()
+  val h = Gdx.graphics.getHeight()
+
   font.setColor(Color.BLACK)
 
   def create {
-    val w = Gdx.graphics.getWidth()
-    val h = Gdx.graphics.getHeight()
   }
 
   def render() {
@@ -47,12 +48,20 @@ class StageRenderer(batch: SpriteBatch, seamMap: Map[(Int, Int), AtlasRegion]) {
 
   }
 
+  private def centerX = {
+    w / 2 - tileSize * DiamondDwarf.activeMap.width / 2
+  }
+
+  private def centerY = {
+    h / 2 - tileSize * DiamondDwarf.activeMap.height / 2
+  }
+
   private def renderTiles {
     batch.begin()
     for (y <- 0 until DiamondDwarf.activeMap.height; x <- 0 until DiamondDwarf.activeMap.width) {
       val tile = DiamondDwarf.activeMap.getTileAt(x, y)
       if (tile.getTexture != null) {
-        batch.draw(tile.getTexture, x * tileSize, y * tileSize)
+        batch.draw(tile.getTexture, x * tileSize + centerX, y * tileSize + centerY)
       }
     }
     batch.end()
@@ -64,7 +73,7 @@ class StageRenderer(batch: SpriteBatch, seamMap: Map[(Int, Int), AtlasRegion]) {
       val tileObj = DiamondDwarf.activeMap.getTileObjectAt(x, y)
       val texture = tileObj.getTexture
       if (texture != null)
-        batch.draw(texture, x * tileSize, y * tileSize)
+        batch.draw(texture, x * tileSize + centerX, y * tileSize + centerY)
 
     }
     batch.end()
@@ -75,7 +84,7 @@ class StageRenderer(batch: SpriteBatch, seamMap: Map[(Int, Int), AtlasRegion]) {
     val (lerpx, lerpy) = actorDrawPosition(DiamondDwarf.player, DiamondDwarf.activeMap.playerPosition.x, DiamondDwarf.activeMap.playerPosition.y)
     val textureRegion = DiamondDwarf.player.getTexture
     if (textureRegion != null)
-      batch.draw(DiamondDwarf.player.getTexture, lerpx, lerpy)
+      batch.draw(DiamondDwarf.player.getTexture, centerX + lerpx, centerY + lerpy)
     batch.end()
   }
 
@@ -86,7 +95,7 @@ class StageRenderer(batch: SpriteBatch, seamMap: Map[(Int, Int), AtlasRegion]) {
       batch.setColor(effect.red, effect.green, effect.blue, effect.alpha)
       for ((anim, c) <- effect.animations) {
         val frame = anim.getCurrentFrame
-        batch.draw(frame, effect.x + c.x, effect.y + c.y)
+        batch.draw(frame, effect.x + c.x + centerX, effect.y + c.y + centerY)
       }
     }
     batch.end()
@@ -101,22 +110,22 @@ class StageRenderer(batch: SpriteBatch, seamMap: Map[(Int, Int), AtlasRegion]) {
       val right = DiamondDwarf.activeMap.getTileAt(x + 1, y)
       this.seamMap.get((tile.id, top.id)) match {
         case Some(region) =>
-          this.batch.draw(region, x * tileSize + tileSize, y * tileSize + tileSize - 4, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 90f)
+          this.batch.draw(region, x * tileSize + tileSize + centerX, y * tileSize + tileSize - 4 + centerY, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 90f)
         case _ =>
       }
       this.seamMap.get((top.id, tile.id)) match {
         case Some(region) =>
-          this.batch.draw(region, x * tileSize, y * tileSize + tileSize + 4, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, -90f)
+          this.batch.draw(region, x * tileSize + centerX, y * tileSize + tileSize + 4 + centerY, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, -90f)
         case _ =>
       }
       this.seamMap.get((tile.id, right.id)) match {
         case Some(region) =>
-          this.batch.draw(region, x * tileSize + tileSize - 4, y * tileSize, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 0f)
+          this.batch.draw(region, x * tileSize + tileSize - 4 + centerX, y * tileSize + centerY, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 0f)
         case _ =>
       }
       this.seamMap.get((right.id, tile.id)) match {
         case Some(region) =>
-          this.batch.draw(region, x * tileSize + tileSize + 4, y * tileSize + tileSize, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 180f)
+          this.batch.draw(region, x * tileSize + tileSize + 4 + centerX, y * tileSize + tileSize + centerY, 0f, 0f, region.originalWidth, region.originalHeight, 1f, 1f, 180f)
         case _ =>
       }
     }
