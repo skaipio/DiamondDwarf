@@ -17,6 +17,7 @@ class InventoryRenderer(batch: SpriteBatch, resourceLoader: ResourceLoader) {
   private val tileSize = 64
   
   private val stageTimer = new StageTimer(batch, resourceLoader)
+  private val playerBar = new PlayerBar(batch, resourceLoader)
 
   font.setColor(Color.BLACK)
 
@@ -26,6 +27,7 @@ class InventoryRenderer(batch: SpriteBatch, resourceLoader: ResourceLoader) {
 
   def render() {
     batch.begin()
+    this.playerBar.render
     this.stageTimer.renderTimer
     this.renderPlayerInventory
     batch.end()

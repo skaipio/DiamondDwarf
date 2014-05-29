@@ -4,26 +4,25 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import scala.util.Random
 import org.diamonddwarf.stage.Tile
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
+import org.diamonddwarf.resources.ResourceLoader
+import com.badlogic.gdx.Graphics
 
-class TileFactory(defaultTexture: TextureRegion, tileTextureMap: Map[Int, com.badlogic.gdx.utils.Array[AtlasRegion]]) {
+class TileFactory(resourceLoader: ResourceLoader) {
+
+  private def randomRegion(array: com.badlogic.gdx.utils.Array[AtlasRegion]) =
+    array.get(Random.nextInt(array.size))
+
   def createDiggableTile = {
     val tile = new Tile(Tile.diggableID, true, false)
-    tile.defaultTexture = this.getTileTexture(Tile.diggableID)
-    tile
-  }
-  
-  def createBaseTile = {
-    val tile = new Tile(Tile.baseID, false, true)
-    tile.defaultTexture = this.getTileTexture(Tile.baseID)
+    tile.defaultTexture = randomRegion(resourceLoader.diggableTileTexture)
     tile
   }
 
-  private def getTileTexture(id: Int) = {
-    this.tileTextureMap.get(id) match {
-      case Some(regions) =>
-        val r = Random.nextInt(regions.size)
-        regions.get(r)
-      case _ => defaultTexture
-    }
+  def createBaseTile = {
+    val tile = new Tile(Tile.baseID, false, true)
+    tile.defaultTexture = randomRegion(resourceLoader.baseTileTexture)
+    tile
   }
+
+  
 }

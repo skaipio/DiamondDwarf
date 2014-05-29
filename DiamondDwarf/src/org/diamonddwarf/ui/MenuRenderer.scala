@@ -20,7 +20,7 @@ class MenuRenderer(batch: SpriteBatch, resourceLoader: ResourceLoader, stageMenu
   private val offsetY = 300
 
   private val backgroundOverlayColor = Color.LIGHT_GRAY
-  
+
   private val levelTextOffsetX = 10
   private val levelTextOffsetY = 50
 
@@ -42,10 +42,7 @@ class MenuRenderer(batch: SpriteBatch, resourceLoader: ResourceLoader, stageMenu
   private def renderBackground {
     batch.setColor(backgroundOverlayColor)
     for (row <- 0 to 20; column <- 0 to 20) {
-      resourceLoader.tileTextureMap.get(Tile.diggableID) match {
-        case Some(x) => batch.draw(x.get(0), row * 64, column * 64)
-        case _ =>
-      }
+      batch.draw(resourceLoader.diggableTileTexture.get(0), row * 64, column * 64)
 
     }
     batch.setColor(Color.WHITE)
@@ -87,7 +84,7 @@ class MenuRenderer(batch: SpriteBatch, resourceLoader: ResourceLoader, stageMenu
 
   def render {
     batch.begin()
-   // renderBackground
+    // renderBackground
     renderGrid
     renderStageInfoBox
     renderStageInfo

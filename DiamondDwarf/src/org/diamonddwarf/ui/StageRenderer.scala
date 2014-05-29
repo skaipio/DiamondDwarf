@@ -26,6 +26,9 @@ class StageRenderer(batch: SpriteBatch, seamMap: Map[(Int, Int), AtlasRegion]) {
   private val inventoryXOffset = 250
   private val inventoryYOffset = 220
 
+  private val horizontalOffset = 0
+  private val verticalOffset = -100
+
   private val tileSize = 64
 
   val w = Gdx.graphics.getWidth()
@@ -48,12 +51,12 @@ class StageRenderer(batch: SpriteBatch, seamMap: Map[(Int, Int), AtlasRegion]) {
 
   }
 
-  private def centerX = {
-    w / 2 - tileSize * DiamondDwarf.activeMap.width / 2
+  def centerX = {
+    (w + horizontalOffset) / 2 - tileSize * DiamondDwarf.activeMap.width / 2
   }
 
-  private def centerY = {
-    h / 2 - tileSize * DiamondDwarf.activeMap.height / 2
+  def centerY = {
+    (h + verticalOffset) / 2 - tileSize * DiamondDwarf.activeMap.height / 2
   }
 
   private def renderTiles {

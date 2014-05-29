@@ -60,7 +60,7 @@ class Game extends ApplicationListener {
     val sounds = new Sounds(resourceLoader)
     val animFactory = new AnimationFactory(resourceLoader.defaultTexture, resourceLoader.animationTemplateMap, resourceLoader.numberMap)
     val effectFactory = new EffectFactory(animFactory)
-    val tileFactory = new TileFactory(resourceLoader.defaultTexture, resourceLoader.tileTextureMap)
+    val tileFactory = new TileFactory(resourceLoader)
 
     stageMenu = new StageMenu(new StageFactory(resourceLoader.stageTemplates, tileFactory))
 

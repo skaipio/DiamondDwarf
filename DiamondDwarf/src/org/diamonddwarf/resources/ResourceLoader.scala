@@ -26,13 +26,14 @@ class ResourceLoader {
 
   val atlas = new TextureAtlas(Gdx.files.internal("packedTextures.atlas"))
   val defaultTexture = this.atlas.findRegion("default")
-  val textureRegionMapForActors = scala.collection.mutable.Map[Actor, com.badlogic.gdx.utils.Array[AtlasRegion]]()
-  val tileTextureMap = Map(
-    Tile.diggableID -> getRegions("tile/grass"),
-    Tile.baseID -> getRegions("tile/base"))
+ 
+  val diggableTileTexture = getRegions("tile/grass")
+  val baseTileTexture = getRegions("tile/base")
 
   val timerSprite = getRegions("ui/timer").get(0)
   val timerBackground = getRegions("ui/timerbg").get(0)
+  
+  val purkkana = getRegions("ui/purkkana").get(0)
   
   val stageMenuCell = getRegions("ui/stageMenuCell").get(0)
 
