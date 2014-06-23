@@ -50,7 +50,7 @@ class ResourceLoader {
       val gson = gsonBuilder.create()
       val mapType = new TypeToken[java.util.Map[String, AnimationTemplate]]() {}.getType()
       val map : java.util.Map[String, AnimationTemplate] = gson.fromJson(content, mapType)
-       scala.collection.JavaConversions.asScalaMap(map).toMap
+       scala.collection.JavaConversions.mapAsScalaMap(map).toMap
     }else{
       throw new Exception("File \"assets/animationTemplates\" is required for animations, but was not found.")
       Map[String, AnimationTemplate]()
