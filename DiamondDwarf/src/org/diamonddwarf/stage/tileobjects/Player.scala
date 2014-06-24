@@ -1,10 +1,11 @@
-package org.diamonddwarf.stage
+package org.diamonddwarf.stage.tileobjects
 
 import scala.collection.mutable.Map
 import org.diamonddwarf.items.Gem
 import org.diamonddwarf.items.Equipment
+import org.diamonddwarf.stage.Actor
 
-class Player(val name: String) extends Actor() {
+class Player(val name: String) extends Animate with Actor {
   
   var score = 0
   var shovel: Equipment = null

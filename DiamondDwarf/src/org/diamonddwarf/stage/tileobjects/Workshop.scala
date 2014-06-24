@@ -1,9 +1,6 @@
-package org.diamonddwarf.stage
+package org.diamonddwarf.stage.tileobjects
 
-import org.diamonddwarf.items.Gem
-import org.diamonddwarf.factories.AnimationFactory
-
-abstract class Workshop extends TileObject(false) with Actor {
+abstract class Workshop extends GroundObject{
   def use(p: Player)
 }
 
@@ -20,8 +17,8 @@ class Replenisher extends Workshop {
 }
 
 object Workshop {
+	val layer = 2
 	val refinery = new Refinery
-	val replenisher = new Replenisher
-	
+	val replenisher = new Replenisher	
 	val buildables = Map("refinery" -> refinery, "replenisher" -> replenisher)
 }

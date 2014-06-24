@@ -1,13 +1,13 @@
 package org.diamonddwarf.factories
 
 import org.diamonddwarf.resources.ResourceLoader
-import org.diamonddwarf.stage.Player
+import org.diamonddwarf.stage.tileobjects.Player
 import org.diamonddwarf.resources.Sounds
 import org.diamonddwarf.stage.State
 import org.diamonddwarf.stage.GemsFound
 import com.badlogic.gdx.audio.Sound
-import org.diamonddwarf.stage.Workshop
-import org.diamonddwarf.stage.TileObject
+import org.diamonddwarf.stage.tileobjects.Workshop
+import org.diamonddwarf.stage.tileobjects.TileObject
 import org.diamonddwarf.items.Equipment
 
 final class ActorFactory(resources: ResourceLoader, effectFactory: EffectFactory, animFactory: AnimationFactory, sounds: Sounds) {

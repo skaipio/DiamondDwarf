@@ -3,6 +3,8 @@ package org.diamonddwarf
 import org.diamonddwarf.stage._
 import org.diamonddwarf.items.Equipment
 import scala.collection.mutable.Set
+import org.diamonddwarf.stage.tileobjects.TileObject
+import org.diamonddwarf.stage.tileobjects.Player
 
 object DiamondDwarf {
 

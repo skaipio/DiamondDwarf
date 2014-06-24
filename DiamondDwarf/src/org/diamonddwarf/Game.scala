@@ -30,6 +30,7 @@ import org.diamonddwarf.menu.StageMenuGrid
 import org.diamonddwarf.ui.MenuInputProcessor
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.audio.Music
+import org.diamonddwarf.stage.tileobjects.Player
 
 class Game extends ApplicationListener {
   private var batch: SpriteBatch = null

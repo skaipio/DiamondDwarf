@@ -6,7 +6,7 @@ import org.diamonddwarf.ui.Animation
 import java.util.logging.Logger
 import java.util.logging.Level
 import org.diamonddwarf.stage.State
-import org.diamonddwarf.stage.TileObject
+import org.diamonddwarf.stage.tileobjects.TileObject
 import org.diamonddwarf.ui.AnimationTemplate
 import org.diamonddwarf.resources.ResourceLoader
 import org.diamonddwarf.ui.AnimationTemplate

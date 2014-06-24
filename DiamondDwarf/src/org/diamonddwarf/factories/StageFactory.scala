@@ -4,7 +4,7 @@ import org.diamonddwarf.resources.ResourceLoader
 import org.diamonddwarf.items.Gem
 import org.diamonddwarf.stage.Stage
 import org.diamonddwarf.stage.Coordinate
-import org.diamonddwarf.stage.Workshop
+import org.diamonddwarf.stage.tileobjects.Workshop
 import org.diamonddwarf.resources.StageTemplate
 
 class StageFactory(val stageTemplates: Array[StageTemplate], tileFactory: TileFactory) {
