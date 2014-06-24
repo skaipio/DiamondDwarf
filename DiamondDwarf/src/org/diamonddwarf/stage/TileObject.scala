@@ -1,6 +1,8 @@
 package org.diamonddwarf.stage
 
-class TileObject(val isPassable: Boolean) extends Actor
+import man.Man
+
+class TileObject(val isPassable: Boolean) extends Man with Actor
 
 object TileObject {
 
@@ -8,5 +10,6 @@ object TileObject {
   val stone = new TileObject(false)
   val minedStone = new TileObject(true)
   val empty = new TileObject(true)
+  val base = new TileObject(true)
 
 }

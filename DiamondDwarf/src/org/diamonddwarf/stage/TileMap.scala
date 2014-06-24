@@ -3,20 +3,21 @@ package org.diamonddwarf.stage
 import org.diamonddwarf.items.Gem
 import scala.collection.mutable.Map
 import org.diamonddwarf.factories.TileFactory
+import board.CollisionBoard
 
-abstract class TileMap(val width: Int, val height: Int, tileFactory: TileFactory) extends Traversable[Tile] {
+abstract class TileMap(width: Int, height: Int, tileFactory: TileFactory) extends CollisionBoard[TileObject](width, height, 3, Set((1,Set(2)))) with Traversable[Tile] {
 
   private val tileMap: Array[Array[Tile]] = Array.fill(height, width)(tileFactory.createDiggableTile)
   private val gemMap: Map[Coordinate, Gem] = Map()
   private val topMap: Array[Array[TileObject]] = Array.fill(height, width)(TileObject.empty)
 
-  def tilesBetween(a: Coordinate, b: Coordinate) = for (x <- a to b if inBounds(x)) yield this.getTileAt(x)
+  def tilesBetween(a: Coordinate, b: Coordinate) = for (c <- a to b if inBounds(c)) yield this.tileAt(c.x ,c.y)
   def gemsBetween(a: Coordinate, b: Coordinate) = for (x <- a to b if inBounds(x) && hasGemAt(x)) yield this.getGemAt(x)
   def tileObjectsBetween(a: Coordinate, b: Coordinate) = for (x <- a to b if inBounds(x)) yield this.getTileObjectAt(x)
   
   
-  def getTileAt(x: Int, y: Int) = tileMap(y)(x)
-  def getTileAt(coordinate: Coordinate): Tile = getTileAt(coordinate.x, coordinate.y)
+  //def getTileAt(x: Int, y: Int) = tileMap(y)(x)
+  //def getTileAt(coordinate: Coordinate): Tile = getTileAt(coordinate.x, coordinate.y)
 
   def hasTileObjectAt(c: Coordinate) = this.getTileObjectAt(c) != TileObject.empty
   
@@ -61,7 +62,7 @@ abstract class TileMap(val width: Int, val height: Int, tileFactory: TileFactory
   def setPlayerPosition(coordinate: Coordinate) { this.playerPosition = coordinate }
   def setPlayerPosition(x: Int, y: Int) { this.playerPosition = new Coordinate(x, y) }
 
-  def playerTile = this.getTileAt(playerPosition.x, playerPosition.y)
+  def playerTile = this.tileAt(playerPosition.x, playerPosition.y)
   def isPlayerAt(t: Tile) = t == playerTile
   def isPlayerAt(x: Int, y: Int): Boolean = this.playerPosition.x == x && this.playerPosition.y == y
 
