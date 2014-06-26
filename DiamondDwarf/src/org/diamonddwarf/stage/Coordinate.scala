@@ -1,9 +1,10 @@
 package org.diamonddwarf.stage
 
+// TODO: Remember to test if same coordinate == coordinate
 class Coordinate(val x: Int, val y: Int, val z: Int = 0) extends Tuple3[Int, Int, Int](x, y, z) with Equals {
 
-  def +(a: Coordinate) = new Coordinate(this.x + a.x, this.y + a.y)
-  def to(that: Coordinate) = for (dx <- this.x to that.x; dy <- this.y to that.y) yield Coordinate(dx, dy)
+  def +(a: Coordinate) = new Coordinate(this.x + a.x, this.y + a.y, this.z + a.z)
+  def to(that: Coordinate) = for (dx <- this.x to that.x; dy <- this.y to that.y) yield new Coordinate(dx, dy, this.z)
 
   override def toString = "(" + x + ", " + y + ")"
 
@@ -22,12 +23,4 @@ class Coordinate(val x: Int, val y: Int, val z: Int = 0) extends Tuple3[Int, Int
 //    val prime = 41
 //    prime * (prime + x) + y
 //  }
-}
-
-object Coordinate {
-  val Zero = new Coordinate(0, 0)
-  val Right = new Coordinate(1, 0)
-  val Left = new Coordinate(-1, 0)
-  val Up = new Coordinate(0, 1)
-  val Down = new Coordinate(0, -1)
 }

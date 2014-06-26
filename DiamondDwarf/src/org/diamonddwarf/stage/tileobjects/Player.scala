@@ -44,3 +44,7 @@ class Player(val name: String) extends Animate with Actor {
   override def toString = "Player: " + this.name
 
 }
+
+object Player {
+  val layer = 2
+}
