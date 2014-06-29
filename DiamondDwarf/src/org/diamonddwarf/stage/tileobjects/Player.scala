@@ -1,19 +1,17 @@
 package org.diamonddwarf.stage.tileobjects
 
 import scala.collection.mutable.Map
-import org.diamonddwarf.items.Gem
 import org.diamonddwarf.items.Equipment
-import org.diamonddwarf.stage.Actor
 
-class Player(val name: String) extends Animate with Actor {
-  
+object Player extends GroundObject {
+
+  var name = ""
   var score = 0
   var shovel: Equipment = null
 
   val inventory = Map[Gem, Int]()
 
   def give(gem: Gem) {
-    if (gem == Gem.noGem) return
     val oldCount = this.inventory.get(gem) match {
       case Some(oldCount) => this.inventory += gem -> (1 + oldCount)
       case None => this.inventory += gem -> 1
@@ -43,8 +41,4 @@ class Player(val name: String) extends Animate with Actor {
 
   override def toString = "Player: " + this.name
 
-}
-
-object Player {
-  val layer = 2
 }

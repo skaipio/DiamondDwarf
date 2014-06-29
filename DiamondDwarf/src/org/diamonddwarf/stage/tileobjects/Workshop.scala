@@ -1,24 +1,22 @@
 package org.diamonddwarf.stage.tileobjects
 
 abstract class Workshop extends GroundObject{
-  def use(p: Player)
+  def use()
 }
 
-class Refinery extends Workshop {
-  override def use(p: Player) {
-    p.give(Gem.bestGem)
+object Refinery extends Workshop {
+  override def use() {
+    Player.give(BestGem)
   }
 }
 
-class Replenisher extends Workshop {
-  override def use(p: Player) {
-    p.setShovelUsages(30)
+object Replenisher extends Workshop {
+  override def use() {
+    Player.setShovelUsages(30)
   }
 }
 
 object Workshop {
-	val layer = 2
-	val refinery = new Refinery
-	val replenisher = new Replenisher	
-	val buildables = Map("refinery" -> refinery, "replenisher" -> replenisher)
+	val layer = 2	
+	val buildables = Map("refinery" -> Refinery, "replenisher" -> Replenisher)
 }
