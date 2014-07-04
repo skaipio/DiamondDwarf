@@ -20,11 +20,7 @@ class ActorBoard(val width: Int, val height: Int, val depth: Int) {
     this.board.spawn(actor, pos)
   }
 
-  def remove(actor: DDActor) = this.getPosition(actor) match {
-    case Some(c) => this.board.remove(c)
-    case _ =>
-  }
-
+  def remove(actor: DDActor) = this.board.remove(actor)
   def hasActorAt(c: C) = this.board.objectAt(c).isDefined
   def getActorAt(c: C) = this.board.objectAt(c)
 
