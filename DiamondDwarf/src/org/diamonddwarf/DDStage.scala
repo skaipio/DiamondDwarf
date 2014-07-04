@@ -8,23 +8,39 @@ import org.diamonddwarf.actors.DDActor
 import org.diamonddwarf.actors.ActionFactory
 import org.diamonddwarf.actors.ActorFactory
 import org.diamonddwarf.actors.ActorFactory
+import com.badlogic.gdx.Gdx
 
 class DDStage(actorFactory: ActorFactory) extends Stage {
   private var controller_ : BoardController = _
-  private var actionFactory : ActionFactory = _
-  def controller = controller_ 
+  private var actionFactory: ActionFactory = _
+  private val keyMap = scala.collection.mutable.Map[Int, () => _]()
+
+  // Init
+  keyMap += (
+    Keys.W -> (() => this.addActionToPlayer(moveAction(Up))),
+    Keys.A -> (() => this.addActionToPlayer(moveAction(Left))),
+    Keys.S -> (() => this.addActionToPlayer(moveAction(Down))),
+    Keys.D -> (() => this.addActionToPlayer(moveAction(Right))))
+
+  def controller = controller_
   def controller_=(c: BoardController) = {
-    controller_ = c 
+    controller_ = c
     actionFactory = new ActionFactory(controller, actorFactory)
-  } 
-  
+  }
+
+  override def act(delta: Float) ={
+    keyMap.foreach { case (k, f) => if (Gdx.input.isKeyPressed(k)) f() }
+    super.act(delta)
+  }
+    
+
   override def keyDown(keyCode: Int): Boolean = {
     require(controller != null, "DDStage must be attached to a board controller.")
     keyCode match {
-      case Keys.W => this.addActionToPlayer(moveAction(Up))
-      case Keys.A => this.addActionToPlayer(moveAction(Left))
-      case Keys.S => this.addActionToPlayer(moveAction(Down))
-      case Keys.D => this.addActionToPlayer(moveAction(Right))
+//      case Keys.W => this.addActionToPlayer(moveAction(Up))
+//      case Keys.A => this.addActionToPlayer(moveAction(Left))
+//      case Keys.S => this.addActionToPlayer(moveAction(Down))
+//      case Keys.D => this.addActionToPlayer(moveAction(Right))
       case Keys.SPACE => this.addActionToPlayer(actionFactory.digAtSelf)
       case _ => return false
     }
@@ -36,7 +52,13 @@ class DDStage(actorFactory: ActorFactory) extends Stage {
   private def addActionToPlayer(action: Action) {
     val player = controller.getPlayerActor
     require(player != null, "Player object is missing from board.")
-    player.addAction(action)
+    this.addActionTo(player, action)
+  }
+
+  private def addActionTo(actor: DDActor, action: Action) = {
+    if (!actor.getActions().contains(action, false)) {
+      actor.addAction(action)
+    }
   }
 }
 

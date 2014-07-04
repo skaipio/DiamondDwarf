@@ -19,11 +19,6 @@ class DDActor(val tileObject: TileObject, textureRegion: Option[AtlasRegion])
   var position : () => Option[(Int, Int, Int)] = _
   
   val collisionGroup = this.tileObject.collisionGroup
-  
-//  override def addAction(action: Action) {
-//    super.addAction(action) 
-//    JavaConversions.asScalaIterator(this.getActions().iterator()).foreach(println)
-//  }
 
   override def draw(batch: Batch, parentAlpha: Float) {
     if (position != null)

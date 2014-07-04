@@ -76,7 +76,7 @@ class BoardController(board: ActorBoard, stage: DDStage) {
 
   def hasActorAt(c: C) = this.board.hasActorAt(c)
 
-  def update = stage.act
+  def update = stage.act(Gdx.graphics.getDeltaTime())
 
   def draw = stage.draw
 
