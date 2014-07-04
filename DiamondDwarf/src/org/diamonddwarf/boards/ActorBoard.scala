@@ -15,12 +15,18 @@ class ActorBoard(val width: Int, val height: Int, val depth: Int) {
 
   def getPosition(obj: DDActor) = board.positionOf(obj)
 
-  def add(actor: DDActor, position: C2) {
+  def add(actor: DDActor, position: C2) = {
     val pos = (position._1, position._2, actor.getLayer)
-    this.board.spawn(actor, pos)
+    val spawnC = this.board.spawn(actor, pos)
+    spawnC.isDefined
   }
 
   def remove(actor: DDActor) = this.board.remove(actor)
+  def removeAt(c: C) = {
+    val actorToRemove = this.board.objectAt(c)
+    this.board.remove(c)
+    actorToRemove
+  }
   def hasActorAt(c: C) = this.board.objectAt(c).isDefined
   def getActorAt(c: C) = this.board.objectAt(c)
 

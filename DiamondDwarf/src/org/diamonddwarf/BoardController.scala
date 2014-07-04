@@ -10,11 +10,13 @@ import org.diamonddwarf.boards.ActorBoard
 import fs.tileboard.board.ObjectTracker
 import fs.tileboard.board.CollisionBoard
 import org.diamonddwarf.boards.ActorBoard
+import com.badlogic.gdx.scenes.scene2d.Group
 
 class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
   type C = (Int, Int, Int)
   type C2 = (Int, Int)
 
+  private val layerGroups = Array.fill(3)(new Group())
   private val stage: DDStage = new DDStage(this, new ActionFactory(actorFactory, this))
   private var player: DDActor = null
 
@@ -23,9 +25,11 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
 
   // Initialization
   Gdx.input.setInputProcessor(stage)
+  // Add groups to stage
+  layerGroups.foreach(stage.addActor(_))
   // Add actors from board to stage
   (0 until board.depth).foreach(board.fullboard(_).foreach(board.getActorAt(_).foreach(actor => {
-    this.stage.addActor(actor)
+    this.layerGroups(actor.getLayer).addActor(actor)
     actor.position = () => this.board.getPosition(actor)
     if (actor.tileObject == Player) player = actor
   })))
@@ -34,14 +38,25 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
 
   def getPosition(actor: DDActor) = board.getPosition(actor).asInstanceOf[Option[C]]
 
-  def addActor(actor: DDActor, whereTo: C2) = {
-    if (!this.stage.getActors().contains(actor, true)) {
-      val c = (whereTo._1, whereTo._2, actor.getLayer)
-      this.stage.addActor(actor)
-      this.board.add(actor, whereTo)
-      actor.position = () => this.board.getPosition(actor)
-      true
-    } else false
+  def addActor(actor: DDActor, whereTo: C2): Boolean = {
+    var added = false
+    val newPos = (whereTo._1, whereTo._2, actor.getLayer)
+    if (!actorExistsOnBoard(actor) && !this.board.hasActorAt((newPos))) {
+      val actorAtC = this.board.getActorAt(newPos)
+      if (this.board.add(actor, whereTo)) {
+        actorAtC.foreach(this.removeActor(_))
+        this.layerGroups(actor.getLayer).addActor(actor)
+        actor.position = () => this.board.getPosition(actor)
+        added = true
+      }
+    }
+    added
+  }
+  
+  def forceAddActor(actor: DDActor, whereTo: C2): Boolean = {
+    val removed = this.board.removeAt((whereTo._1 ,whereTo._2 ,actor.getLayer))
+    removed.foreach(a => this.layerGroups(a.getLayer).removeActor(a))
+    this.addActor(actor, whereTo)
   }
 
   def moveActor(actor: DDActor, whereTo: C2) = {
@@ -54,6 +69,11 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
     this.board.moveBy(actor, by)
   }
 
+  def removeActor(actor: DDActor) = {
+    this.board.remove(actor)
+    this.layerGroups(actor.getLayer).removeActor(actor)
+  }
+
   def hasActorAt(c: C) = this.board.hasActorAt(c)
 
   def update = stage.act
@@ -64,7 +84,7 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
     require(actorExistsOnBoard(actor), "Actor " + actor + " not found on board.")
 
   private def actorExistsOnBoard(actor: DDActor) =
-    this.stage.getActors().contains(actor, true) && this.getPosition(actor).isDefined
+    this.layerGroups(actor.getLayer).getChildren().contains(actor, true) && this.getPosition(actor).isDefined
 }
 
 abstract class Direction(x: Int, y: Int) extends Tuple2(x, y)
