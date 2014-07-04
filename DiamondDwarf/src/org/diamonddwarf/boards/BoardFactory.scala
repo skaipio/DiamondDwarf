@@ -12,7 +12,7 @@ import org.diamonddwarf.tileobjects.Player
 
 class BoardFactory(resources: Resources, actorFactory: ActorFactory) {
   private val layers = 3
-  def createBoard(boardID: Int, boardController: BoardController) = {
+  def createBoard(boardID: Int) = {
     require(boardID < resources.boardTemplates.size)
     val template = resources.boardTemplates(boardID)
     val board = new ActorBoard(template.width, template.height, layers)

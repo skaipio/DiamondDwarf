@@ -12,12 +12,11 @@ import fs.tileboard.board.CollisionBoard
 import org.diamonddwarf.boards.ActorBoard
 import com.badlogic.gdx.scenes.scene2d.Group
 
-class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
+class BoardController(board: ActorBoard, stage: DDStage) {
   type C = (Int, Int, Int)
   type C2 = (Int, Int)
 
   private val layerGroups = Array.fill(3)(new Group())
-  private val stage: DDStage = new DDStage(this, new ActionFactory(actorFactory, this))
   private var player: DDActor = null
 
   var buildableIndex = 0
@@ -25,6 +24,7 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
 
   // Initialization
   Gdx.input.setInputProcessor(stage)
+  stage.controller = this
   // Add groups to stage
   layerGroups.foreach(stage.addActor(_))
   // Add actors from board to stage

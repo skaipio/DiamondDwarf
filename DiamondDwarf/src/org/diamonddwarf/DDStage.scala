@@ -6,9 +6,20 @@ import org.diamonddwarf.actors.DDActor
 import com.badlogic.gdx.scenes.scene2d.Action
 import org.diamonddwarf.actors.DDActor
 import org.diamonddwarf.actors.ActionFactory
+import org.diamonddwarf.actors.ActorFactory
+import org.diamonddwarf.actors.ActorFactory
 
-class DDStage(controller: BoardController, actionFactory : ActionFactory) extends Stage {
+class DDStage(actorFactory: ActorFactory) extends Stage {
+  private var controller_ : BoardController = _
+  private var actionFactory : ActionFactory = _
+  def controller = controller_ 
+  def controller_=(c: BoardController) = {
+    controller_ = c 
+    actionFactory = new ActionFactory(controller, actorFactory)
+  } 
+  
   override def keyDown(keyCode: Int): Boolean = {
+    require(controller != null, "DDStage must be attached to a board controller.")
     keyCode match {
       case Keys.W => this.addActionToPlayer(moveAction(Up))
       case Keys.A => this.addActionToPlayer(moveAction(Left))

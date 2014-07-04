@@ -21,7 +21,7 @@ class Game extends ApplicationListener {
     resources = new Resources
     actorFactory = new ActorFactory(resources)
     boardFactory = new BoardFactory(resources, actorFactory)
-    boardController = new BoardController(boardFactory.createBoard(0, boardController), actorFactory)
+    boardController = new BoardController(boardFactory.createBoard(0), new DDStage(actorFactory))
   }
 
   override def dispose() {

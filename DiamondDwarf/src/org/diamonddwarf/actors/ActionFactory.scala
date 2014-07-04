@@ -10,7 +10,7 @@ import org.diamonddwarf.Right
 import org.diamonddwarf.tileobjects.Hole
 import com.badlogic.gdx.scenes.scene2d.Actor
 
-class ActionFactory(actorFactory: ActorFactory, controller: BoardController) {
+class ActionFactory(controller: BoardController, actorFactory: ActorFactory) {
   def digAtSelf = new DigAtSelf()
   def moveSelf(direction: Direction) = new MoveSelf(controller, direction)
 

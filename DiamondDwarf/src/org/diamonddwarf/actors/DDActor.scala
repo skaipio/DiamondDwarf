@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
 import org.diamonddwarf.BoardController
 import fs.tileboard.board.CollisionGroupable
 import org.diamonddwarf.boards.ActorBoard
+import com.badlogic.gdx.scenes.scene2d.Action
+import scala.collection.JavaConversions
 
 class DDActor(val tileObject: TileObject, textureRegion: Option[AtlasRegion])
   extends Actor with CollisionGroupable {
@@ -17,6 +19,11 @@ class DDActor(val tileObject: TileObject, textureRegion: Option[AtlasRegion])
   var position : () => Option[(Int, Int, Int)] = _
   
   val collisionGroup = this.tileObject.collisionGroup
+  
+//  override def addAction(action: Action) {
+//    super.addAction(action) 
+//    JavaConversions.asScalaIterator(this.getActions().iterator()).foreach(println)
+//  }
 
   override def draw(batch: Batch, parentAlpha: Float) {
     if (position != null)
