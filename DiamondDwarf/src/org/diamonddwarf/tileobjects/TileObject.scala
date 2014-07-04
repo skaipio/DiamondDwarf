@@ -1,9 +1,10 @@
-package org.diamonddwarf.stage.tileobjects
+package org.diamonddwarf.tileobjects
 
-import board.CollisionGroupable
-import com.badlogic.gdx.scenes.scene2d.Actor
+import fs.tileboard.board.CollisionGroupable
 
-abstract class TileObject(val layer: Int, val collisionGroup: Int) extends CollisionGroupable
+abstract class TileObject(val layer: Int, val collisionGroup: Int) extends CollisionGroupable{
+  override def toString = this.getClass().getName().split('.').last.dropRight(1)
+}
 
 class GroundObject extends TileObject(2, CollisionGroups.groundObjects)
 class Surface extends TileObject(1, CollisionGroups.surface)

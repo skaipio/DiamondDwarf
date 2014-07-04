@@ -1,4 +1,4 @@
-package org.diamonddwarf.stage.tileobjects
+package org.diamonddwarf.tileobjects
 
 abstract class Workshop extends GroundObject{
   def use()

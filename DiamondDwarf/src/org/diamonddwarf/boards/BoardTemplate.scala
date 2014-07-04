@@ -1,9 +1,8 @@
-package org.diamonddwarf.stage
+package org.diamonddwarf.boards
 
-import org.diamonddwarf.stage.tileobjects.Workshop
-import org.diamonddwarf.stage.tileobjects._
+import org.diamonddwarf.tileobjects._
 
-final class StageTemplate(val stageNum: Int, val gemCounts: Array[Int],
+final class BoardTemplate(val stageNum: Int, val gemCounts: Array[Int],
     val width: Int, val height: Int, val stones: Int,
     val baseX: Int, val baseY: Int, val time: Int, buildables: Array[String]){
   

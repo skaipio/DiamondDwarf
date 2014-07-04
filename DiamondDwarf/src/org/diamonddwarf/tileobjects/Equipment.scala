@@ -1,4 +1,4 @@
-package org.diamonddwarf.items
+package org.diamonddwarf.tileobjects
 
 case class Equipment private(val name: String, var usesLeft: Int) { 
   override def toString = name + " with " + usesLeft + {if (usesLeft == 1) " dig" else " digs"} + " left"

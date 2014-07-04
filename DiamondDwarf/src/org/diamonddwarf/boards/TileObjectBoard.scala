@@ -1,26 +1,30 @@
-package org.diamonddwarf.stage
+package org.diamonddwarf.boards
 
-import board.CollisionBoard
-import board.Zero
 import org.diamonddwarf.actors._
-import org.diamonddwarf.stage.tileobjects._
-import com.badlogic.gdx.scenes.scene2d.Stage
-import scala.collection.mutable.Map
+import org.diamonddwarf.tileobjects._
+import fs.tileboard.board.CollisionBoard
 
-class TileObjectStage(val stageTemplate: StageTemplate)
-	extends CollisionBoard[TileObject](stageTemplate.width, stageTemplate.height, 3, CollisionGroups.collisionSet) {
+class TileObjectBoard(val stageTemplate: BoardTemplate)
+  extends CollisionBoard[TileObject](stageTemplate.width, stageTemplate.height, 3, CollisionGroups.collisionSet) {
   type C3 = (Int, Int, Int)
   type C2 = (Int, Int)
-  
+
   var buildableIndex = 0
   var currentTime = 0f
 
   // Initialization
-  this.fill(Grass, Grass.layer)
+//  fill(Grass, Grass.layer)
+//  spawn(Player, (stageTemplate.baseX, stageTemplate.baseY, Player.layer))
+//  setBaseAround(stageTemplate.baseX, stageTemplate.baseY)
+
+  def setObject(obj: TileObject, whereTo: C2) {
+    val c = (whereTo._1, whereTo._2, obj.layer)
+    this.spawn(obj, c)
+  }
+
+  def hasObjectAt(c: C3) = this.objectAt(c).isDefined
 
   /*
-  this.setBaseAround(stageTemplate.baseX, stageTemplate.baseY)
-
   {
     var coordinatePairs = (0 until height).flatMap(y => (0 until width).map(x => (x, y)))
     coordinatePairs = coordinatePairs.filter(c => this.objectAt(c._1, c._2, DwarfBase.layer) != Some(DwarfBase))
@@ -54,21 +58,8 @@ class TileObjectStage(val stageTemplate: StageTemplate)
 
   def hasBaseAt(x: Int, y: Int) = this.objectAt(x, y, DwarfBase.layer) == DwarfBase
 
-  def setBaseAround(x: Int, y: Int) {
-    if (this.minTilesFromBorders(x, y, 1)) {
-      for (x <- x - 1 to x + 1; y <- y - 1 to y + 1) {
-        this.place(DwarfBase, (x, y, DwarfBase.layer))
-      }
+  */
 
-    }
-  }*/
-
-  def setObject(obj: TileObject, whereTo: C2) {
-    val c = (whereTo._1, whereTo._2, obj.layer)
-    this.spawn(obj, c)
-  }
-  
-  def hasObjectAt(c: C3) = this.objectAt(c).isDefined
   //  def gemsBetween(a: C, b: C) = board.subregion(a, b).collect(c => this.getGemAt(c._1, c._2) match {
   //    case Some(g: Gem) => g
   //  })
@@ -106,12 +97,17 @@ class TileObjectStage(val stageTemplate: StageTemplate)
     gem
   }*/
 
-  def minTilesFromBorders(x: Int, y: Int, padding: Int) = {
-    x >= padding && y >= padding && x < this.width - padding && y < this.height - padding
-  }
-
   def isPlayerAt(x: Int, y: Int): Boolean =
     this.inBounds(x, y, Player.layer) && this.objectAt(x, y, Player.layer).contains(Player)
+
+  private def setBaseAround(x: Int, y: Int) {
+    require(this.minTilesFromBorders(x, y, 1))
+    subregion((x - 1, y - 1, DwarfBase.layer), (x + 1, y + 1, DwarfBase.layer)).foreach(spawn(DwarfBase, _))
+  }
+
+  private def minTilesFromBorders(x: Int, y: Int, padding: Int) = {
+    x >= padding && y >= padding && x < this.width - padding && y < this.height - padding
+  }
 
   private implicit def tuple3totuple2(c: C3): C2 = (c._1, c._2)
 }

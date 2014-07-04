@@ -1,7 +1,6 @@
-package org.diamonddwarf.stage.tileobjects
+package org.diamonddwarf.tileobjects
 
 import scala.collection.mutable.Map
-import org.diamonddwarf.items.Equipment
 
 object Player extends GroundObject {
 
