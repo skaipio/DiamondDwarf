@@ -9,6 +9,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/DiamondDwarf/libs/gson-2.2.4-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/tileboard.jar" sourcepath="libs/tileboard-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/tileboard.git"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

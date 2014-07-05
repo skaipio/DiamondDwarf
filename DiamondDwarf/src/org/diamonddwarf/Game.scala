@@ -8,11 +8,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import org.diamonddwarf.boards.ActorBoard
 import org.diamonddwarf.boards.BoardFactory
 import org.diamonddwarf.boards.BoardFactory
+import org.diamonddwarf.actors.AnimationFactory
 
 class Game extends ApplicationListener {
   private var batch: SpriteBatch = null
   private var resources: Resources = null
   private var actorFactory: ActorFactory = null
+  private var animationFactory: AnimationFactory = null
   private var boardFactory: BoardFactory = null
   private var boardController: BoardController = null
 
@@ -20,8 +22,9 @@ class Game extends ApplicationListener {
     batch = new SpriteBatch
     resources = new Resources
     actorFactory = new ActorFactory(resources)
+    animationFactory = new AnimationFactory(resources)
     boardFactory = new BoardFactory(resources, actorFactory)
-    boardController = new BoardController(boardFactory.createBoard(0), new DDStage(actorFactory))
+    boardController = new BoardController(boardFactory.createBoard(0), new DDStage(actorFactory, animationFactory))
   }
 
   override def dispose() {

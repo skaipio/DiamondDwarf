@@ -9,8 +9,9 @@ import org.diamonddwarf.actors.ActionFactory
 import org.diamonddwarf.actors.ActorFactory
 import org.diamonddwarf.actors.ActorFactory
 import com.badlogic.gdx.Gdx
+import org.diamonddwarf.actors.AnimationFactory
 
-class DDStage(actorFactory: ActorFactory) extends Stage {
+class DDStage(actorFactory: ActorFactory, animationFactory : AnimationFactory) extends Stage {
   private var controller_ : BoardController = _
   private var actionFactory: ActionFactory = _
   private val keyMap = scala.collection.mutable.Map[Int, () => _]()
@@ -25,7 +26,7 @@ class DDStage(actorFactory: ActorFactory) extends Stage {
   def controller = controller_
   def controller_=(c: BoardController) = {
     controller_ = c
-    actionFactory = new ActionFactory(controller, actorFactory)
+    actionFactory = new ActionFactory(controller, actorFactory, animationFactory)
   }
 
   override def act(delta: Float) ={

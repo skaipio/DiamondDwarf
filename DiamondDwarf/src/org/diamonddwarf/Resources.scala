@@ -25,6 +25,9 @@ class Resources {
     Hole -> getRegions("tileobj/hole"),
     Player -> getRegions("tileobj/dwarf"))
 
+  val animations: Map[Int, List[AtlasRegion]] = Map(
+    0 -> getRegions("tileobj/dwarf_walk"))
+
   // Load stage data from "assets/stages"-file
   val boardTemplates = {
     val file = Gdx.files.internal("stageTemplates")

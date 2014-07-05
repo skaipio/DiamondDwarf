@@ -10,11 +10,11 @@ import org.diamonddwarf.Right
 import org.diamonddwarf.tileobjects.Hole
 import com.badlogic.gdx.scenes.scene2d.Actor
 
-class ActionFactory(controller: BoardController, actorFactory: ActorFactory) {
+class ActionFactory(controller: BoardController, actorFactory: ActorFactory, animationFactory: AnimationFactory) {
   def digAtSelf = new DigAtSelf()
   def moveSelf(direction: Direction) = {
     val action = new MoveSelf(controller, direction) with TimedAction
-    action.setActionTime(0.5f)
+    action.setActionTime(0.15f * 4)
     action
   }
 
@@ -27,6 +27,7 @@ class ActionFactory(controller: BoardController, actorFactory: ActorFactory) {
 
   case class MoveSelf(controller: BoardController, val direction: Direction) extends Action {
     override def act(delta: Float) = {
+      ifAnimatedThenSetAnim(actor, animationFactory.dwarfWalk)
       ifDDActorThenDo(this.getActor(), (a: DDActor) => controller.moveActor(a, direction))
     }
 
@@ -38,6 +39,10 @@ class ActionFactory(controller: BoardController, actorFactory: ActorFactory) {
       true
     case _ => false
   }
+  private def ifAnimatedThenSetAnim(actor: Actor, anim: Animation) = actor match {
+    case a: AnimatedActor => a.currentAnimation = Some(anim)
+    case _ =>
+  }
 
   private implicit def tuple3totuple2(c: (Int, Int, Int)): (Int, Int) = (c._1, c._2)
 }
@@ -45,7 +50,9 @@ class ActionFactory(controller: BoardController, actorFactory: ActorFactory) {
 trait TimedAction extends Action {
   private var timer: Float = _
   private var lastsFor: Float = _
+  private var onFinished: Option[() => _] = _
 
+  def setOnFinished(doOnFinished: () => _) = this.onFinished
   def setActionTime(time: Float) = lastsFor = time
   def getActionTime = lastsFor
 
@@ -56,6 +63,7 @@ trait TimedAction extends Action {
     if (timer >= lastsFor) {
       timer = 0
       isFinished = true
+      this.onFinished.foreach(f => f())
     }
     isFinished
   }
