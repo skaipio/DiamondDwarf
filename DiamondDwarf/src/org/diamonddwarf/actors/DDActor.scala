@@ -12,9 +12,10 @@ import fs.tileboard.board.CollisionGroupable
 import org.diamonddwarf.boards.ActorBoard
 import com.badlogic.gdx.scenes.scene2d.Action
 import scala.collection.JavaConversions
+import fs.tileboard.board.Trackable
 
 class DDActor(val tileObject: TileObject, textureRegion: Option[AtlasRegion])
-  extends Actor with CollisionGroupable {
+  extends Actor with CollisionGroupable with Trackable {
   
   var position : () => Option[(Int, Int, Int)] = _
   

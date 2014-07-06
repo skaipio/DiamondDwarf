@@ -17,7 +17,7 @@ class ActorBoard(val width: Int, val height: Int, val depth: Int) {
 
   def add(actor: DDActor, position: C2) = {
     val pos = (position._1, position._2, actor.getLayer)
-    val spawnC = this.board.spawn(actor, pos)
+    val spawnC = this.board.trySpawn(actor, pos)
     spawnC.isDefined
   }
 
@@ -40,5 +40,6 @@ class ActorBoard(val width: Int, val height: Int, val depth: Int) {
 
   def subregion(from: C, to: C) = this.board.subregion(from, to)
 
-  def fullboard(layer: Int) = this.board.boardCoordinates(layer)
+  val fullboard = this.board.boardCoordinates 
+  def fullboard(layer: Int) = this.board.layerCoordinates(layer)
 }

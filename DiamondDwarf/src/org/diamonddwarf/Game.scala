@@ -16,7 +16,7 @@ class Game extends ApplicationListener {
   private var actorFactory: ActorFactory = null
   private var animationFactory: AnimationFactory = null
   private var boardFactory: BoardFactory = null
-  private var boardController: BoardController = null
+  private var boardController: BoardController with BoardInputHandler = null
 
   override def create() {
     batch = new SpriteBatch
@@ -24,7 +24,10 @@ class Game extends ApplicationListener {
     actorFactory = new ActorFactory(resources)
     animationFactory = new AnimationFactory(resources)
     boardFactory = new BoardFactory(resources, actorFactory)
-    boardController = new BoardController(boardFactory.createBoard(0), new DDStage(actorFactory, animationFactory))
+
+    // Initialization
+    boardController = new BoardController(boardFactory.createBoard(0)) with BoardInputHandler
+    Gdx.input.setInputProcessor(boardController)
   }
 
   override def dispose() {
