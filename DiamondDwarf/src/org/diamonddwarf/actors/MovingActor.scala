@@ -17,6 +17,12 @@ trait MovingActor extends DDActor {
     setDirection(dir)
     this.fromPosition = -1
   }
+  
+  abstract override def drawingPosition = {
+    val (origx, origy) = super.drawingPosition
+    val (dx, dy) = this.lerp(direction)
+    (origx+dx*Game.tilesize , origy+dy*Game.tilesize )
+  }
 
   abstract override def update(delta: Float) {
     super.update(delta)
@@ -28,12 +34,12 @@ trait MovingActor extends DDActor {
     }
   }
 
-  abstract override def draw(batch: Batch) = (direction, this.position(), this.textureRegion) match {
-    case (d, Some(p), Some(t)) =>
-      val (dx, dy) = this.lerp(d)
-      batch.draw(t, (p._1 + dx) * Game.tilesize, (p._2 + dy) * Game.tilesize)
-    case _ => super.draw(batch)
-  }
+//  abstract override def draw(batch: Batch) = (direction, this.position(), this.textureRegion) match {
+//    case (d, Some(p), Some(t)) =>
+//      val (dx, dy) = this.lerp(d)
+//      batch.draw(t, (p._1 + dx) * Game.tilesize, (p._2 + dy) * Game.tilesize)
+//    case _ => super.draw(batch)
+//  }
 
   private def lerp(d: (Int, Int)): (Float, Float) = (d._1 * fromPosition, d._2 * fromPosition)
 }

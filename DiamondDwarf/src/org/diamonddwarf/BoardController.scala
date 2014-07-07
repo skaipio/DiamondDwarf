@@ -23,7 +23,7 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
 
   val player = actorFactory.createPlayer
 
-  private def setPositionMethodToActor(a: DDActor) = a.position = () => this.board.positionOf(a)
+  private def setPositionMethodToActor(a: TileObjectActor) = a.position = () => this.board.positionOf(a)
 
   // Initialization
   board.spawn(player, (board.base._1, board.base._2, player.getLayer)) // set player on board

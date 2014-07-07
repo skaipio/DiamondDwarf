@@ -1,37 +1,16 @@
 package org.diamonddwarf.actors
 
-import com.badlogic.gdx.scenes.scene2d.Actor
-import org.diamonddwarf.tileobjects.TileObject
-import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.Batch
-import org.diamonddwarf.Game
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
-import org.diamonddwarf.BoardController
-import fs.tileboard.board.CollisionGroupable
-import org.diamonddwarf.boards.ActorBoard
-import com.badlogic.gdx.scenes.scene2d.Action
-import scala.collection.JavaConversions
-import fs.tileboard.board.Trackable
 
-class DDActor(val tileObject: TileObject, protected val textureRegion: Option[AtlasRegion])
-  extends CollisionGroupable with Trackable {
+abstract class DDActor {
+  protected[this] var texture: Option[AtlasRegion] = None
+  protected[this] var isVisible = true
 
-  var position: () => Option[(Int, Int, Int)] = _
-
-  val collisionGroup = this.tileObject.collisionGroup
-
-  def update(delta: Float) {}
-
-  def draw(batch: Batch) {
-    if (position != null) (position(), textureRegion) match {
-      case (Some(pos), Some(region)) => batch.draw(region, pos._1 * Game.tilesize, pos._2 * Game.tilesize)
-      case _ =>
-    }
- 
+  def drawingPosition(): (Float, Float)
+  def update(delta: Float): Unit
+  def draw(batch: Batch) = if (isVisible) {
+    val (x, y) = this.drawingPosition
+    texture.foreach(batch.draw(_, x, y))
   }
-
-  def getLayer = tileObject.layer
-
-  override def toString = this.tileObject.toString
 }

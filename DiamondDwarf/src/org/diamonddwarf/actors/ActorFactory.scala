@@ -18,7 +18,7 @@ final class ActorFactory(resources: Resources) {
   // Replace None with default texture
   def createActorOf(obj: TileObject) = resources.defaultTextureRegions.get(obj) match {
     case Some(regions) =>
-      if (regions.size != 0) new DDActor(obj, Some(getRandom(regions))) with AnimatedActor
+      if (regions.size != 0) new TileObjectActor(obj, Some(getRandom(regions))) with AnimatedActor
       else this.actorWithNoTexture(obj)
     case _ => this.actorWithNoTexture(obj)
   }
@@ -31,7 +31,7 @@ final class ActorFactory(resources: Resources) {
 
   private def actorWithNoTexture(obj: TileObject) = {
     logger.warning("No textures found for " + obj + ".")
-    new DDActor(obj, None)
+    new TileObjectActor(obj, None)
   }
 
   private def getRandom(regions: List[AtlasRegion]) = regions(Random.nextInt(regions.size))

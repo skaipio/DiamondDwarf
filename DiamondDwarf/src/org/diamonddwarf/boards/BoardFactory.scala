@@ -12,6 +12,7 @@ import org.diamonddwarf.tileobjects.Player
 import fs.tileboard.board.CollisionBoard
 import fs.tileboard.board.ObjectTracker
 import org.diamonddwarf.tileobjects.CollisionGroups
+import org.diamonddwarf.actors.TileObjectActor
 
 class BoardFactory(resources: Resources, actorFactory: ActorFactory) {
 
@@ -30,7 +31,7 @@ class BoardFactory(resources: Resources, actorFactory: ActorFactory) {
     new ActorBoard(template.width, template.height, layers,
       CollisionGroups.collisionSet, (template.baseX, template.baseY))
 
-  private def setBaseAround(board: CollisionBoard[DDActor], x: Int, y: Int) {
+  private def setBaseAround(board: ActorBoard, x: Int, y: Int) {
     require(this.minTilesFromBorders(board, x, y, 1))
 
     board.subregion((x - 1, y - 1, DwarfBase.layer), (x + 1, y + 1, DwarfBase.layer)).foreach(c => {
@@ -39,7 +40,7 @@ class BoardFactory(resources: Resources, actorFactory: ActorFactory) {
     })
   }
 
-  private def minTilesFromBorders(board: CollisionBoard[DDActor], x: Int, y: Int, padding: Int) = {
+  private def minTilesFromBorders(board: ActorBoard, x: Int, y: Int, padding: Int) = {
     x >= padding && y >= padding && x < board.width - padding && y < board.height - padding
   }
 }
