@@ -18,7 +18,6 @@ import fs.tileboard.board.Board.C
 
 class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
 
-
   type C2 = (Int, Int)
 
   val player = actorFactory.createPlayer
@@ -29,9 +28,11 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
   board.spawn(player, (board.base._1, board.base._2, player.getLayer)) // set player on board
   board.boardCoordinates.foreach(board.objectAt(_).foreach(setPositionMethodToActor))
 
-  protected def movePlayer(direction: C2) = 
-    board.moveBy(player, direction).foreach(c => player.setMoving(direction))
-  
+  protected def movePlayer(direction: C2) = {
+    if (this.player.direction == Stay)
+      board.moveBy(player, direction).foreach(c => player.setMoving(direction))
+  }
+
   //  private def addActorToLayer(actor: DDActor): Boolean = {
   //    this.layerGroups(actor.getLayer).addActor(actor)
   //    actor.position = () => this.board.getPosition(actor)
