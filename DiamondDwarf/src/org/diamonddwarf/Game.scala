@@ -26,7 +26,7 @@ class Game extends ApplicationListener {
     boardFactory = new BoardFactory(resources, actorFactory)
 
     // Initialization
-    boardController = new BoardController(boardFactory.createBoard(0)) with BoardInputHandler
+    boardController = new BoardController(boardFactory.createBoard(0), actorFactory ) with BoardInputHandler
     Gdx.input.setInputProcessor(boardController)
   }
 
@@ -37,8 +37,8 @@ class Game extends ApplicationListener {
   override def render() {
     Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    boardController.update
-    boardController.draw
+    boardController.update(Gdx.graphics.getDeltaTime())
+    boardController.draw(batch)
   }
 
   override def resize(width: Int, height: Int) {

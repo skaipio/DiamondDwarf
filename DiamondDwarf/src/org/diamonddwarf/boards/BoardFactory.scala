@@ -20,12 +20,15 @@ class BoardFactory(resources: Resources, actorFactory: ActorFactory) {
   def createBoard(boardID: Int) = {
     require(boardID < resources.boardTemplates.size)
     val template = resources.boardTemplates(boardID)
-    val board = new CollisionBoard[DDActor](template.width, template.height, layers, CollisionGroups.collisionSet) with ObjectTracker[DDActor]
+    val board = boardFromTemplate(template)
     board.fill(() => actorFactory.createActorOf(Grass), Grass.layer)
-    board.spawn(actorFactory.createActorOf(Player), (template.baseX, template.baseY, Player.layer))
     this.setBaseAround(board, template.baseX, template.baseY)
     board
   }
+
+  private def boardFromTemplate(template: BoardTemplate) =
+    new ActorBoard(template.width, template.height, layers,
+      CollisionGroups.collisionSet, (template.baseX, template.baseY))
 
   private def setBaseAround(board: CollisionBoard[DDActor], x: Int, y: Int) {
     require(this.minTilesFromBorders(board, x, y, 1))

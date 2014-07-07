@@ -14,17 +14,21 @@ import com.badlogic.gdx.scenes.scene2d.Action
 import scala.collection.JavaConversions
 import fs.tileboard.board.Trackable
 
-class DDActor(val tileObject: TileObject, textureRegion: Option[AtlasRegion])
-  extends Actor with CollisionGroupable with Trackable {
-  
-  var position : () => Option[(Int, Int, Int)] = _
-  
+class DDActor(val tileObject: TileObject, protected val textureRegion: Option[AtlasRegion])
+  extends CollisionGroupable with Trackable {
+
+  var position: () => Option[(Int, Int, Int)] = _
+
   val collisionGroup = this.tileObject.collisionGroup
 
-  override def draw(batch: Batch, parentAlpha: Float) {
+  def update(delta: Float) {}
+
+  def draw(batch: Batch) {
     if (position != null)
-    	textureRegion.foreach(r => position().foreach(c => batch.draw(r, c._1 * Game.tilesize, c._2 * Game.tilesize)))
+      textureRegion.foreach(r => position().foreach(c => batch.draw(r, c._1 * Game.tilesize, c._2 * Game.tilesize)))
   }
 
   def getLayer = tileObject.layer
+
+  override def toString = this.tileObject.toString
 }

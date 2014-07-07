@@ -12,22 +12,20 @@ import fs.tileboard.board.CollisionBoard
 import org.diamonddwarf.boards.ActorBoard
 import com.badlogic.gdx.scenes.scene2d.Group
 import fs.tileboard.board.Board
+import com.badlogic.gdx.graphics.g2d.Batch
 
-class BoardController(board: CollisionBoard[DDActor] with ObjectTracker[DDActor]) {
+class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
 
   type C = (Int, Int, Int)
   type C2 = (Int, Int)
 
-  var buildableIndex = 0
-  var currentTime = 0f
+  val player = actorFactory.createActorOf(Player)
 
-  // stage.controller = this
+  private def setPositionMethodToActor(a: DDActor) = a.position = () => this.board.positionOf(player)
 
-  // Add groups to stage
-  // layerGroups.foreach(stage.addActor(_))
-
-  // Add actors from board to stage
-  // board.fullboard.foreach(board.getActorAt(_).foreach(addActorToLayer))
+  // Initialization
+  board.spawn(player, (board.base._1, board.base._2, player.getLayer)) // set player on board
+  board.boardCoordinates.foreach(board.objectAt(_).foreach(setPositionMethodToActor))
 
   //  private def addActorToLayer(actor: DDActor): Boolean = {
   //    this.layerGroups(actor.getLayer).addActor(actor)
@@ -67,9 +65,13 @@ class BoardController(board: CollisionBoard[DDActor] with ObjectTracker[DDActor]
 
   //  def hasActorAt(c: C) = this.board.hasActorAt(c)
 
-  def update = stage.act(Gdx.graphics.getDeltaTime())
+  def update(delta: Float) = board.boardCoordinates.foreach(board.objectAt(_).foreach(_.update(delta)))
 
-  def draw = stage.draw
+  def draw(batch: Batch) = {
+    batch.begin()
+    board.boardCoordinates.foreach(board.objectAt(_).foreach(_.draw(batch)))
+    batch.end()
+  }
 
   //  private def requireActorOnBoard(actor: DDActor) =
   //    require(actorExistsOnBoard(actor), "Actor " + actor + " not found on board.")
