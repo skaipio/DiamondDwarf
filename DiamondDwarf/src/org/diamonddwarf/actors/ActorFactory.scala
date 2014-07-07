@@ -10,6 +10,8 @@ import org.diamonddwarf.BoardController
 import org.diamonddwarf.boards.ActorBoard
 import java.util.logging.Logger
 import org.diamonddwarf.tileobjects.TileObject
+import org.diamonddwarf.tileobjects.Player
+import org.diamonddwarf.tileobjects.Player
 
 final class ActorFactory(resources: Resources) {
   private val logger = Logger.getAnonymousLogger()
@@ -19,6 +21,12 @@ final class ActorFactory(resources: Resources) {
       if (regions.size != 0) new DDActor(obj, Some(getRandom(regions))) with AnimatedActor
       else this.actorWithNoTexture(obj)
     case _ => this.actorWithNoTexture(obj)
+  }
+
+  def createPlayer = resources.defaultTextureRegions.get(Player) match {
+    case Some(regions) if (regions.size != 0) =>
+      new PlayerActor(Some(getRandom(regions)))
+    case _ => new PlayerActor(None)
   }
 
   private def actorWithNoTexture(obj: TileObject) = {

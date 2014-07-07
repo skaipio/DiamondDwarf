@@ -24,8 +24,11 @@ class DDActor(val tileObject: TileObject, protected val textureRegion: Option[At
   def update(delta: Float) {}
 
   def draw(batch: Batch) {
-    if (position != null)
-      textureRegion.foreach(r => position().foreach(c => batch.draw(r, c._1 * Game.tilesize, c._2 * Game.tilesize)))
+    if (position != null) (position(), textureRegion) match {
+      case (Some(pos), Some(region)) => batch.draw(region, pos._1 * Game.tilesize, pos._2 * Game.tilesize)
+      case _ =>
+    }
+ 
   }
 
   def getLayer = tileObject.layer

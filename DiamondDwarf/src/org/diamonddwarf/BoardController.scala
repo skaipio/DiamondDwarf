@@ -13,20 +13,25 @@ import org.diamonddwarf.boards.ActorBoard
 import com.badlogic.gdx.scenes.scene2d.Group
 import fs.tileboard.board.Board
 import com.badlogic.gdx.graphics.g2d.Batch
+import fs.tileboard.board.Board.tuple2asTuple3
+import fs.tileboard.board.Board.C
 
 class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
 
-  type C = (Int, Int, Int)
+
   type C2 = (Int, Int)
 
-  val player = actorFactory.createActorOf(Player)
+  val player = actorFactory.createPlayer
 
-  private def setPositionMethodToActor(a: DDActor) = a.position = () => this.board.positionOf(player)
+  private def setPositionMethodToActor(a: DDActor) = a.position = () => this.board.positionOf(a)
 
   // Initialization
   board.spawn(player, (board.base._1, board.base._2, player.getLayer)) // set player on board
   board.boardCoordinates.foreach(board.objectAt(_).foreach(setPositionMethodToActor))
 
+  protected def movePlayer(direction: C2) = 
+    board.moveBy(player, direction).foreach(c => player.setMoving(direction))
+  
   //  private def addActorToLayer(actor: DDActor): Boolean = {
   //    this.layerGroups(actor.getLayer).addActor(actor)
   //    actor.position = () => this.board.getPosition(actor)
@@ -65,11 +70,11 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
 
   //  def hasActorAt(c: C) = this.board.hasActorAt(c)
 
-  def update(delta: Float) = board.boardCoordinates.foreach(board.objectAt(_).foreach(_.update(delta)))
+  def update(delta: Float) = board.boardObjects.foreach(_.foreach(_.update(delta)))
 
   def draw(batch: Batch) = {
     batch.begin()
-    board.boardCoordinates.foreach(board.objectAt(_).foreach(_.draw(batch)))
+    board.boardObjects.foreach(_.foreach(_.draw(batch)))
     batch.end()
   }
 
@@ -82,6 +87,7 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
 
 abstract class Direction(x: Int, y: Int) extends Tuple2(x, y)
 
+object Stay extends Direction(0, 0)
 object Up extends Direction(0, 1)
 object Down extends Direction(0, -1)
 object Left extends Direction(-1, 0)
