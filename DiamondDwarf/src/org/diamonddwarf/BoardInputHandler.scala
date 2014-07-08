@@ -6,30 +6,26 @@ import com.badlogic.gdx.Gdx
 
 trait BoardInputHandler extends BoardController with InputProcessor {
 
+  private[this] def checkAndMove(key: Int, dir: Direction) {
+    if (Gdx.input.isKeyPressed(key))
+      this.movePlayer(dir)
+  }
+  
+//  private[this] def checkAndDig(key: Int) {
+//    if (Gdx.input.isKeyPressed(key))
+//      this.playerDig()
+//  }
+
   abstract override def update(delta: Float) {
-    if (Gdx.input.isKeyPressed(Keys.W))
-      this.movePlayer(Up)
-    if (Gdx.input.isKeyPressed(Keys.A))
-      this.movePlayer(Left)
-    if (Gdx.input.isKeyPressed(Keys.S))
-      this.movePlayer(Down)
-    if (Gdx.input.isKeyPressed(Keys.D))
-      this.movePlayer(Right)
+    checkAndMove(Keys.W, Up)
+    checkAndMove(Keys.A, Left)
+    checkAndMove(Keys.S, Down)
+    checkAndMove(Keys.D, Right)
+  //  checkAndDig(Keys.SPACE)
     super.update(delta)
   }
 
-  override def keyDown(keyCode: Int): Boolean = {
-
-//    keyCode match {
-//      case Keys.W     => this.movePlayer(Up)
-//      case Keys.A     => this.movePlayer(Left)
-//      case Keys.S     => this.movePlayer(Down)
-//      case Keys.D     => this.movePlayer(Right)
-//      case Keys.SPACE => //this.addActionToPlayer(actionFactory.digAtSelf)
-//      case _          => return false
-//    }
-    true
-  }
+  override def keyDown(keyCode: Int): Boolean = false
 
   /**
    * Called when a key was released
