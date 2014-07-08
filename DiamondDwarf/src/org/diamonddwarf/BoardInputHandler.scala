@@ -2,19 +2,32 @@ package org.diamonddwarf
 
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.Gdx
 
 trait BoardInputHandler extends BoardController with InputProcessor {
 
+  abstract override def update(delta: Float) {
+    if (Gdx.input.isKeyPressed(Keys.W))
+      this.movePlayer(Up)
+    if (Gdx.input.isKeyPressed(Keys.A))
+      this.movePlayer(Left)
+    if (Gdx.input.isKeyPressed(Keys.S))
+      this.movePlayer(Down)
+    if (Gdx.input.isKeyPressed(Keys.D))
+      this.movePlayer(Right)
+    super.update(delta)
+  }
+
   override def keyDown(keyCode: Int): Boolean = {
 
-    keyCode match {
-      case Keys.W => this.movePlayer(Up)
-      case Keys.A => this.movePlayer(Left)
-      case Keys.S => this.movePlayer(Down)
-      case Keys.D => this.movePlayer(Right)
-      case Keys.SPACE => //this.addActionToPlayer(actionFactory.digAtSelf)
-      case _ => return false
-    }
+//    keyCode match {
+//      case Keys.W     => this.movePlayer(Up)
+//      case Keys.A     => this.movePlayer(Left)
+//      case Keys.S     => this.movePlayer(Down)
+//      case Keys.D     => this.movePlayer(Right)
+//      case Keys.SPACE => //this.addActionToPlayer(actionFactory.digAtSelf)
+//      case _          => return false
+//    }
     true
   }
 
