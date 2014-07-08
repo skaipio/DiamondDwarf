@@ -25,13 +25,20 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
   private def setPositionMethodToActor(a: TileObjectActor) = a.position = () => this.board.positionOf(a)
 
   // Initialization
-  board.spawn(player, (board.base._1, board.base._2, player.getLayer)) // set player on board
-  board.boardCoordinates.foreach(board.objectAt(_).foreach(setPositionMethodToActor))
+  this.setActorTo(player, board.base._1, board.base._2) // set player on board
+  this.applyToActorsOnBoard(setPositionMethodToActor)
 
-  protected def movePlayer(direction: C2) = {
+  protected[this] def movePlayer(direction: C2) = {
     if (this.player.direction == Stay)
       board.moveBy(player, direction).foreach(c => player.setMoving(direction))
   }
+
+  private[this] def setActorTo(a: TileObjectActor, x: Int, y: Int, force: Boolean = true) =
+    if (force) this.board.spawn(a, (x, y, a.getLayer))
+    else this.board.trySpawn(a, (x, y, a.getLayer))
+
+  private[this] def applyToActorsOnBoard(f: TileObjectActor => _) =
+    board.boardObjects.map(_.map(f))
 
   //  private def addActorToLayer(actor: DDActor): Boolean = {
   //    this.layerGroups(actor.getLayer).addActor(actor)
