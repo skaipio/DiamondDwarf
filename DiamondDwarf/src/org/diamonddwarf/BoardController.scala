@@ -29,8 +29,10 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
   this.applyToActorsOnBoard(setPositionMethodToActor)
 
   protected[this] def movePlayer(direction: C2) = {
-    if (this.player.direction == Stay)
+    if (this.player.direction == Stay){
       board.moveBy(player, direction).foreach(c => player.setMoving(direction))
+      player.setState(Moving())      
+    }      
   }
 
   private[this] def setActorTo(a: TileObjectActor, x: Int, y: Int, force: Boolean = true) =

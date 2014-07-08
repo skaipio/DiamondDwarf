@@ -14,8 +14,6 @@ class TileObjectActor(val tileObject: TileObject, defaultTexture: Option[AtlasRe
 
   val collisionGroup = this.tileObject.collisionGroup
 
-  this.texture = defaultTexture
-
   override def drawingPosition = {
     require(position != null && position().isDefined, "No position method has been assigned for tile object " + this)
     val (tileX, tileY, _) = this.position().get
@@ -27,4 +25,6 @@ class TileObjectActor(val tileObject: TileObject, defaultTexture: Option[AtlasRe
   def getLayer = tileObject.layer
 
   override def toString = this.tileObject.toString
+
+  override protected[this] def getTexture = this.defaultTexture
 }

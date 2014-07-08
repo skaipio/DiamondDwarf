@@ -13,19 +13,21 @@ import org.diamonddwarf.tileobjects.TileObject
 import org.diamonddwarf.tileobjects.Player
 import org.diamonddwarf.tileobjects.Player
 
-final class ActorFactory(resources: Resources) {
+final class ActorFactory(resources: Resources, animationFactory: AnimationFactory) {
   private val logger = Logger.getAnonymousLogger()
   // Replace None with default texture
   def createActorOf(obj: TileObject) = resources.defaultTextureRegions.get(obj) match {
     case Some(regions) =>
-      if (regions.size != 0) new TileObjectActor(obj, Some(getRandom(regions))) with AnimatedActor
+      if (regions.size != 0) new TileObjectActor(obj, Some(getRandom(regions)))
       else this.actorWithNoTexture(obj)
     case _ => this.actorWithNoTexture(obj)
   }
 
   def createPlayer = resources.defaultTextureRegions.get(Player) match {
     case Some(regions) if (regions.size != 0) =>
-      new PlayerActor(Some(getRandom(regions)))
+      val player = new PlayerActor(Some(getRandom(regions)))
+      player.animMap = Some(animationFactory.playerAnimMap)
+      player
     case _ => new PlayerActor(None)
   }
 

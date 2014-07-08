@@ -2,20 +2,31 @@ package org.diamonddwarf.actors
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import org.diamonddwarf.Game
+import org.diamonddwarf.tileobjects.TileObject
 
-trait AnimatedActor extends DDActor {
-//  var currentAnimation: Option[Animation] = None
-//
-//  abstract override def act(delta: Float) = {
-//    super.act(delta)
-//    currentAnimation.foreach(anim => anim.advance(delta))
-//  }
-//
-//  abstract override def draw(batch: Batch, parentAlpha: Float) = currentAnimation match {
-//    case Some(anim) => anim.getCurrentFrame match {
-//      case Some(frame) => this.position().foreach(c => (batch.draw(frame, c._1*Game.tilesize, c._2*Game.tilesize )))
-//      case _ => super.draw(batch, parentAlpha)
-//    }
-//    case _ => super.draw(batch, parentAlpha)
-//  }
+trait AnimatedActor extends StateActor {
+  var animMap: Option[Map[State, () => Animation]] = None
+  var previousState: State = Idle()
+  var currentAnimation: Option[Animation] = None
+
+  abstract override def update(delta: Float) {
+    super.update(delta)
+    currentAnimation.foreach(anim => anim.advance(delta))
+
+    if (previousState != this.getState) {
+      animMap.foreach(_.get(this.getState) match {
+        case Some(f) => this.currentAnimation = Some(f())
+        case _ => this.currentAnimation = None
+      })
+    }
+    previousState = this.getState
+  }
+
+  abstract override protected[this] def getTexture =
+    currentAnimation match {
+      case Some(anim) =>
+        anim.getCurrentFrame
+      case _ => super.getTexture
+    }
+
 }

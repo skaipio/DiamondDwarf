@@ -20,9 +20,9 @@ class Game extends ApplicationListener {
 
   override def create() {
     batch = new SpriteBatch
-    resources = new Resources
-    actorFactory = new ActorFactory(resources)
+    resources = new Resources    
     animationFactory = new AnimationFactory(resources)
+    actorFactory = new ActorFactory(resources, animationFactory)
     boardFactory = new BoardFactory(resources, actorFactory)
 
     // Initialization
