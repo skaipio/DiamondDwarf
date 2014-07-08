@@ -1,16 +1,7 @@
-package org.diamonddwarf.actors
+package org.diamonddwarf.anim
 
 import org.diamonddwarf.Resources
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
-import org.diamonddwarf.tileobjects.Player
-import org.diamonddwarf.tileobjects.TileObject
-
-class AnimationFactory(resources: Resources) {
-  def dwarfWalk = new DwarfWalk(resources)
-  
-  val playerAnimMap : Map[State, () => Animation] =
-    Map(Moving() -> (() => dwarfWalk))
-}
 
 abstract class Animation(resources: Resources) {
   protected var animId: Int = _
@@ -40,12 +31,3 @@ abstract class Animation(resources: Resources) {
 
   }
 }
-
-class DwarfWalk(resources: Resources) extends Animation(resources) {
-  this.animId = 0
-  this.assignFrameTimes(0.15f, 0.15f, 0.15f, 0.15f)
-  this.totalFrameTime_ = this.frameTimes.fold(0f)(_ + _)
-}
-
-
-

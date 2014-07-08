@@ -12,6 +12,7 @@ import java.util.logging.Logger
 import org.diamonddwarf.tileobjects.TileObject
 import org.diamonddwarf.tileobjects.Player
 import org.diamonddwarf.tileobjects.Player
+import org.diamonddwarf.anim.AnimationFactory
 
 final class ActorFactory(resources: Resources, animationFactory: AnimationFactory) {
   private val logger = Logger.getAnonymousLogger()

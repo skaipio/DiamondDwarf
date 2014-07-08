@@ -3,6 +3,7 @@ package org.diamonddwarf.actors
 import com.badlogic.gdx.graphics.g2d.Batch
 import org.diamonddwarf.Game
 import org.diamonddwarf.tileobjects.TileObject
+import org.diamonddwarf.anim.Animation
 
 trait AnimatedActor extends StateActor {
   var animMap: Option[Map[State, () => Animation]] = None

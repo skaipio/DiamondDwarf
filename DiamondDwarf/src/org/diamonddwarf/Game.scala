@@ -7,8 +7,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import org.diamonddwarf.boards.ActorBoard
 import org.diamonddwarf.boards.BoardFactory
-import org.diamonddwarf.boards.BoardFactory
-import org.diamonddwarf.actors.AnimationFactory
+import org.diamonddwarf.anim.AnimationFactory
 
 class Game extends ApplicationListener {
   private var batch: SpriteBatch = null
