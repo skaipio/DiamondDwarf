@@ -29,7 +29,7 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
   this.applyToActorsOnBoard(setPositionMethodToActor)
 
   protected[this] def movePlayer(direction: C2) = {
-    if (this.player.direction == Stay && this.player.getState == Idle()) {
+    if (this.player.direction == Stay && (this.player.getState == Idle() || this.player.getState == Moving())) {
       board.moveBy(player, direction).foreach(c => player.setMoving(direction))
       player.setState(Moving())
       if (direction == Left || direction == Right)
