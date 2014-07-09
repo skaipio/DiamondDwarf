@@ -3,11 +3,17 @@ package org.diamonddwarf.tileobjects
 import fs.tileboard.board.CollisionGroupable
 
 abstract class TileObject(val layer: Int, val collisionGroup: Int) extends CollisionGroupable{
+  
+  val diggable = true
+  
   override def toString = this.getClass().getName().split('.').last.dropRight(1)
+  
 }
 
 class GroundObject extends TileObject(2, CollisionGroups.groundObjects)
-class Surface extends TileObject(1, CollisionGroups.surface)
+class Surface extends TileObject(1, CollisionGroups.surface){
+  override val diggable = false
+}
 class Ground extends TileObject(0, CollisionGroups.ground)
 abstract case class Gem(val value: Int, val name: String) extends TileObject(Gem.layer, CollisionGroups.ground) {
   override def toString = this.name + " of value " + this.value.toString

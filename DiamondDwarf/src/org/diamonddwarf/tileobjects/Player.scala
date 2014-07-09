@@ -6,7 +6,7 @@ object Player extends GroundObject {
 
   var name = ""
   var score = 0
-  var shovel: Equipment = null
+  var shovel: Equipment = Equipment.shabbyShovel
 
   val inventory = Map[Gem, Int]()
 

@@ -11,8 +11,8 @@ class PlayerActor(textureRegion: Option[AtlasRegion])
 
   override def setState(state: State) = {
     state match {
-      case m: Moving =>
-        m.delay = 1f/this.speed
+      case _: Moving => state.delay = 1f/this.speed
+      case _: Digging => state.delay = 1f
       case _ =>
     }
     super.setState(state)

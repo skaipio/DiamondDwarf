@@ -11,17 +11,17 @@ trait BoardInputHandler extends BoardController with InputProcessor {
       this.movePlayer(dir)
   }
   
-//  private[this] def checkAndDig(key: Int) {
-//    if (Gdx.input.isKeyPressed(key))
-//      this.playerDig()
-//  }
+  private[this] def checkAndDig(key: Int) {
+    if (Gdx.input.isKeyPressed(key))
+      this.playerDig
+  }
 
   abstract override def update(delta: Float) {
     checkAndMove(Keys.W, Up)
     checkAndMove(Keys.A, Left)
     checkAndMove(Keys.S, Down)
     checkAndMove(Keys.D, Right)
-  //  checkAndDig(Keys.SPACE)
+    checkAndDig(Keys.SPACE)
     super.update(delta)
   }
 

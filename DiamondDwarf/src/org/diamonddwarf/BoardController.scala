@@ -29,7 +29,7 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
   this.applyToActorsOnBoard(setPositionMethodToActor)
 
   protected[this] def movePlayer(direction: C2) = {
-    if (this.player.direction == Stay) {
+    if (this.player.direction == Stay && this.player.getState == Idle()) {
       board.moveBy(player, direction).foreach(c => player.setMoving(direction))
       player.setState(Moving())
       if (direction == Left || direction == Right)
@@ -37,33 +37,38 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
     }
   }
 
-  private[this] def setActorTo(a: TileObjectActor, x: Int, y: Int, force: Boolean = true) =
+  protected[this] def playerDig {
+    val playerPos = positionOf(player)
+    if (player.getState == Idle() && Player.canDig && forallObjectsAt(playerPos, _.tileObject.diggable)) {
+      this.setActorTo(actorFactory.createActorOf(Hole), playerPos._1, playerPos._2, true)
+      Player.depleteShovel
+      player.setState(Digging())
+    }
+  }
+
+  private[this] def positionOf(a: TileObjectActor) = board.positionOf(a) match {
+    case Some((x, y, z)) => (x, y)
+    case _ => throw new Exception("Actor " + a + " not found on board.")
+  }
+
+  private[this] def forallObjectsAt(c: C2, p: TileObjectActor => Boolean): Boolean = {
+    for (layer <- 0 until board.depth) {
+      if (!board.objectAt(c._1, c._2, layer).forall(p))
+        return false
+    }
+    true
+  }
+
+  private[this] def setActorTo(a: TileObjectActor, x: Int, y: Int, force: Boolean = true) {
+    a.position = () => board.positionOf(a)
     if (force) this.board.spawn(a, (x, y, a.getLayer))
     else this.board.trySpawn(a, (x, y, a.getLayer))
+  }
 
   private[this] def applyToActorsOnBoard(f: TileObjectActor => _) =
     board.boardObjects.map(_.map(f))
 
-  //  private def addActorToLayer(actor: DDActor): Boolean = {
-  //    this.layerGroups(actor.getLayer).addActor(actor)
-  //    actor.position = () => this.board.getPosition(actor)
-  //    if (actor.tileObject == Player) player = actor
-  //    true
-  //  }
-
   //  def getPosition(actor: DDActor) = board.getPosition(actor).asInstanceOf[Option[C]]
-
-  //  def addActor(actor: DDActor, whereTo: C2): Boolean = {
-  //    val newPos = (whereTo._1, whereTo._2, actor.getLayer)
-  //    !actorExistsOnBoard(actor) && this.board.add(actor, whereTo) &&
-  //      addActorToLayer(actor)
-  //  }
-
-  //  def forceAddActor(actor: DDActor, whereTo: C2): Boolean = {
-  //    val removed = this.board.removeAt((whereTo._1, whereTo._2, actor.getLayer))
-  //    removed.foreach(a => this.layerGroups(a.getLayer).removeActor(a))
-  //    this.addActor(actor, whereTo)
-  //  }
 
   //  def moveActor(actor: DDActor, whereTo: C2) = {
   //    this.requireActorOnBoard(actor)
@@ -73,11 +78,6 @@ class BoardController(board: ActorBoard, actorFactory: ActorFactory) {
   //  def moveActor(actor: DDActor, by: Direction) = {
   //    this.requireActorOnBoard(actor)
   //    this.board.moveBy(actor, by)
-  //  }
-
-  //  def removeActor(actor: DDActor) = {
-  //    this.board.remove(actor)
-  //    this.layerGroups(actor.getLayer).removeActor(actor)
   //  }
 
   //  def hasActorAt(c: C) = this.board.hasActorAt(c)

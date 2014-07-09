@@ -28,7 +28,10 @@ abstract class State {
   val timed : Boolean = false
 }
 
-case class Idle() extends State
-case class Moving() extends State{
+abstract class TimedState extends State {
   override val timed = true
 }
+
+case class Idle() extends State
+case class Moving() extends TimedState
+case class Digging() extends TimedState
